@@ -1,0 +1,131 @@
+import { NextResponse } from 'next/server'
+import { createServiceClient } from '@/lib/supabase/server'
+import { sendEmail } from '@/lib/email/resend'
+import { rentalRequestedEmail } from '@/lib/email/templates/rental-requested'
+import { rentalApprovedEmail } from '@/lib/email/templates/rental-approved'
+import { rentalRejectedEmail } from '@/lib/email/templates/rental-rejected'
+import { formatDate } from '@/lib/utils'
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json()
+    const { type, rentalId } = body
+
+    if (type === 'contact') {
+      const { name, email, subject, message } = body
+      await sendEmail({
+        to: process.env.RESEND_FROM_EMAIL ?? 'admin@example.com',
+        subject: `[お問い合わせ] ${subject}`,
+        html: `
+          <p>お名前: ${name}</p>
+          <p>メール: ${email}</p>
+          <p>件名: ${subject}</p>
+          <p>内容:</p>
+          <pre>${message}</pre>
+        `,
+      })
+      return NextResponse.json({ ok: true })
+    }
+
+    if (!rentalId) {
+      return NextResponse.json({ error: 'Missing rentalId' }, { status: 400 })
+    }
+
+    const supabase = await createServiceClient()
+
+    const { data: rental } = await supabase
+      .from('rentals')
+      .select(`
+        *,
+        costumes(title),
+        renter:profiles!rentals_renter_id_fkey(name),
+        owner:profiles!rentals_owner_id_fkey(name)
+      `)
+      .eq('id', rentalId)
+      .single()
+
+    if (!rental) {
+      return NextResponse.json({ error: 'Rental not found' }, { status: 404 })
+    }
+
+    const costume = (rental as unknown as { costumes: { title: string } }).costumes
+    const renter = (rental as unknown as { renter: { name: string | null } }).renter
+    const owner = (rental as unknown as { owner: { name: string | null } }).owner
+
+    // Get email addresses
+    const { data: renterAuth } = await supabase.auth.admin.getUserById(rental.renter_id)
+    const { data: ownerAuth } = await supabase.auth.admin.getUserById(rental.owner_id)
+
+    const renterEmail = renterAuth.user?.email
+    const ownerEmail = ownerAuth.user?.email
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
+    const rentalLink = `${appUrl}/rentals/${rentalId}`
+
+    const startDate = formatDate(rental.start_date)
+    const endDate = formatDate(rental.end_date)
+
+    if (type === 'rental_requested' && ownerEmail) {
+      const { subject, html } = rentalRequestedEmail({
+        ownerName: owner.name ?? '出品者',
+        renterName: renter.name ?? '借り手',
+        costumeTitle: costume.title,
+        startDate,
+        endDate,
+        totalPrice: rental.total_price,
+        rentalLink,
+      })
+      await sendEmail({ to: ownerEmail, subject, html })
+
+      // Create in-app notification for owner
+      await supabase.from('notifications').insert({
+        user_id: rental.owner_id,
+        type: 'rental_requested',
+        title: `${renter.name ?? '借り手'}様からレンタル申請が届きました`,
+        body: costume.title,
+        link: rentalLink,
+      })
+    }
+
+    if (type === 'rental_approved' && renterEmail) {
+      const { subject, html } = rentalApprovedEmail({
+        renterName: renter.name ?? '借り手',
+        ownerName: owner.name ?? '出品者',
+        costumeTitle: costume.title,
+        startDate,
+        endDate,
+        totalPrice: rental.total_price,
+        rentalLink,
+      })
+      await sendEmail({ to: renterEmail, subject, html })
+
+      await supabase.from('notifications').insert({
+        user_id: rental.renter_id,
+        type: 'rental_approved',
+        title: 'レンタル申請が承認されました',
+        body: costume.title,
+        link: rentalLink,
+      })
+    }
+
+    if (type === 'rental_rejected' && renterEmail) {
+      const { subject, html } = rentalRejectedEmail({
+        renterName: renter.name ?? '借り手',
+        costumeTitle: costume.title,
+      })
+      await sendEmail({ to: renterEmail, subject, html })
+
+      await supabase.from('notifications').insert({
+        user_id: rental.renter_id,
+        type: 'rental_rejected',
+        title: 'レンタル申請が却下されました',
+        body: costume.title,
+        link: rentalLink,
+      })
+    }
+
+    return NextResponse.json({ ok: true })
+  } catch (error) {
+    console.error('[Email API Error]', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
+}
