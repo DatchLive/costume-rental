@@ -72,9 +72,8 @@ export function CostumeCard({ costume }: CostumeCardProps) {
 
         <div className="mt-auto pt-2">
           <span className="text-base font-bold text-amber-700">
-            {formatPrice(costume.price_per_day)}
+            {formatPrice(costume.rental_price)}
           </span>
-          <span className="text-xs text-gray-500"> / 日</span>
         </div>
       </div>
     </Link>

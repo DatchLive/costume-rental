@@ -50,13 +50,8 @@ export function calcRentalDays(startDate: string, endDate: string): number {
   return differenceInCalendarDays(new Date(endDate), new Date(startDate))
 }
 
-export function calcTotalPrice(
-  pricePerDay: number,
-  startDate: string,
-  endDate: string
-): number {
-  const days = calcRentalDays(startDate, endDate)
-  return pricePerDay * days
+export function calcTotalPrice(rentalPrice: number): number {
+  return rentalPrice
 }
 
 export function calcCancelFee(

@@ -33,7 +33,7 @@ export function EditCostumeClient({
         category: data.category as CostumeCategory,
         height_min: data.height_min ?? null,
         height_max: data.height_max ?? null,
-        price_per_day: data.price_per_day,
+        rental_price: data.rental_price,
         images,
         area: data.area ?? null,
         ships_nationwide: data.ships_nationwide,

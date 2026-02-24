@@ -9,13 +9,13 @@ import { calcTotalPrice } from '@/lib/utils'
 
 interface RentalRequestFormWrapperProps {
   costumeId: string
-  pricePerDay: number
+  rentalPrice: number
   ownerId: string
 }
 
 export function RentalRequestFormWrapper({
   costumeId,
-  pricePerDay,
+  rentalPrice,
   ownerId,
 }: RentalRequestFormWrapperProps) {
   const router = useRouter()
@@ -26,7 +26,7 @@ export function RentalRequestFormWrapper({
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) throw new Error('Not authenticated')
 
-    const totalPrice = calcTotalPrice(pricePerDay, data.start_date, data.end_date)
+    const totalPrice = calcTotalPrice(rentalPrice)
 
     const { data: rental, error } = await supabase
       .from('rentals')
@@ -69,7 +69,7 @@ export function RentalRequestFormWrapper({
 
   return (
     <RentalRequestForm
-      pricePerDay={pricePerDay}
+      rentalPrice={rentalPrice}
       onSubmit={handleSubmit}
     />
   )

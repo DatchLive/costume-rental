@@ -111,9 +111,8 @@ export default async function CostumePage({ params }: CostumePageProps) {
 
             <div className="mt-2 flex items-baseline gap-1">
               <span className="text-3xl font-bold text-amber-700">
-                {formatPrice(costume.price_per_day)}
+                {formatPrice(costume.rental_price)}
               </span>
-              <span className="text-gray-500">/ 日</span>
             </div>
           </div>
 
@@ -203,7 +202,7 @@ export default async function CostumePage({ params }: CostumePageProps) {
           ) : user && costume.status === 'available' ? (
             <RentalRequestFormWrapper
               costumeId={id}
-              pricePerDay={costume.price_per_day}
+              rentalPrice={costume.rental_price}
               ownerId={costume.user_id}
             />
           ) : !user ? (

@@ -85,7 +85,7 @@ export default async function MyCostumesPage() {
                   </Link>
                   <div className="mt-1 flex items-center gap-2 text-sm text-gray-500">
                     <Badge variant={status.variant}>{status.label}</Badge>
-                    <span>{formatPrice(costume.price_per_day)}/日</span>
+                    <span>{formatPrice(costume.rental_price)}</span>
                   </div>
                 </div>
 

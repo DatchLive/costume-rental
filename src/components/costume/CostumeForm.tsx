@@ -35,7 +35,6 @@ export function CostumeForm({
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    watch,
   } = useForm<CostumeFormData>({
     resolver: zodResolver(costumeSchema),
     defaultValues: {
@@ -45,7 +44,6 @@ export function CostumeForm({
     },
   })
 
-  const pricePerDay = watch('price_per_day')
 
   async function handleFormSubmit(data: CostumeFormData) {
     setServerError(null)
@@ -128,14 +126,13 @@ export function CostumeForm({
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Input
-          label="レンタル料金（円/日）"
+          label="レンタル料金（一律）"
           type="number"
           required
           min={100}
           max={100000}
-          hint={pricePerDay ? `7日間レンタルで ¥${(Number(pricePerDay) * 7).toLocaleString('ja-JP')}` : undefined}
-          error={errors.price_per_day?.message}
-          {...register('price_per_day', { valueAsNumber: true })}
+          error={errors.rental_price?.message}
+          {...register('rental_price', { valueAsNumber: true })}
         />
 
         <Select

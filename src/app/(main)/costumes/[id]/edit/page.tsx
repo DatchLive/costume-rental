@@ -50,7 +50,7 @@ export default async function EditCostumePage({ params }: EditCostumePageProps) 
               category: costume.category as never,
               height_min: costume.height_min ?? undefined,
               height_max: costume.height_max ?? undefined,
-              price_per_day: costume.price_per_day,
+              rental_price: costume.rental_price,
               area: costume.area ?? undefined,
               ships_nationwide: costume.ships_nationwide,
               allows_handover: costume.allows_handover,

@@ -74,7 +74,7 @@ export interface Database {
           category: string
           height_min: number | null
           height_max: number | null
-          price_per_day: number
+          rental_price: number
           images: string[]
           area: string | null
           ships_nationwide: boolean
@@ -90,7 +90,7 @@ export interface Database {
           category: string
           height_min?: number | null
           height_max?: number | null
-          price_per_day: number
+          rental_price: number
           images?: string[]
           area?: string | null
           ships_nationwide?: boolean
@@ -106,7 +106,7 @@ export interface Database {
           category?: string
           height_min?: number | null
           height_max?: number | null
-          price_per_day?: number
+          rental_price?: number
           images?: string[]
           area?: string | null
           ships_nationwide?: boolean
@@ -397,7 +397,7 @@ export type CostumeWithProfile = Costume & {
 }
 
 export type RentalWithDetails = Rental & {
-  costumes: Pick<Costume, 'id' | 'title' | 'images' | 'price_per_day'>
+  costumes: Pick<Costume, 'id' | 'title' | 'images' | 'rental_price'>
   renter: Pick<Profile, 'id' | 'name' | 'avatar_url'>
   owner: Pick<Profile, 'id' | 'name' | 'avatar_url'>
 }

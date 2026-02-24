@@ -18,7 +18,7 @@ export default async function RentalsPage() {
     .from('rentals')
     .select(`
       *,
-      costumes(id, title, images, price_per_day),
+      costumes(id, title, images, rental_price),
       renter:profiles!rentals_renter_id_fkey(id, name, avatar_url),
       owner:profiles!rentals_owner_id_fkey(id, name, avatar_url)
     `)
@@ -29,7 +29,7 @@ export default async function RentalsPage() {
     .from('rentals')
     .select(`
       *,
-      costumes(id, title, images, price_per_day),
+      costumes(id, title, images, rental_price),
       renter:profiles!rentals_renter_id_fkey(id, name, avatar_url),
       owner:profiles!rentals_owner_id_fkey(id, name, avatar_url)
     `)
@@ -43,7 +43,7 @@ export default async function RentalsPage() {
     return (
       <div className="flex flex-col gap-3">
         {rentals.map((rental) => {
-          const costume = (rental as unknown as { costumes: { id: string; title: string; images: string[]; price_per_day: number } }).costumes
+          const costume = (rental as unknown as { costumes: { id: string; title: string; images: string[]; rental_price: number } }).costumes
           return (
             <Link
               key={rental.id}

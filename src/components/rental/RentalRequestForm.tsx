@@ -6,16 +6,16 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { rentalRequestSchema, type RentalRequestFormData } from '@/lib/validations/rental'
 import { Button } from '@/components/ui/Button'
 import { Textarea } from '@/components/ui/Textarea'
-import { formatPrice, calcTotalPrice, calcRentalDays } from '@/lib/utils'
+import { formatPrice, calcRentalDays } from '@/lib/utils'
 import { MIN_RENTAL_DAYS, MAX_RENTAL_DAYS } from '@/lib/constants'
 
 interface RentalRequestFormProps {
-  pricePerDay: number
+  rentalPrice: number
   onSubmit: (data: RentalRequestFormData) => Promise<void>
 }
 
 export function RentalRequestForm({
-  pricePerDay,
+  rentalPrice,
   onSubmit,
 }: RentalRequestFormProps) {
   const minDays = MIN_RENTAL_DAYS
@@ -30,13 +30,6 @@ export function RentalRequestForm({
   } = useForm<RentalRequestFormData>({ resolver: zodResolver(rentalRequestSchema) })
 
   const startDate = watch('start_date')
-  const endDate = watch('end_date')
-
-  const days = startDate && endDate && endDate > startDate
-    ? calcRentalDays(startDate, endDate)
-    : 0
-
-  const totalPrice = days > 0 ? calcTotalPrice(pricePerDay, startDate, endDate) : 0
 
   const minDateStr = new Date().toISOString().slice(0, 10)
 
@@ -102,14 +95,12 @@ export function RentalRequestForm({
         レンタル可能期間: {minDays}日〜{maxDays}日
       </p>
 
-      {days > 0 && (
-        <div className="rounded-lg bg-amber-50 p-3">
-          <div className="flex justify-between text-sm">
-            <span className="text-gray-600">{formatPrice(pricePerDay)} × {days}日</span>
-            <span className="font-bold text-amber-700">{formatPrice(totalPrice)}</span>
-          </div>
+      <div className="rounded-lg bg-amber-50 p-3">
+        <div className="flex justify-between text-sm">
+          <span className="text-gray-600">レンタル料金（一律）</span>
+          <span className="font-bold text-amber-700">{formatPrice(rentalPrice)}</span>
         </div>
-      )}
+      </div>
 
       <Textarea
         label="出品者へのメッセージ（任意）"

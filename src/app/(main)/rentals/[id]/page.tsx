@@ -27,7 +27,7 @@ export default async function RentalDetailPage({ params }: RentalDetailPageProps
     .from('rentals')
     .select(`
       *,
-      costumes(id, title, images, price_per_day, category),
+      costumes(id, title, images, rental_price, category),
       renter:profiles!rentals_renter_id_fkey(id, name, avatar_url),
       owner:profiles!rentals_owner_id_fkey(id, name, avatar_url)
     `)
@@ -39,7 +39,7 @@ export default async function RentalDetailPage({ params }: RentalDetailPageProps
 
   const isOwner = user.id === rental.owner_id
   const isRenter = user.id === rental.renter_id
-  const costume = (rental as unknown as { costumes: { id: string; title: string; images: string[]; price_per_day: number; category: string } }).costumes
+  const costume = (rental as unknown as { costumes: { id: string; title: string; images: string[]; rental_price: number; category: string } }).costumes
   const renter = (rental as unknown as { renter: { id: string; name: string | null; avatar_url: string | null } }).renter
   const owner = (rental as unknown as { owner: { id: string; name: string | null; avatar_url: string | null } }).owner
 
@@ -98,8 +98,8 @@ export default async function RentalDetailPage({ params }: RentalDetailPageProps
               </dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-gray-500">料金単価</dt>
-              <dd className="text-gray-900">{formatPrice(costume?.price_per_day ?? 0)}/日</dd>
+              <dt className="text-gray-500">レンタル料金</dt>
+              <dd className="text-gray-900">{formatPrice(costume?.rental_price ?? 0)}</dd>
             </div>
             <div className="flex justify-between border-t border-gray-100 pt-3">
               <dt className="font-medium text-gray-700">合計金額</dt>

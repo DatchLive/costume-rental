@@ -16,7 +16,7 @@ export const costumeSchema = z.object({
   }),
   height_min: heightField,
   height_max: heightField,
-  price_per_day: z
+  rental_price: z
     .number({ message: '数値を入力してください' })
     .int('整数を入力してください')
     .min(100, '100円以上で設定してください')
