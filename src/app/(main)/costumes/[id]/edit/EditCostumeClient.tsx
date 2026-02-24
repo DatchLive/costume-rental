@@ -37,8 +37,6 @@ export function EditCostumeClient({
         images,
         area: data.area ?? null,
         ships_nationwide: data.ships_nationwide,
-        min_rental_days: data.min_rental_days,
-        max_rental_days: data.max_rental_days,
       })
       .eq('id', costumeId)
 

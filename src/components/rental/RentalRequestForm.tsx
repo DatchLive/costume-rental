@@ -7,20 +7,19 @@ import { rentalRequestSchema, type RentalRequestFormData } from '@/lib/validatio
 import { Button } from '@/components/ui/Button'
 import { Textarea } from '@/components/ui/Textarea'
 import { formatPrice, calcTotalPrice, calcRentalDays } from '@/lib/utils'
+import { MIN_RENTAL_DAYS, MAX_RENTAL_DAYS } from '@/lib/constants'
 
 interface RentalRequestFormProps {
   pricePerDay: number
-  minDays: number
-  maxDays: number
   onSubmit: (data: RentalRequestFormData) => Promise<void>
 }
 
 export function RentalRequestForm({
   pricePerDay,
-  minDays,
-  maxDays,
   onSubmit,
 }: RentalRequestFormProps) {
+  const minDays = MIN_RENTAL_DAYS
+  const maxDays = MAX_RENTAL_DAYS
   const [serverError, setServerError] = useState<string | null>(null)
 
   const {

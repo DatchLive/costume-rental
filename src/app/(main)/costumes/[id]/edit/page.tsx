@@ -53,8 +53,6 @@ export default async function EditCostumePage({ params }: EditCostumePageProps) 
               price_per_day: costume.price_per_day,
               area: costume.area ?? undefined,
               ships_nationwide: costume.ships_nationwide,
-              min_rental_days: costume.min_rental_days,
-              max_rental_days: costume.max_rental_days,
             }}
             initialImages={costume.images}
           />

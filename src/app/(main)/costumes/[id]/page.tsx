@@ -2,7 +2,7 @@ import { notFound, redirect } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import type { Metadata } from 'next'
-import { MapPin, Truck, Calendar, Pencil } from 'lucide-react'
+import { MapPin, Truck, Pencil } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { CategoryBadge } from '@/components/costume/CategoryBadge'
 import { Avatar } from '@/components/ui/Avatar'
@@ -138,14 +138,6 @@ export default async function CostumePage({ params }: CostumePageProps) {
             )}
           </div>
 
-          {/* Rental period */}
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <Calendar className="h-4 w-4" aria-hidden="true" />
-            <span>
-              最短{costume.min_rental_days}日〜最長{costume.max_rental_days}日
-            </span>
-          </div>
-
           {/* Description */}
           {costume.description && (
             <div>
@@ -206,8 +198,6 @@ export default async function CostumePage({ params }: CostumePageProps) {
             <RentalRequestFormWrapper
               costumeId={id}
               pricePerDay={costume.price_per_day}
-              minDays={costume.min_rental_days}
-              maxDays={costume.max_rental_days}
               ownerId={costume.user_id}
             />
           ) : !user ? (

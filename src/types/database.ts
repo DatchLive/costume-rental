@@ -78,8 +78,6 @@ export interface Database {
           images: string[]
           area: string | null
           ships_nationwide: boolean
-          min_rental_days: number
-          max_rental_days: number
           status: string
           created_at: string
         }
@@ -95,8 +93,6 @@ export interface Database {
           images?: string[]
           area?: string | null
           ships_nationwide?: boolean
-          min_rental_days?: number
-          max_rental_days?: number
           status?: string
           created_at?: string
         }
@@ -112,8 +108,6 @@ export interface Database {
           images?: string[]
           area?: string | null
           ships_nationwide?: boolean
-          min_rental_days?: number
-          max_rental_days?: number
           status?: string
           created_at?: string
         }

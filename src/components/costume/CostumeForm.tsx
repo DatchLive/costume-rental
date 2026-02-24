@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { costumeSchema, type CostumeFormData } from '@/lib/validations/costume'
-import { COSTUME_CATEGORIES, JAPAN_PREFECTURES, MIN_RENTAL_DAYS, MAX_RENTAL_DAYS } from '@/lib/constants'
+import { COSTUME_CATEGORIES, JAPAN_PREFECTURES } from '@/lib/constants'
 import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
 import { Select } from '@/components/ui/Select'
@@ -40,8 +40,6 @@ export function CostumeForm({
     resolver: zodResolver(costumeSchema),
     defaultValues: {
       ships_nationwide: false,
-      min_rental_days: MIN_RENTAL_DAYS,
-      max_rental_days: MAX_RENTAL_DAYS,
       ...defaultValues,
     },
   })
@@ -156,28 +154,6 @@ export function CostumeForm({
         />
         <span className="text-sm font-medium text-gray-700">全国発送に対応する</span>
       </label>
-
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <Input
-          label="最短レンタル日数"
-          type="number"
-          required
-          min={MIN_RENTAL_DAYS}
-          max={MAX_RENTAL_DAYS}
-          hint="最低2日から設定できます"
-          error={errors.min_rental_days?.message}
-          {...register('min_rental_days', { valueAsNumber: true })}
-        />
-        <Input
-          label="最長レンタル日数"
-          type="number"
-          required
-          min={MIN_RENTAL_DAYS}
-          max={30}
-          error={errors.max_rental_days?.message}
-          {...register('max_rental_days', { valueAsNumber: true })}
-        />
-      </div>
 
       <div className="flex justify-end gap-3">
         <Button type="button" variant="outline" onClick={() => history.back()}>

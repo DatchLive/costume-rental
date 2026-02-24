@@ -25,19 +25,6 @@ export const costumeSchema = z.object({
     .enum([...JAPAN_PREFECTURES, ''] as [string, ...string[]])
     .optional(),
   ships_nationwide: z.boolean(),
-  min_rental_days: z
-    .number({ message: '数値を入力してください' })
-    .int()
-    .min(2, '最短2日から設定できます')
-    .max(14, '最長14日まで設定できます'),
-  max_rental_days: z
-    .number({ message: '数値を入力してください' })
-    .int()
-    .min(2, '最短2日から設定できます')
-    .max(30, '最長30日まで設定できます'),
-}).refine((data) => data.max_rental_days >= data.min_rental_days, {
-  message: '最長レンタル日数は最短以上に設定してください',
-  path: ['max_rental_days'],
 }).refine(
   (data) => !(data.height_min && data.height_max) || data.height_max >= data.height_min,
   { message: '最高身長は最低身長以上に設定してください', path: ['height_max'] }

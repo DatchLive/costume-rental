@@ -10,16 +10,12 @@ import { calcTotalPrice } from '@/lib/utils'
 interface RentalRequestFormWrapperProps {
   costumeId: string
   pricePerDay: number
-  minDays: number
-  maxDays: number
   ownerId: string
 }
 
 export function RentalRequestFormWrapper({
   costumeId,
   pricePerDay,
-  minDays,
-  maxDays,
   ownerId,
 }: RentalRequestFormWrapperProps) {
   const router = useRouter()
@@ -74,8 +70,6 @@ export function RentalRequestFormWrapper({
   return (
     <RentalRequestForm
       pricePerDay={pricePerDay}
-      minDays={minDays}
-      maxDays={maxDays}
       onSubmit={handleSubmit}
     />
   )
