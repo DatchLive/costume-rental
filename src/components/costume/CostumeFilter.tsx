@@ -28,7 +28,7 @@ export function CostumeFilter() {
     router.push('/')
   }, [router])
 
-  const hasFilters = ['category', 'height', 'area', 'min_price', 'max_price', 'ships_nationwide'].some(
+  const hasFilters = ['category', 'height', 'area', 'min_price', 'max_price', 'ships_nationwide', 'allows_handover'].some(
     (key) => searchParams.has(key)
   )
 
@@ -96,6 +96,16 @@ export function CostumeFilter() {
           className="h-4 w-4 rounded border-gray-300 text-amber-700 focus:ring-amber-500"
         />
         全国発送のみ
+      </label>
+
+      <label className="flex cursor-pointer items-center gap-2 pb-2 text-sm font-medium text-gray-700">
+        <input
+          type="checkbox"
+          checked={searchParams.get('allows_handover') === 'true'}
+          onChange={(e) => updateFilter('allows_handover', e.target.checked ? 'true' : '')}
+          className="h-4 w-4 rounded border-gray-300 text-amber-700 focus:ring-amber-500"
+        />
+        手渡し可のみ
       </label>
 
       {hasFilters && (

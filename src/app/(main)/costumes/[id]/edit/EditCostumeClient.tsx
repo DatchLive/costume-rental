@@ -37,6 +37,7 @@ export function EditCostumeClient({
         images,
         area: data.area ?? null,
         ships_nationwide: data.ships_nationwide,
+        allows_handover: data.allows_handover,
       })
       .eq('id', costumeId)
 

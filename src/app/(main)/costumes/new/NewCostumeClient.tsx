@@ -29,6 +29,7 @@ export function NewCostumeClient({ userId, maxImages }: NewCostumeClientProps) {
         images,
         area: data.area ?? null,
         ships_nationwide: data.ships_nationwide,
+        allows_handover: data.allows_handover,
         status: 'available',
       })
       .select('id')

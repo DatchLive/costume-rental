@@ -53,6 +53,7 @@ export default async function EditCostumePage({ params }: EditCostumePageProps) 
               price_per_day: costume.price_per_day,
               area: costume.area ?? undefined,
               ships_nationwide: costume.ships_nationwide,
+              allows_handover: costume.allows_handover,
             }}
             initialImages={costume.images}
           />

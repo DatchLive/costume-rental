@@ -40,6 +40,7 @@ export function CostumeForm({
     resolver: zodResolver(costumeSchema),
     defaultValues: {
       ships_nationwide: false,
+      allows_handover: false,
       ...defaultValues,
     },
   })
@@ -153,6 +154,15 @@ export function CostumeForm({
           {...register('ships_nationwide')}
         />
         <span className="text-sm font-medium text-gray-700">全国発送に対応する</span>
+      </label>
+
+      <label className="flex cursor-pointer items-center gap-3">
+        <input
+          type="checkbox"
+          className="h-4 w-4 rounded border-gray-300 text-amber-700 focus:ring-amber-500"
+          {...register('allows_handover')}
+        />
+        <span className="text-sm font-medium text-gray-700">手渡しに対応する</span>
       </label>
 
       <div className="flex justify-end gap-3">

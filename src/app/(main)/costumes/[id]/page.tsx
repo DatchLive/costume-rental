@@ -2,7 +2,7 @@ import { notFound, redirect } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import type { Metadata } from 'next'
-import { MapPin, Truck, Pencil } from 'lucide-react'
+import { MapPin, Truck, Handshake, Pencil } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { CategoryBadge } from '@/components/costume/CategoryBadge'
 import { Avatar } from '@/components/ui/Avatar'
@@ -134,6 +134,12 @@ export default async function CostumePage({ params }: CostumePageProps) {
               <span className="flex items-center gap-1 text-green-700">
                 <Truck className="h-4 w-4" aria-hidden="true" />
                 全国発送対応
+              </span>
+            )}
+            {costume.allows_handover && (
+              <span className="flex items-center gap-1 text-blue-700">
+                <Handshake className="h-4 w-4" aria-hidden="true" />
+                手渡し対応
               </span>
             )}
           </div>

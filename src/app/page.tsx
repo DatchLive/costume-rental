@@ -18,6 +18,7 @@ interface HomePageProps {
     min_price?: string
     max_price?: string
     ships_nationwide?: string
+    allows_handover?: string
     page?: string
   }>
 }
@@ -49,6 +50,9 @@ async function CostumeList({ searchParams }: HomePageProps) {
   }
   if (params.ships_nationwide === 'true' && !params.area) {
     query = query.eq('ships_nationwide', true)
+  }
+  if (params.allows_handover === 'true') {
+    query = query.eq('allows_handover', true)
   }
   if (params.min_price) query = query.gte('price_per_day', Number(params.min_price))
   if (params.max_price) query = query.lte('price_per_day', Number(params.max_price))

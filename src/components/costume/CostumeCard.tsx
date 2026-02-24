@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { MapPin, Truck } from 'lucide-react'
+import { MapPin, Truck, Handshake } from 'lucide-react'
 import { formatPrice } from '@/lib/utils'
 import { CategoryBadge } from './CategoryBadge'
 import type { CostumeWithProfile } from '@/types/database'
@@ -54,6 +54,12 @@ export function CostumeCard({ costume }: CostumeCardProps) {
             <span className="ml-1 flex items-center gap-0.5 text-green-700">
               <Truck className="h-3 w-3" aria-hidden="true" />
               全国発送
+            </span>
+          )}
+          {costume.allows_handover && (
+            <span className="ml-1 flex items-center gap-0.5 text-blue-700">
+              <Handshake className="h-3 w-3" aria-hidden="true" />
+              手渡し可
             </span>
           )}
         </div>

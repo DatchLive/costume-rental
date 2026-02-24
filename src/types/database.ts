@@ -78,6 +78,7 @@ export interface Database {
           images: string[]
           area: string | null
           ships_nationwide: boolean
+          allows_handover: boolean
           status: string
           created_at: string
         }
@@ -93,6 +94,7 @@ export interface Database {
           images?: string[]
           area?: string | null
           ships_nationwide?: boolean
+          allows_handover?: boolean
           status?: string
           created_at?: string
         }
@@ -108,6 +110,7 @@ export interface Database {
           images?: string[]
           area?: string | null
           ships_nationwide?: boolean
+          allows_handover?: boolean
           status?: string
           created_at?: string
         }
