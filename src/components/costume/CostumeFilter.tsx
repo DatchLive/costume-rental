@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useCallback } from 'react'
 import { Select } from '@/components/ui/Select'
 import { Button } from '@/components/ui/Button'
-import { COSTUME_CATEGORIES, JAPAN_PREFECTURES, COSTUME_SIZES } from '@/lib/constants'
+import { COSTUME_CATEGORIES, JAPAN_PREFECTURES } from '@/lib/constants'
 
 export function CostumeFilter() {
   const router = useRouter()
@@ -28,7 +28,7 @@ export function CostumeFilter() {
     router.push('/')
   }, [router])
 
-  const hasFilters = ['category', 'size', 'area', 'min_price', 'max_price', 'ships_nationwide'].some(
+  const hasFilters = ['category', 'height', 'area', 'min_price', 'max_price', 'ships_nationwide'].some(
     (key) => searchParams.has(key)
   )
 
@@ -43,14 +43,18 @@ export function CostumeFilter() {
         className="w-40"
       />
 
-      <Select
-        label="サイズ"
-        value={searchParams.get('size') ?? ''}
-        onChange={(e) => updateFilter('size', e.target.value)}
-        placeholder="すべて"
-        options={COSTUME_SIZES.map((s) => ({ value: s, label: s }))}
-        className="w-32"
-      />
+      <div className="flex flex-col gap-1">
+        <label className="text-sm font-medium text-gray-700">対応身長 (cm)</label>
+        <input
+          type="number"
+          placeholder="例: 163"
+          value={searchParams.get('height') ?? ''}
+          onChange={(e) => updateFilter('height', e.target.value)}
+          className="h-10 w-24 rounded-lg border border-gray-300 px-3 text-sm focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
+          min={50}
+          max={250}
+        />
+      </div>
 
       <Select
         label="エリア"

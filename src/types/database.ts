@@ -72,7 +72,8 @@ export interface Database {
           title: string
           description: string | null
           category: string
-          size: string | null
+          height_min: number | null
+          height_max: number | null
           price_per_day: number
           images: string[]
           area: string | null
@@ -88,7 +89,8 @@ export interface Database {
           title: string
           description?: string | null
           category: string
-          size?: string | null
+          height_min?: number | null
+          height_max?: number | null
           price_per_day: number
           images?: string[]
           area?: string | null
@@ -104,7 +106,8 @@ export interface Database {
           title?: string
           description?: string | null
           category?: string
-          size?: string | null
+          height_min?: number | null
+          height_max?: number | null
           price_per_day?: number
           images?: string[]
           area?: string | null

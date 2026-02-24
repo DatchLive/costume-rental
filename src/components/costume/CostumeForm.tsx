@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { costumeSchema, type CostumeFormData } from '@/lib/validations/costume'
-import { COSTUME_CATEGORIES, JAPAN_PREFECTURES, COSTUME_SIZES, MIN_RENTAL_DAYS, MAX_RENTAL_DAYS } from '@/lib/constants'
+import { COSTUME_CATEGORIES, JAPAN_PREFECTURES, MIN_RENTAL_DAYS, MAX_RENTAL_DAYS } from '@/lib/constants'
 import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
 import { Select } from '@/components/ui/Select'
@@ -98,13 +98,33 @@ export function CostumeForm({
           {...register('category')}
         />
 
-        <Select
-          label="サイズ"
-          placeholder="選択してください"
-          options={COSTUME_SIZES.map((s) => ({ value: s, label: s }))}
-          error={errors.size?.message}
-          {...register('size')}
-        />
+        <div className="flex flex-col gap-1">
+          <label className="text-sm font-medium text-gray-700">対応身長 (cm)</label>
+          <div className="flex items-center gap-2">
+            <input
+              type="number"
+              placeholder="最低"
+              min={50}
+              max={250}
+              className="h-10 w-full rounded-lg border border-gray-300 px-3 text-sm focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
+              {...register('height_min', { valueAsNumber: true })}
+            />
+            <span className="shrink-0 text-gray-400">〜</span>
+            <input
+              type="number"
+              placeholder="最高"
+              min={50}
+              max={250}
+              className="h-10 w-full rounded-lg border border-gray-300 px-3 text-sm focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
+              {...register('height_max', { valueAsNumber: true })}
+            />
+          </div>
+          {(errors.height_min || errors.height_max) && (
+            <p className="text-xs text-red-600">
+              {errors.height_min?.message ?? errors.height_max?.message}
+            </p>
+          )}
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">

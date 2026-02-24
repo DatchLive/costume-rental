@@ -58,8 +58,10 @@ export function CostumeCard({ costume }: CostumeCardProps) {
           )}
         </div>
 
-        {costume.size && (
-          <span className="text-xs text-gray-500">サイズ: {costume.size}</span>
+        {(costume.height_min || costume.height_max) && (
+          <span className="text-xs text-gray-500">
+            対応身長: {costume.height_min ?? ''}〜{costume.height_max ?? ''}cm
+          </span>
         )}
 
         <div className="mt-auto pt-2">

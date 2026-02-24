@@ -119,7 +119,11 @@ export default async function CostumePage({ params }: CostumePageProps) {
 
           {/* Tags */}
           <div className="flex flex-wrap gap-2 text-sm text-gray-600">
-            {costume.size && <Badge variant="outline">サイズ: {costume.size}</Badge>}
+            {(costume.height_min || costume.height_max) && (
+              <Badge variant="outline">
+                対応身長: {costume.height_min ?? ''}〜{costume.height_max ?? ''}cm
+              </Badge>
+            )}
             {costume.area && (
               <span className="flex items-center gap-1">
                 <MapPin className="h-4 w-4" aria-hidden="true" />

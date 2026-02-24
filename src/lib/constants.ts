@@ -60,15 +60,6 @@ export const JAPAN_PREFECTURES = [
   '沖縄県',
 ] as const
 
-export const COSTUME_SIZES = [
-  'SS',
-  'S',
-  'M',
-  'L',
-  'LL',
-  'XL',
-  'フリーサイズ',
-] as const
 
 export const RENTAL_STATUS_LABELS: Record<string, string> = {
   pending: '申請中',

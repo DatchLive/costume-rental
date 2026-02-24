@@ -13,7 +13,7 @@ const PAGE_SIZE = 20
 interface HomePageProps {
   searchParams: Promise<{
     category?: string
-    size?: string
+    height?: string
     area?: string
     min_price?: string
     max_price?: string
@@ -36,7 +36,12 @@ async function CostumeList({ searchParams }: HomePageProps) {
     .range(offset, offset + PAGE_SIZE - 1)
 
   if (params.category) query = query.eq('category', params.category)
-  if (params.size) query = query.eq('size', params.size)
+  if (params.height) {
+    const h = Number(params.height)
+    query = query
+      .or(`height_min.is.null,height_min.lte.${h}`)
+      .or(`height_max.is.null,height_max.gte.${h}`)
+  }
   if (params.area) {
     query = params.ships_nationwide === 'true'
       ? query.or(`area.eq.${params.area},ships_nationwide.eq.true`)

@@ -1,5 +1,12 @@
 import { z } from 'zod'
-import { COSTUME_CATEGORIES, COSTUME_SIZES, JAPAN_PREFECTURES } from '@/lib/constants'
+import { COSTUME_CATEGORIES, JAPAN_PREFECTURES } from '@/lib/constants'
+
+const heightField = z
+  .number({ message: '数値を入力してください' })
+  .int('整数を入力してください')
+  .min(50, '50cm以上で入力してください')
+  .max(250, '250cm以下で入力してください')
+  .optional()
 
 export const costumeSchema = z.object({
   title: z.string().min(1, '必須項目です').max(100, '100文字以内で入力してください'),
@@ -7,9 +14,8 @@ export const costumeSchema = z.object({
   category: z.enum(COSTUME_CATEGORIES as [string, ...string[]], {
     message: 'カテゴリを選択してください',
   }),
-  size: z
-    .enum([...COSTUME_SIZES, ''] as [string, ...string[]])
-    .optional(),
+  height_min: heightField,
+  height_max: heightField,
   price_per_day: z
     .number({ message: '数値を入力してください' })
     .int('整数を入力してください')
@@ -32,6 +38,9 @@ export const costumeSchema = z.object({
 }).refine((data) => data.max_rental_days >= data.min_rental_days, {
   message: '最長レンタル日数は最短以上に設定してください',
   path: ['max_rental_days'],
-})
+}).refine(
+  (data) => !(data.height_min && data.height_max) || data.height_max >= data.height_min,
+  { message: '最高身長は最低身長以上に設定してください', path: ['height_max'] }
+)
 
 export type CostumeFormData = z.infer<typeof costumeSchema>
