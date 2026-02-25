@@ -26,6 +26,8 @@ export const costumeSchema = z.object({
     .optional(),
   ships_nationwide: z.boolean(),
   allows_handover: z.boolean(),
+  certan_ok: z.boolean(),
+  body_foundation_ok: z.boolean(),
 }).refine(
   (data) => !(data.height_min && data.height_max) || data.height_max >= data.height_min,
   { message: '最高身長は最低身長以上に設定してください', path: ['height_max'] }

@@ -79,6 +79,8 @@ export interface Database {
           area: string | null
           ships_nationwide: boolean
           allows_handover: boolean
+          certan_ok: boolean
+          body_foundation_ok: boolean
           status: string
           created_at: string
         }
@@ -95,6 +97,8 @@ export interface Database {
           area?: string | null
           ships_nationwide?: boolean
           allows_handover?: boolean
+          certan_ok?: boolean
+          body_foundation_ok?: boolean
           status?: string
           created_at?: string
         }
@@ -111,6 +115,8 @@ export interface Database {
           area?: string | null
           ships_nationwide?: boolean
           allows_handover?: boolean
+          certan_ok?: boolean
+          body_foundation_ok?: boolean
           status?: string
           created_at?: string
         }

@@ -141,6 +141,12 @@ export default async function CostumePage({ params }: CostumePageProps) {
                 手渡し対応
               </span>
             )}
+            {costume.certan_ok && (
+              <Badge variant="outline">セルタン可</Badge>
+            )}
+            {costume.body_foundation_ok && (
+              <Badge variant="outline">ボディファンデ可</Badge>
+            )}
           </div>
 
           {/* Description */}
