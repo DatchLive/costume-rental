@@ -81,6 +81,7 @@ export interface Database {
           allows_handover: boolean
           certan_ok: boolean
           body_foundation_ok: boolean
+          colors: string[] | null
           status: string
           created_at: string
         }
@@ -99,6 +100,7 @@ export interface Database {
           allows_handover?: boolean
           certan_ok?: boolean
           body_foundation_ok?: boolean
+          colors?: string[] | null
           status?: string
           created_at?: string
         }
@@ -117,6 +119,7 @@ export interface Database {
           allows_handover?: boolean
           certan_ok?: boolean
           body_foundation_ok?: boolean
+          colors?: string[] | null
           status?: string
           created_at?: string
         }

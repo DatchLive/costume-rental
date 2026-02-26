@@ -19,6 +19,7 @@ interface HomePageProps {
     max_price?: string
     ships_nationwide?: string
     allows_handover?: string
+    color?: string
     page?: string
   }>
 }
@@ -56,6 +57,7 @@ async function CostumeList({ searchParams }: HomePageProps) {
   }
   if (params.min_price) query = query.gte('rental_price', Number(params.min_price))
   if (params.max_price) query = query.lte('rental_price', Number(params.max_price))
+  if (params.color) query = query.contains('colors', [params.color])
 
   const { data: costumes } = await query
 

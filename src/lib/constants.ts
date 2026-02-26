@@ -61,6 +61,45 @@ export const JAPAN_PREFECTURES = [
 ] as const
 
 
+export const COSTUME_COLORS = [
+  'レッド',
+  'ピンク',
+  'オレンジ',
+  'イエロー',
+  'グリーン',
+  'ブルー',
+  'ネイビー',
+  'パープル',
+  'ブラック',
+  'ホワイト',
+  'ゴールド',
+  'シルバー',
+  'ベージュ',
+  'ブラウン',
+  'マルチカラー',
+] as const
+
+export type CostumeColor = typeof COSTUME_COLORS[number]
+
+// CSS color values for each costume color (use `background` shorthand to support gradients)
+export const COSTUME_COLOR_MAP: Record<string, string> = {
+  'レッド':       '#dc2626',
+  'ピンク':       '#f472b6',
+  'オレンジ':     '#f97316',
+  'イエロー':     '#fbbf24',
+  'グリーン':     '#22c55e',
+  'ブルー':       '#3b82f6',
+  'ネイビー':     '#1e3a8a',
+  'パープル':     '#a855f7',
+  'ブラック':     '#111827',
+  'ホワイト':     '#f9fafb',
+  'ゴールド':     '#d97706',
+  'シルバー':     '#94a3b8',
+  'ベージュ':     '#d4b896',
+  'ブラウン':     '#7c3f1e',
+  'マルチカラー': 'conic-gradient(#dc2626, #f97316, #fbbf24, #22c55e, #3b82f6, #a855f7, #dc2626)',
+}
+
 export const RENTAL_STATUS_LABELS: Record<string, string> = {
   pending: '申請中',
   approved: '承認済み',

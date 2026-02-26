@@ -56,6 +56,7 @@ export default async function EditCostumePage({ params }: EditCostumePageProps) 
               allows_handover: costume.allows_handover,
               certan_ok: costume.certan_ok,
               body_foundation_ok: costume.body_foundation_ok,
+              colors: costume.colors ?? [],
             }}
             initialImages={costume.images}
           />

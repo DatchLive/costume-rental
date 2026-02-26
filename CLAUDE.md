@@ -78,7 +78,7 @@ costumes (
   height_max int,                      -- ✅ 身長上限（cm）
   rental_price int not null,           -- ✅ 円/日（旧: price_per_day）
   student_price int,                   -- 🔄 学生料金（任意）。表示のみ、適用確認はメッセージで当事者間が行う
-  colors text[],                       -- 🔄 カラー（最大2色）。選択肢は constants.ts の COSTUME_COLORS で管理
+  colors text[],                       -- ✅ カラー（最大2色）。選択肢は constants.ts の COSTUME_COLORS で管理
   images text[],                       -- ✅ Supabase StorageのURL配列（無料3枚・プレミアム10枚）
   area text,                           -- ✅ 都道府県
   handover_area text,                  -- 🔄 手渡し可能エリア（自由記述）
@@ -342,7 +342,7 @@ WHERE NOT EXISTS (
 - エリア（都道府県）✅
 - 受け渡し方法（配送可 / 手渡し可）✅
 - 価格帯（円/日）✅
-- カラー 🔄 未実装（最大2色登録・1色指定で絞り込み）
+- カラー ✅（最大2色登録・1色指定で絞り込み）
 - 手渡し可能エリア（自由検索）🔄 未実装（handover_area フィールド追加後に対応）
 - 希望日（use_dateとbuffer_daysで空き確認）🔄 未実装
 

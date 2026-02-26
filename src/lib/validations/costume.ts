@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { COSTUME_CATEGORIES, JAPAN_PREFECTURES } from '@/lib/constants'
+import { COSTUME_CATEGORIES, COSTUME_COLORS, JAPAN_PREFECTURES } from '@/lib/constants'
 
 const heightField = z
   .number({ message: '数値を入力してください' })
@@ -28,6 +28,7 @@ export const costumeSchema = z.object({
   allows_handover: z.boolean(),
   certan_ok: z.boolean(),
   body_foundation_ok: z.boolean(),
+  colors: z.array(z.enum([...COSTUME_COLORS] as [string, ...string[]])).max(2, { message: 'カラーは2つまで選択できます' }).optional(),
 }).refine(
   (data) => !(data.height_min && data.height_max) || data.height_max >= data.height_min,
   { message: '最高身長は最低身長以上に設定してください', path: ['height_max'] }

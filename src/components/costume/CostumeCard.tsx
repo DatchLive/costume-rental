@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { MapPin, Truck, Handshake } from 'lucide-react'
 import { formatPrice } from '@/lib/utils'
+import { COSTUME_COLOR_MAP } from '@/lib/constants'
 import { CategoryBadge } from './CategoryBadge'
 import type { CostumeWithProfile } from '@/types/database'
 
@@ -68,6 +69,19 @@ export function CostumeCard({ costume }: CostumeCardProps) {
           <span className="text-xs text-gray-500">
             対応身長: {costume.height_min ?? ''}〜{costume.height_max ?? ''}cm
           </span>
+        )}
+
+        {costume.colors && costume.colors.length > 0 && (
+          <div className="flex items-center gap-1.5">
+            {costume.colors.map((color) => (
+              <span
+                key={color}
+                title={color}
+                style={{ background: COSTUME_COLOR_MAP[color] }}
+                className={`h-3.5 w-3.5 rounded-full border ${color === 'ホワイト' ? 'border-gray-300' : 'border-gray-200/60'}`}
+              />
+            ))}
+          </div>
         )}
 
         <div className="mt-auto pt-2">

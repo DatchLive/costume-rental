@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useCallback } from 'react'
 import { Select } from '@/components/ui/Select'
 import { Button } from '@/components/ui/Button'
-import { COSTUME_CATEGORIES, JAPAN_PREFECTURES } from '@/lib/constants'
+import { COSTUME_CATEGORIES, COSTUME_COLOR_MAP, COSTUME_COLORS, JAPAN_PREFECTURES } from '@/lib/constants'
 
 export function CostumeFilter() {
   const router = useRouter()
@@ -28,7 +28,7 @@ export function CostumeFilter() {
     router.push('/')
   }, [router])
 
-  const hasFilters = ['category', 'height', 'area', 'min_price', 'max_price', 'ships_nationwide', 'allows_handover'].some(
+  const hasFilters = ['category', 'height', 'area', 'min_price', 'max_price', 'ships_nationwide', 'allows_handover', 'color'].some(
     (key) => searchParams.has(key)
   )
 
@@ -64,6 +64,33 @@ export function CostumeFilter() {
         options={JAPAN_PREFECTURES.map((p) => ({ value: p, label: p }))}
         className="w-36"
       />
+
+      <div className="flex flex-col gap-1.5">
+        <label className="text-sm font-medium text-gray-700">カラー</label>
+        <div className="flex flex-wrap gap-1.5">
+          {COSTUME_COLORS.map((color) => {
+            const isSelected = searchParams.get('color') === color
+            return (
+              <button
+                key={color}
+                type="button"
+                title={color}
+                aria-label={color}
+                aria-pressed={isSelected}
+                onClick={() => updateFilter('color', isSelected ? '' : color)}
+                style={{ background: COSTUME_COLOR_MAP[color] }}
+                className={`h-6 w-6 rounded-full border transition-all ${
+                  color === 'ホワイト' ? 'border-gray-300' : 'border-transparent'
+                } ${
+                  isSelected
+                    ? 'ring-2 ring-amber-500 ring-offset-1'
+                    : 'hover:ring-2 hover:ring-gray-400 hover:ring-offset-1'
+                }`}
+              />
+            )
+          })}
+        </div>
+      </div>
 
       <div className="flex flex-col gap-1">
         <label className="text-sm font-medium text-gray-700">価格（円/日）</label>

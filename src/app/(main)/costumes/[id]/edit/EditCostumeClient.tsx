@@ -40,6 +40,7 @@ export function EditCostumeClient({
         allows_handover: data.allows_handover,
         certan_ok: data.certan_ok,
         body_foundation_ok: data.body_foundation_ok,
+        colors: data.colors ?? [],
       })
       .eq('id', costumeId)
 

@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { costumeSchema, type CostumeFormData } from '@/lib/validations/costume'
-import { COSTUME_CATEGORIES, JAPAN_PREFECTURES } from '@/lib/constants'
+import { COSTUME_CATEGORIES, COSTUME_COLOR_MAP, COSTUME_COLORS, JAPAN_PREFECTURES } from '@/lib/constants'
 import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
 import { Select } from '@/components/ui/Select'
@@ -34,6 +34,8 @@ export function CostumeForm({
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<CostumeFormData>({
     resolver: zodResolver(costumeSchema),
@@ -42,9 +44,20 @@ export function CostumeForm({
       allows_handover: false,
       certan_ok: false,
       body_foundation_ok: false,
+      colors: [],
       ...defaultValues,
     },
   })
+
+  const selectedColors = watch('colors') ?? []
+
+  function toggleColor(color: string) {
+    if (selectedColors.includes(color)) {
+      setValue('colors', selectedColors.filter((c) => c !== color))
+    } else if (selectedColors.length < 2) {
+      setValue('colors', [...selectedColors, color])
+    }
+  }
 
 
   async function handleFormSubmit(data: CostumeFormData) {
@@ -124,6 +137,46 @@ export function CostumeForm({
             </p>
           )}
         </div>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center justify-between">
+          <label className="text-sm font-medium text-gray-700">カラー</label>
+          <span className="text-xs text-gray-400">{selectedColors.length}/2</span>
+        </div>
+        <div className="flex flex-wrap gap-3">
+          {COSTUME_COLORS.map((color) => {
+            const isSelected = selectedColors.includes(color)
+            const isDisabled = !isSelected && selectedColors.length >= 2
+            return (
+              <button
+                key={color}
+                type="button"
+                disabled={isDisabled}
+                onClick={() => toggleColor(color)}
+                title={color}
+                className={`flex flex-col items-center gap-1 transition-opacity ${isDisabled ? 'cursor-not-allowed opacity-30' : 'cursor-pointer'}`}
+              >
+                <span
+                  style={{ background: COSTUME_COLOR_MAP[color] }}
+                  className={`flex h-8 w-8 items-center justify-center rounded-full border transition-all ${
+                    color === 'ホワイト' ? 'border-gray-300' : 'border-transparent'
+                  } ${isSelected ? 'ring-2 ring-amber-500 ring-offset-1' : 'hover:ring-2 hover:ring-gray-300 hover:ring-offset-1'}`}
+                >
+                  {isSelected && (
+                    <svg className="h-4 w-4 drop-shadow" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                      <path d="M3 8l3.5 3.5L13 5" stroke={color === 'ホワイト' || color === 'イエロー' || color === 'ベージュ' ? '#374151' : '#fff'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  )}
+                </span>
+                <span className="text-[10px] leading-tight text-gray-600">{color}</span>
+              </button>
+            )
+          })}
+        </div>
+        {errors.colors && (
+          <p className="text-xs text-red-600">{errors.colors.message as string}</p>
+        )}
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
