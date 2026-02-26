@@ -2,11 +2,10 @@ import { notFound, redirect } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import type { Metadata } from 'next'
-import { MapPin, Truck, Handshake, Pencil } from 'lucide-react'
+import { MapPin, Truck, Handshake, Pencil, ThumbsUp, ThumbsDown } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { CategoryBadge } from '@/components/costume/CategoryBadge'
 import { Avatar } from '@/components/ui/Avatar'
-import { StarRating } from '@/components/ui/StarRating'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { formatPrice, formatDate } from '@/lib/utils'
@@ -38,14 +37,14 @@ export default async function CostumePage({ params }: CostumePageProps) {
 
   const { data: costumeData } = await supabase
     .from('costumes')
-    .select('*, profiles(id, name, avatar_url, rating_avg, rating_count, is_verified, area)')
+    .select('*, profiles(id, name, avatar_url, good_count, bad_count, is_verified, area)')
     .eq('id', id)
     .single()
 
   if (!costumeData) notFound()
 
   const costume = costumeData as unknown as CostumeWithProfile & {
-    profiles: { id: string; name: string | null; avatar_url: string | null; rating_avg: number | null; rating_count: number; is_verified: boolean; area: string | null }
+    profiles: { id: string; name: string | null; avatar_url: string | null; good_count: number; bad_count: number; is_verified: boolean; area: string | null }
   }
 
   if (costume.status === 'hidden') {
@@ -179,15 +178,15 @@ export default async function CostumePage({ params }: CostumePageProps) {
                 {costume.profiles.area && (
                   <p className="text-xs text-gray-500">{costume.profiles.area}</p>
                 )}
-                {(costume.profiles.rating_count ?? 0) > 0 && (
-                  <div className="mt-1 flex items-center gap-1">
-                    <StarRating
-                      value={costume.profiles.rating_avg ?? 0}
-                      readonly
-                      size="sm"
-                    />
-                    <span className="text-xs text-gray-500">
-                      ({costume.profiles.rating_count}件)
+                {(costume.profiles.good_count + costume.profiles.bad_count) > 0 && (
+                  <div className="mt-1 flex items-center gap-2">
+                    <span className="flex items-center gap-0.5 text-xs font-medium text-green-700">
+                      <ThumbsUp className="h-3 w-3" aria-hidden="true" />
+                      {costume.profiles.good_count}
+                    </span>
+                    <span className="flex items-center gap-0.5 text-xs font-medium text-red-600">
+                      <ThumbsDown className="h-3 w-3" aria-hidden="true" />
+                      {costume.profiles.bad_count}
                     </span>
                   </div>
                 )}

@@ -1,5 +1,5 @@
 import { Avatar } from '@/components/ui/Avatar'
-import { StarRating } from '@/components/ui/StarRating'
+import { RatingBadge } from '@/components/ui/StarRating'
 import { formatDate } from '@/lib/utils'
 import type { Review, Profile } from '@/types/database'
 
@@ -20,7 +20,7 @@ export function ReviewCard({ review }: ReviewCardProps) {
         </div>
       </div>
       <div className="mt-3">
-        <StarRating value={review.rating} readonly size="sm" />
+        <RatingBadge value={review.rating} size="sm" />
       </div>
       {review.comment && (
         <p className="mt-2 text-sm text-gray-600">{review.comment}</p>

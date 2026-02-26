@@ -3,12 +3,13 @@
 import { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { ThumbsUp, ThumbsDown } from 'lucide-react'
 import { ownerReviewSchema, renterReviewSchema } from '@/lib/validations/review'
 import type { OwnerReviewFormData, RenterReviewFormData } from '@/lib/validations/review'
-import { StarRating } from '@/components/ui/StarRating'
 import { Textarea } from '@/components/ui/Textarea'
 import { Button } from '@/components/ui/Button'
-import type { ReviewRole } from '@/types/database'
+import { cn } from '@/lib/utils'
+import type { ReviewRole, RatingValue } from '@/types/database'
 
 type ReviewFormData = OwnerReviewFormData | RenterReviewFormData
 
@@ -17,10 +18,14 @@ interface ReviewFormProps {
   onSubmit: (data: ReviewFormData) => Promise<void>
 }
 
+const ratingOptions: { value: RatingValue; label: string; icon: typeof ThumbsUp; activeClass: string }[] = [
+  { value: 'good', label: '良かった', icon: ThumbsUp, activeClass: 'border-green-500 bg-green-50 text-green-700' },
+  { value: 'bad', label: '残念だった', icon: ThumbsDown, activeClass: 'border-red-400 bg-red-50 text-red-600' },
+]
+
 export function ReviewForm({ role, onSubmit }: ReviewFormProps) {
   const [serverError, setServerError] = useState<string | null>(null)
-  const isOwner = role === 'owner'
-  const schema = isOwner ? ownerReviewSchema : renterReviewSchema
+  const schema = role === 'owner' ? ownerReviewSchema : renterReviewSchema
 
   const {
     control,
@@ -46,62 +51,38 @@ export function ReviewForm({ role, onSubmit }: ReviewFormProps) {
         <div className="rounded-lg bg-red-50 p-3 text-sm text-red-700">{serverError}</div>
       )}
 
-      <Controller
-        name="rating"
-        control={control as never}
-        render={({ field }) => (
-          <StarRating
-            label="総合評価 *"
-            value={field.value as number}
-            onChange={field.onChange}
-            size="lg"
-          />
-        )}
-      />
-      {(errors as Record<string, { message?: string }>).rating && (
-        <p className="text-xs text-red-500">{(errors as Record<string, { message?: string }>).rating?.message}</p>
-      )}
-
-      {isOwner && (
-        <>
-          <Controller
-            name={'accuracy_rating' as never}
-            control={control as never}
-            render={({ field }) => (
-              <StarRating
-                label="商品説明の正確さ *"
-                value={(field as { value: number }).value}
-                onChange={field.onChange}
-              />
-            )}
-          />
-          <Controller
-            name={'response_rating' as never}
-            control={control as never}
-            render={({ field }) => (
-              <StarRating
-                label="対応の丁寧さ *"
-                value={(field as { value: number }).value}
-                onChange={field.onChange}
-              />
-            )}
-          />
-        </>
-      )}
-
-      {!isOwner && (
+      <div>
+        <p className="mb-3 text-sm font-medium text-gray-700">総合評価 *</p>
         <Controller
-          name={'return_rating' as never}
+          name="rating"
           control={control as never}
           render={({ field }) => (
-            <StarRating
-              label="返却の丁寧さ *"
-              value={(field as { value: number }).value}
-              onChange={field.onChange}
-            />
+            <div className="flex gap-3">
+              {ratingOptions.map(({ value, label, icon: Icon, activeClass }) => (
+                <button
+                  key={value}
+                  type="button"
+                  onClick={() => field.onChange(value)}
+                  className={cn(
+                    'flex flex-1 items-center justify-center gap-2 rounded-xl border-2 px-4 py-4 text-sm font-medium transition-colors',
+                    field.value === value
+                      ? activeClass
+                      : 'border-gray-200 bg-white text-gray-500 hover:border-gray-300 hover:bg-gray-50',
+                  )}
+                >
+                  <Icon className="h-5 w-5" aria-hidden="true" />
+                  {label}
+                </button>
+              ))}
+            </div>
           )}
         />
-      )}
+        {(errors as Record<string, { message?: string }>).rating && (
+          <p className="mt-1 text-xs text-red-500">
+            {(errors as Record<string, { message?: string }>).rating?.message}
+          </p>
+        )}
+      </div>
 
       <Textarea
         label="コメント（任意）"

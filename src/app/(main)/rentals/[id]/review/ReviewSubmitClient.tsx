@@ -22,10 +22,7 @@ export function ReviewSubmitClient({ rentalId, reviewerId, revieweeId, role }: R
       reviewer_id: reviewerId,
       reviewee_id: revieweeId,
       role,
-      rating: data.rating as number,
-      accuracy_rating: (data.accuracy_rating as number) ?? null,
-      response_rating: (data.response_rating as number) ?? null,
-      return_rating: (data.return_rating as number) ?? null,
+      rating: data.rating as 'good' | 'bad',
       comment: (data.comment as string) ?? null,
       is_published: false,
     })
