@@ -50,102 +50,103 @@
 
 ## DBテーブル設計
 
+凡例: `-- ✅` 実装済み / `-- 🔄` 仕様確定済み・未実装（要マイグレーション）/ `-- 🔲` フェーズ2以降
+
 ```sql
 -- ユーザープロフィール
 profiles (
-  id uuid references auth.users primary key,
-  name text,
-  area text,              -- 都道府県レベル
-  bio text,
-  avatar_url text,
-  is_verified boolean default false,
-  good_count int default 0,   -- 良かった評価の件数
-  total_count int default 0,  -- 総評価件数
-  plan text default 'free', -- 'free' | 'premium'
-  created_at timestamptz default now()
+  id uuid references auth.users primary key,  -- ✅
+  name text,                                   -- ✅
+  area text,                                   -- ✅ 都道府県レベル
+  bio text,                                    -- ✅
+  avatar_url text,                             -- ✅
+  is_verified boolean default false,           -- ✅
+  good_count int default 0,    -- 🔄 良かった評価の件数（現在: rating_avg, rating_count）
+  total_count int default 0,   -- 🔄 総評価件数（現在: rating_avg, rating_count）
+  plan text default 'free',    -- ✅ 'free' | 'premium'
+  created_at timestamptz default now()         -- ✅
 )
 
 -- 衣装
 costumes (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid references profiles(id),
-  title text not null,
-  description text,
-  category text not null,      -- カテゴリ参照
-  size text,                   -- 自由記述（フリーサイズ・特注が多いため）
-  price_per_day int not null,  -- 円/日
-  images text[],               -- Supabase StorageのURL配列（無料3枚・プレミアム10枚）
-  area text,                   -- 都道府県
-  handover_area text,          -- 手渡し可能エリア（自由記述）
-  ships_nationwide boolean default false, -- 全国配送対応
-  accepts_handover boolean default true,  -- 手渡し対応
-  cleaning_responsibility text default 'renter_home',
+  id uuid primary key default gen_random_uuid(),  -- ✅
+  user_id uuid references profiles(id),            -- ✅
+  title text not null,                             -- ✅
+  description text,                                -- ✅
+  category text not null,                          -- ✅ カテゴリ参照
+  height_min int,                      -- ✅ 身長下限（cm）
+  height_max int,                      -- ✅ 身長上限（cm）
+  rental_price int not null,           -- ✅ 円/日（旧: price_per_day）
+  images text[],                       -- ✅ Supabase StorageのURL配列（無料3枚・プレミアム10枚）
+  area text,                           -- ✅ 都道府県
+  handover_area text,                  -- 🔄 手渡し可能エリア（自由記述）
+  ships_nationwide boolean default false, -- ✅ 全国配送対応
+  allows_handover boolean default true,   -- ✅ 手渡し対応（仕様名: accepts_handover だが実装は allows_handover）
+  cleaning_responsibility text default 'renter_home',  -- 🔄
   -- 'renter_home' → 借り手負担（ホームクリーニング可）
   -- 'renter_shop' → 借り手負担（クリーニング店）
   -- 'owner'       → オーナー負担
   -- 'other'       → その他
-  cleaning_notes text,         -- クリーニング特記事項（200文字以内）
-  buffer_days int default 2,   -- 返却後〜次回貸出可能までの準備日数
-  tanning_policy text default 'none',
+  cleaning_notes text,                 -- 🔄 クリーニング特記事項（200文字以内）
+  buffer_days int default 2,           -- 🔄 返却後〜次回貸出可能までの準備日数
+  tanning_policy text default 'none',  -- 🔄（現在: certan_ok, body_foundation_ok で暫定対応）
   -- 'all'  → ボディファン・セルタン可
   -- 'self' → セルタンのみ可
   -- 'none' → すべて不可
-  safety_pin boolean default false, -- 安全ピン（背番号など）使用可能
-  perfume boolean default false,    -- 香水使用可能
-  status text default 'available',
-  -- 'available' → 貸し出し可能
-  -- 'hidden'    → 非公開（出品者が一時的に隠す）
-  -- ※ レンタル中かどうかはrentalsテーブルで管理する
-  created_at timestamptz default now()
+  safety_pin boolean default false,    -- 🔄 安全ピン（背番号など）使用可能
+  perfume boolean default false,       -- 🔄 香水使用可能
+  status text default 'available',     -- ✅ 'available' | 'hidden'
+  -- ※ 'renting' ステータスは削除予定 🔄（レンタル中かどうかはrentalsテーブルで管理）
+  created_at timestamptz default now() -- ✅
 )
 
 -- レンタル申請・取引
 rentals (
-  id uuid primary key default gen_random_uuid(),
-  costume_id uuid references costumes(id),
-  renter_id uuid references profiles(id),
-  owner_id uuid references profiles(id),
-  use_date date not null,      -- 使用したい日（日程の詳細はメッセージで交渉）
-  total_price int not null,    -- 申請時点の価格で確定
-  platform_fee int default 0,  -- 手数料（フェーズ1・2は0）
-  status text default 'pending',
+  id uuid primary key default gen_random_uuid(),  -- ✅
+  costume_id uuid references costumes(id),         -- ✅
+  renter_id uuid references profiles(id),          -- ✅
+  owner_id uuid references profiles(id),           -- ✅
+  use_date date not null,      -- 🔄 使用したい日（現在: start_date, end_date で実装）
+  total_price int not null,    -- ✅ 申請時点の価格で確定
+  platform_fee int default 0,  -- ✅ 手数料（フェーズ1・2は0）
+  status text default 'pending',  -- ✅
   -- 'pending'    → 申請中（借り手が申請、出品者の承認待ち）
   -- 'approved'   → 承認済み・メッセージで交渉中
   -- 'active'     → 使用中（受け渡し完了〜返却前）
-  -- 'returning'  → 返却確認中（借り手が返却済みボタン押下後）
+  -- 'returning'  → 返却確認中（借り手が返却済みボタン押下後）🔄 未実装
   -- 'returned'   → 返却完了・クリーニング／準備中
   -- 'rejected'   → 却下
   -- 'cancelled'  → キャンセル
-  cancel_reason text,
-  created_at timestamptz default now()
+  cancel_reason text,                              -- ✅
+  created_at timestamptz default now()             -- ✅
 )
 
 -- メッセージ
 messages (
-  id uuid primary key default gen_random_uuid(),
-  rental_id uuid references rentals(id),
-  sender_id uuid references profiles(id),
-  content text not null,
-  is_read boolean default false,
-  created_at timestamptz default now()
+  id uuid primary key default gen_random_uuid(),  -- ✅
+  rental_id uuid references rentals(id),           -- ✅
+  sender_id uuid references profiles(id),          -- ✅
+  content text not null,                           -- ✅
+  is_read boolean default false,                   -- ✅
+  created_at timestamptz default now()             -- ✅
 )
 
 -- ユーザー評価（出品者・借り手の相互評価）
 reviews (
-  id uuid primary key default gen_random_uuid(),
-  rental_id uuid references rentals(id),
-  reviewer_id uuid references profiles(id),
-  reviewee_id uuid references profiles(id),
-  role text not null,        -- 'owner' | 'renter'
-  rating text not null,      -- 'good'（良かった）| 'bad'（残念だった）
-  tags text[],               -- 選択されたタグの配列
-  comment text,              -- 任意コメント
-  is_published boolean default false,  -- 双方投稿 or 7日経過で同時公開
-  created_at timestamptz default now()
+  id uuid primary key default gen_random_uuid(),  -- ✅
+  rental_id uuid references rentals(id),           -- ✅
+  reviewer_id uuid references profiles(id),        -- ✅
+  reviewee_id uuid references profiles(id),        -- ✅
+  role text not null,        -- ✅ 'owner' | 'renter'
+  rating text not null,      -- 🔄 'good'（良かった）| 'bad'（残念だった）（現在: int 1〜5の星評価）
+  tags text[],               -- 🔄 選択されたタグの配列（現在: accuracy_rating等のint）
+  comment text,              -- ✅
+  is_published boolean default false,  -- ✅ 双方投稿 or 7日経過で同時公開
+  created_at timestamptz default now() -- ✅
 )
 
 -- 衣装評価（フェーズ2で実装）
-costume_reviews (
+costume_reviews (                         -- 🔲
   id uuid primary key default gen_random_uuid(),
   rental_id uuid references rentals(id),
   costume_id uuid references costumes(id),
@@ -160,18 +161,18 @@ costume_reviews (
 
 -- 通知
 notifications (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid references profiles(id),
-  type text not null,        -- 通知タイプ参照
-  title text not null,
-  body text,
-  link text,
-  is_read boolean default false,
-  created_at timestamptz default now()
+  id uuid primary key default gen_random_uuid(),  -- ✅
+  user_id uuid references profiles(id),            -- ✅
+  type text not null,        -- ✅ 通知タイプ参照
+  title text not null,       -- ✅
+  body text,                 -- ✅
+  link text,                 -- ✅
+  is_read boolean default false,                   -- ✅
+  created_at timestamptz default now()             -- ✅
 )
 
 -- お気に入り（フェーズ2）
-favorites (
+favorites (                   -- 🔲
   id uuid primary key default gen_random_uuid(),
   user_id uuid references profiles(id),
   costume_id uuid references costumes(id),
@@ -179,7 +180,7 @@ favorites (
 )
 
 -- 通報（フェーズ2）
-reports (
+reports (                     -- 🔲
   id uuid primary key default gen_random_uuid(),
   reporter_id uuid references profiles(id),
   target_user_id uuid references profiles(id),
@@ -214,7 +215,7 @@ reports (
 - 支払い：当事者間で自由に取り決め（現金・PayPay・銀行振込等）
 - サービス手数料：**無料（フェーズ1・2）**
 
-### クリーニングルール
+### クリーニングルール 🔄 未実装
 
 衣装ごとに出品者が事前に設定する。借り手は申請前に確認できる。
 
@@ -231,10 +232,10 @@ reports (
 ### 取引フローとstatusの遷移
 
 ```
-① 借り手が申請（use_dateと一言メッセージを入力）
-      ↓ status: pending
+① 借り手が申請（use_dateと一言メッセージを入力）🔄 現在は start_date/end_date
+      ↓ status: pending ✅
 ② 出品者が承認 or 却下
-      ↓ status: approved（承認）/ rejected（却下）
+      ↓ status: approved（承認）/ rejected（却下）✅
 ③ メッセージで交渉
    - 発送 or 手渡しの確認
    - 発送の場合: 住所・送料・発送日
@@ -245,24 +246,24 @@ reports (
 ④ 受け渡し完了
    - 発送: 出品者「発送しました」→ 借り手「受け取りました」
    - 手渡し: 借り手「受け取りました」
-      ↓ status: active
+      ↓ status: active ✅
 ⑤ 使用
       ↓
 ⑥ 返却
    - 発送: 借り手「返送しました」→ 出品者「受け取りました」
    - 手渡し: 借り手「返却しました」→ 出品者「受け取りました」
-      ↓ status: returning → returned
+      ↓ status: returning 🔄 未実装 → returned ✅
 ⑦ クリーニング・準備
    - 借り手クリーニングの場合: 返却前に完了済み → すぐ準備へ
    - 出品者クリーニングの場合: 返却後に対応
       ↓
 ⑧ 出品者が「貸し出し可能にする」ボタンを押す（手動）
-   ※ returned後 buffer_days 経過で「そろそろ貸し出し可能にできますか？」通知を送る
+   ※ returned後 buffer_days 経過で「そろそろ貸し出し可能にできますか？」通知を送る 🔄
       ↓ status: returned → costumesのstatusはavailableのまま管理
 ⑨ 希望日検索に再び表示される
 ```
 
-### 希望日検索の仕組み
+### 希望日検索の仕組み 🔄 未実装
 
 ```sql
 -- 希望日と重なるrentalsが存在しない衣装だけを返す
@@ -317,14 +318,14 @@ WHERE NOT EXISTS (
 
 ## 画面一覧
 
-### 認証 ✅実装済み
+### 認証 ✅ 実装済み
 
 - `/signup` - 新規登録
 - `/login` - ログイン（Google / メール）
 - `/reset-password` - パスワードリセット
 - `/profile/edit` - プロフィール設定
 
-### 衣装 ✅実装済み（作業中）
+### 衣装 ✅ 実装済み
 
 - `/` - トップ / 衣装一覧（検索・絞り込み）
 - `/costumes/[id]` - 衣装詳細
@@ -334,51 +335,51 @@ WHERE NOT EXISTS (
 
 ### 絞り込み条件
 
-- カテゴリ
-- サイズ
-- エリア（都道府県）
-- 受け渡し方法（配送可 / 手渡し可 / どちらも可）
-- 手渡し可能エリア（自由検索）
-- 希望日（use_dateとbuffer_daysで空き確認）
-- 価格帯（円/日）
+- カテゴリ ✅
+- 身長範囲 ✅（height_min / height_max）
+- エリア（都道府県）✅
+- 受け渡し方法（配送可 / 手渡し可）✅
+- 価格帯（円/日）✅
+- 手渡し可能エリア（自由検索）🔄 未実装（handover_area フィールド追加後に対応）
+- 希望日（use_dateとbuffer_daysで空き確認）🔄 未実装
 
-### 取引 ✅実装済み
+### 取引 ✅ 実装済み
 
 - `/rentals` - 取引一覧（借り手・出品者それぞれ）
 - `/rentals/[id]` - 取引詳細・申請承認
 - `/rentals/[id]/review` - 評価投稿
 
-### メッセージ ✅実装済み
+### メッセージ ✅ 実装済み
 
 - `/messages` - スレッド一覧（未読バッジ）
 - `/messages/[rentalId]` - 取引ごとのチャット（Supabase Realtime）
 
-### ユーザー 🔲未実装
+### ユーザー ✅ 実装済み
 
 - `/users/[id]` - ユーザープロフィール（評価・出品一覧）
 
-### 通知 ✅実装済み
+### 通知 ✅ 実装済み
 
 - `/notifications` - 通知一覧
 
-### お気に入り 🔲フェーズ2
+### お気に入り 🔲 フェーズ2
 
 - `/mypage/favorites` - お気に入り一覧
 
-### 管理者 🔲フェーズ2
+### 管理者 🔲 フェーズ2
 
 - `/admin/users` - ユーザー管理
 - `/admin/costumes` - 衣装モデレーション
 - `/admin/reports` - 通報対応
 
-### 静的ページ 🔲未実装（リリースブロッカー）
+### 静的ページ
 
-- `/terms` - 利用規約
-- `/privacy` - プライバシーポリシー
-- `/tokushoho` - 特定商取引法に基づく表記
-- `/guide` - 使い方ガイド（借りる・貸す手順をタブで切り替え）
-- `/faq` - よくある質問（/guideの下部に統合も可）
-- `/contact` - お問い合わせ
+- `/terms` - 利用規約 ✅
+- `/privacy` - プライバシーポリシー ✅
+- `/tokushoho` - 特定商取引法に基づく表記 ✅
+- `/faq` - よくある質問 ✅
+- `/contact` - お問い合わせ ✅
+- `/guide` - 使い方ガイド（借りる・貸す手順をタブで切り替え）🔲 未実装（リリースブロッカー）
 
 ---
 
@@ -386,41 +387,41 @@ WHERE NOT EXISTS (
 
 ### 出品者向け
 
-- `rental_requested` - レンタル申請が来た
-- `message_received` - メッセージが来た
-- `rental_returned` - 返却を受け取った
-- `review_received` - 評価が届いた
-- `ready_to_list` - 準備期間が終了、貸し出し可能にするよう促す通知
+- `rental_requested` - レンタル申請が来た ✅（メール通知あり）
+- `message_received` - メッセージが来た ✅（アプリ内のみ、メール通知 🔄 未実装）
+- `rental_returned` - 返却を受け取った ✅
+- `review_received` - 評価が届いた ✅
+- `ready_to_list` - 準備期間が終了、貸し出し可能にするよう促す通知 🔄 未実装
 
 ### 借り手向け
 
-- `rental_approved` - 申請が承認された
-- `rental_rejected` - 申請が却下された
-- `message_received` - メッセージが来た
-- `review_received` - 評価が届いた
+- `rental_approved` - 申請が承認された ✅（メール通知あり）
+- `rental_rejected` - 申請が却下された ✅（メール通知あり）
+- `message_received` - メッセージが来た ✅（アプリ内のみ、メール通知 🔄 未実装）
+- `review_received` - 評価が届いた ✅
 
 ---
 
 ## 評価システム
 
-### ユーザー評価（相互評価）
+### ユーザー評価（相互評価）🔄 UI変更が必要
 
-- 取引完了後、双方に評価依頼を通知
-- 両者が投稿 or 7日経過で同時公開（先出し不利を防ぐ）
-- メルカリと同じ「良かった / 残念だった」の二択
-- 評価はユーザーページに「良かった率」として表示（例: ★ 良かった 12件）
+- 取引完了後、双方に評価依頼を通知 ✅
+- 両者が投稿 or 7日経過で同時公開（先出し不利を防ぐ）✅
+- メルカリと同じ「良かった / 残念だった」の二択 🔄（現在: 1〜5の星評価で実装）
+- 評価はユーザーページに「良かった率」として表示（例: 良かった 12件）🔄（現在: 星平均で表示）
 
-**出品者への評価タグ（借り手が選択）**
+**出品者への評価タグ（借り手が選択）** 🔄 未実装（現在: accuracy_rating, response_rating のスコア）
 - 説明通りの衣装だった
 - 対応が丁寧だった
 - 発送・受け渡しが早かった
 
-**借り手への評価タグ（出品者が選択）**
+**借り手への評価タグ（出品者が選択）** 🔄 未実装（現在: return_rating のスコア）
 - 返却が丁寧だった
 - 連絡が早かった
 - クリーニングが丁寧だった
 
-### 衣装評価（フェーズ2）
+### 衣装評価（フェーズ2）🔲
 
 - 星評価ではなくタグ選択式にしてネガティブ評価が出にくい設計にする
 - 項目：サイズ感・写真との一致度・コンディション・おすすめシーン
@@ -444,23 +445,33 @@ WHERE NOT EXISTS (
 
 **実装済み ✅**
 - 認証（Google + メール）
-- 衣装登録・一覧・詳細（作業中）
-- レンタル申請・承認フロー
+- 衣装登録・一覧・詳細（高さ範囲・手渡し対応・全国発送・セルタン可・ボディファンデ可）
+- レンタル申請・承認フロー（start_date/end_dateで実装）
 - メッセージ機能（Supabase Realtime）
-- 評価機能
+- 評価機能（星評価で実装）
 - 通知機能（アプリ内）
+- ユーザープロフィールページ（/users/[id]）
+- 静的ページ（/terms, /privacy, /tokushoho, /faq, /contact）
+- メール通知（申請・承認・却下）
 
 **リリースブロッカー 🔲**
-- 静的ページ（利用規約・プライバシーポリシー・特商法・FAQ・お問い合わせ）
+- `/guide` 使い方ガイド（借りる・貸す手順のページ）
 
-**リリース前に仕上げる 🔲**
-- ユーザープロフィールページ（/users/[id]）
-- マイページ・取引一覧の整備
-- メール通知（Resend）
-  - 申請が来たとき
-  - 承認・却下されたとき
-  - メッセージが来たとき
-  - 返却後buffer_days経過で貸し出し可能促進通知
+**仕様変更対応（コードへの反映が必要）🔄**
+- costumes テーブルに新フィールド追加
+  - `handover_area`（手渡し可能エリア）
+  - `cleaning_responsibility`, `cleaning_notes`（クリーニング設定）
+  - `buffer_days`（準備日数）
+  - `tanning_policy`（certan_ok / body_foundation_ok から置き換え）
+  - `safety_pin`, `perfume`
+  - status から `renting` を削除
+- rentals テーブル: `start_date`/`end_date` → `use_date` に変更
+- rentals status に `returning` を追加
+- reviews テーブル: 星評価 → 「良かった/残念だった」+ タグ方式に変更
+- profiles テーブル: `rating_avg`/`rating_count` → `good_count`/`total_count` に変更
+- 希望日フィルタ（use_date + buffer_days で空き確認）の実装
+- メール通知: `message_received`（メッセージ受信時）
+- メール通知: `ready_to_list`（buffer_days 経過後の貸し出し促進）
 
 ### フェーズ2
 
