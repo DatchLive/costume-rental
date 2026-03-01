@@ -144,6 +144,9 @@ export default async function CostumePage({ params }: CostumePageProps) {
               <span className="flex items-center gap-1 text-blue-700">
                 <Handshake className="h-4 w-4" aria-hidden="true" />
                 手渡し対応
+                {costume.handover_area && (
+                  <span className="text-gray-600">（{costume.handover_area}）</span>
+                )}
               </span>
             )}
             {costume.certan_ok && (

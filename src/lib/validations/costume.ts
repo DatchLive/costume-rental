@@ -32,6 +32,7 @@ export const costumeSchema = z.object({
     .optional(),
   ships_nationwide: z.boolean(),
   allows_handover: z.boolean(),
+  handover_area: z.string().max(200, '200文字以内で入力してください').optional(),
   certan_ok: z.boolean(),
   body_foundation_ok: z.boolean(),
   colors: z.array(z.enum([...COSTUME_COLORS] as [string, ...string[]])).max(2, { message: 'カラーは2つまで選択できます' }).optional(),

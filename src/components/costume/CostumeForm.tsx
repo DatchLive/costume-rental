@@ -50,6 +50,7 @@ export function CostumeForm({
   })
 
   const selectedColors = watch('colors') ?? []
+  const allowsHandover = watch('allows_handover')
 
   function toggleColor(color: string) {
     if (selectedColors.includes(color)) {
@@ -229,6 +230,16 @@ export function CostumeForm({
         />
         <span className="text-sm font-medium text-gray-700">手渡しに対応する</span>
       </label>
+
+      {allowsHandover && (
+        <Input
+          label="手渡し可能エリア"
+          placeholder="例：東京・横浜・大会会場 など"
+          maxLength={200}
+          error={errors.handover_area?.message}
+          {...register('handover_area')}
+        />
+      )}
 
       <label className="flex cursor-pointer items-center gap-3">
         <input

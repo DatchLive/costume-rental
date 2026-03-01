@@ -81,7 +81,7 @@ costumes (
   colors text[],                       -- ✅ カラー（最大2色）。選択肢は constants.ts の COSTUME_COLORS で管理
   images text[],                       -- ✅ Supabase StorageのURL配列（無料3枚・プレミアム10枚）
   area text,                           -- ✅ 都道府県
-  handover_area text,                  -- 🔄 手渡し可能エリア（自由記述）
+  handover_area text,                  -- ✅ 手渡し可能エリア（自由記述）
   ships_nationwide boolean default false, -- ✅ 全国配送対応
   allows_handover boolean default true,   -- ✅ 手渡し対応（仕様名: accepts_handover だが実装は allows_handover）
   cleaning_responsibility text default 'renter_home',  -- 🔄
@@ -343,7 +343,7 @@ WHERE NOT EXISTS (
 - 受け渡し方法（配送可 / 手渡し可）✅
 - 価格帯（円/日）✅
 - カラー ✅（最大2色登録・1色指定で絞り込み）
-- 手渡し可能エリア（自由検索）🔄 未実装（handover_area フィールド追加後に対応）
+- 手渡し可能エリア（自由検索）✅
 - 希望日（use_dateとbuffer_daysで空き確認）🔄 未実装
 
 ### 取引 ✅ 実装済み
@@ -462,7 +462,6 @@ WHERE NOT EXISTS (
 
 **仕様変更対応（コードへの反映が必要）🔄**
 - costumes テーブルに新フィールド追加
-  - `handover_area`（手渡し可能エリア）
   - `cleaning_responsibility`, `cleaning_notes`（クリーニング設定）
   - `buffer_days`（準備日数）
   - `tanning_policy`（certan_ok / body_foundation_ok から置き換え）

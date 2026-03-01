@@ -28,7 +28,7 @@ export function CostumeFilter() {
     router.push('/')
   }, [router])
 
-  const hasFilters = ['category', 'height', 'area', 'min_price', 'max_price', 'ships_nationwide', 'allows_handover', 'color'].some(
+  const hasFilters = ['category', 'height', 'area', 'min_price', 'max_price', 'ships_nationwide', 'allows_handover', 'color', 'handover_area'].some(
     (key) => searchParams.has(key)
   )
 
@@ -134,6 +134,17 @@ export function CostumeFilter() {
         />
         手渡し可のみ
       </label>
+
+      <div className="flex flex-col gap-1">
+        <label className="text-sm font-medium text-gray-700">手渡しエリア</label>
+        <input
+          type="text"
+          placeholder="例：東京"
+          value={searchParams.get('handover_area') ?? ''}
+          onChange={(e) => updateFilter('handover_area', e.target.value)}
+          className="h-10 w-36 rounded-lg border border-gray-300 px-3 text-sm focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
+        />
+      </div>
 
       {hasFilters && (
         <Button variant="ghost" size="sm" onClick={resetFilters} className="mb-0.5">

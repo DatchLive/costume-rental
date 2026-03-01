@@ -78,6 +78,7 @@ export interface Database {
           student_price: number | null
           images: string[]
           area: string | null
+          handover_area: string | null
           ships_nationwide: boolean
           allows_handover: boolean
           certan_ok: boolean
@@ -98,6 +99,7 @@ export interface Database {
           student_price?: number | null
           images?: string[]
           area?: string | null
+          handover_area?: string | null
           ships_nationwide?: boolean
           allows_handover?: boolean
           certan_ok?: boolean
@@ -118,6 +120,7 @@ export interface Database {
           student_price?: number | null
           images?: string[]
           area?: string | null
+          handover_area?: string | null
           ships_nationwide?: boolean
           allows_handover?: boolean
           certan_ok?: boolean

@@ -19,6 +19,7 @@ interface HomePageProps {
     max_price?: string
     ships_nationwide?: string
     allows_handover?: string
+    handover_area?: string
     color?: string
     page?: string
   }>
@@ -54,6 +55,9 @@ async function CostumeList({ searchParams }: HomePageProps) {
   }
   if (params.allows_handover === 'true') {
     query = query.eq('allows_handover', true)
+  }
+  if (params.handover_area) {
+    query = query.ilike('handover_area', `%${params.handover_area}%`)
   }
   if (params.min_price) query = query.gte('rental_price', Number(params.min_price))
   if (params.max_price) query = query.lte('rental_price', Number(params.max_price))
