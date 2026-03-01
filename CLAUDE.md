@@ -95,8 +95,8 @@ costumes (
   -- 'all'  → ボディファン・セルタン可
   -- 'self' → セルタンのみ可
   -- 'none' → すべて不可
-  safety_pin boolean default false,    -- 🔄 安全ピン（背番号など）使用可能
-  perfume boolean default false,       -- 🔄 香水使用可能
+  safety_pin boolean default false,    -- ✅ 安全ピン（背番号など）使用可能
+  perfume boolean default false,       -- ✅ 香水使用可能
   status text default 'available',     -- ✅ 'available' | 'hidden'
   -- ※ 'renting' ステータスは削除予定 🔄（レンタル中かどうかはrentalsテーブルで管理）
   created_at timestamptz default now() -- ✅
@@ -463,7 +463,6 @@ WHERE NOT EXISTS (
 **仕様変更対応（コードへの反映が必要）🔄**
 - costumes テーブルに新フィールド追加
   - `buffer_days`（準備日数）
-  - `safety_pin`, `perfume`
   - status から `renting` を削除
 - rentals テーブル: `start_date`/`end_date` → `use_date` に変更
 - rentals status に `returning` を追加

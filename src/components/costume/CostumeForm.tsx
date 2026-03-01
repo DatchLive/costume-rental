@@ -43,6 +43,8 @@ export function CostumeForm({
       ships_nationwide: false,
       allows_handover: false,
       tanning_policy: 'none',
+      safety_pin: false,
+      perfume: false,
       colors: [],
       cleaning_responsibility: 'renter_home',
       ...defaultValues,
@@ -279,6 +281,24 @@ export function CostumeForm({
           <p className="text-xs text-red-600">{errors.tanning_policy.message}</p>
         )}
       </div>
+
+      <label className="flex cursor-pointer items-center gap-3">
+        <input
+          type="checkbox"
+          className="h-4 w-4 rounded border-gray-300 text-amber-700 focus:ring-amber-500"
+          {...register('safety_pin')}
+        />
+        <span className="text-sm font-medium text-gray-700">安全ピン可（背番号など）</span>
+      </label>
+
+      <label className="flex cursor-pointer items-center gap-3">
+        <input
+          type="checkbox"
+          className="h-4 w-4 rounded border-gray-300 text-amber-700 focus:ring-amber-500"
+          {...register('perfume')}
+        />
+        <span className="text-sm font-medium text-gray-700">香水使用可</span>
+      </label>
 
       <div className="flex justify-end gap-3">
         <Button type="button" variant="outline" onClick={() => history.back()}>

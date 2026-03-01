@@ -84,6 +84,8 @@ export interface Database {
           cleaning_responsibility: string
           cleaning_notes: string | null
           tanning_policy: string
+          safety_pin: boolean
+          perfume: boolean
           colors: string[] | null
           status: string
           created_at: string
@@ -106,6 +108,8 @@ export interface Database {
           cleaning_responsibility?: string
           cleaning_notes?: string | null
           tanning_policy?: string
+          safety_pin?: boolean
+          perfume?: boolean
           colors?: string[] | null
           status?: string
           created_at?: string
@@ -128,6 +132,8 @@ export interface Database {
           cleaning_responsibility?: string
           cleaning_notes?: string | null
           tanning_policy?: string
+          safety_pin?: boolean
+          perfume?: boolean
           colors?: string[] | null
           status?: string
           created_at?: string

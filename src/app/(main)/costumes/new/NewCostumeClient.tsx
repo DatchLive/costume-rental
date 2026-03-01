@@ -35,6 +35,8 @@ export function NewCostumeClient({ userId, maxImages }: NewCostumeClientProps) {
         cleaning_responsibility: data.cleaning_responsibility,
         cleaning_notes: data.cleaning_notes ?? null,
         tanning_policy: data.tanning_policy,
+        safety_pin: data.safety_pin,
+        perfume: data.perfume,
         colors: data.colors ?? [],
         status: 'available',
       })

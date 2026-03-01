@@ -155,6 +155,12 @@ export default async function CostumePage({ params }: CostumePageProps) {
                 {TANNING_POLICY_LABEL[costume.tanning_policy] ?? costume.tanning_policy}
               </Badge>
             )}
+            {costume.safety_pin && (
+              <Badge variant="outline">安全ピン可</Badge>
+            )}
+            {costume.perfume && (
+              <Badge variant="outline">香水可</Badge>
+            )}
           </div>
 
           {/* Description */}

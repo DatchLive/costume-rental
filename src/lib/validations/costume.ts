@@ -42,6 +42,8 @@ export const costumeSchema = z.object({
     TANNING_POLICY_OPTIONS.map((o) => o.value) as [string, ...string[]],
     { message: '日焼けポリシーを選択してください' }
   ),
+  safety_pin: z.boolean(),
+  perfume: z.boolean(),
   colors: z.array(z.enum([...COSTUME_COLORS] as [string, ...string[]])).max(2, { message: 'カラーは2つまで選択できます' }).optional(),
 }).refine(
   (data) => !(data.height_min && data.height_max) || data.height_max >= data.height_min,
