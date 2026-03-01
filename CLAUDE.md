@@ -90,7 +90,7 @@ costumes (
   -- 'owner'       → オーナー負担
   -- 'other'       → その他
   cleaning_notes text,                 -- ✅ クリーニング特記事項（200文字以内）
-  buffer_days int default 2,           -- 🔄 返却後〜次回貸出可能までの準備日数
+  buffer_days int default 2,           -- ✅ 返却後〜次回貸出可能までの準備日数
   tanning_policy text default 'none',  -- ✅
   -- 'all'  → ボディファン・セルタン可
   -- 'self' → セルタンのみ可
@@ -462,7 +462,6 @@ WHERE NOT EXISTS (
 
 **仕様変更対応（コードへの反映が必要）🔄**
 - costumes テーブルに新フィールド追加
-  - `buffer_days`（準備日数）
   - status から `renting` を削除
 - rentals テーブル: `start_date`/`end_date` → `use_date` に変更
 - rentals status に `returning` を追加

@@ -43,6 +43,7 @@ export function CostumeForm({
       ships_nationwide: false,
       allows_handover: false,
       tanning_policy: 'none',
+      buffer_days: 2,
       safety_pin: false,
       perfume: false,
       colors: [],
@@ -260,6 +261,25 @@ export function CostumeForm({
           error={errors.cleaning_notes?.message}
           {...register('cleaning_notes')}
         />
+        <div className="flex flex-col gap-1">
+          <label className="text-sm font-medium text-gray-700">
+            返却後の準備日数 <span className="text-red-500">*</span>
+          </label>
+          <div className="flex items-center gap-2">
+            <input
+              type="number"
+              min={0}
+              max={30}
+              className="h-10 w-24 rounded-lg border border-gray-300 px-3 text-sm focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
+              {...register('buffer_days', { valueAsNumber: true })}
+            />
+            <span className="text-sm text-gray-500">日</span>
+          </div>
+          <p className="text-xs text-gray-400">クリーニング・発送準備を含む、返却後〜次の貸し出しまでの日数</p>
+          {errors.buffer_days && (
+            <p className="text-xs text-red-600">{errors.buffer_days.message}</p>
+          )}
+        </div>
       </div>
 
       <div className="flex flex-col gap-2">

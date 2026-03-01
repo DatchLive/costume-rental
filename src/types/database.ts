@@ -83,6 +83,7 @@ export interface Database {
           allows_handover: boolean
           cleaning_responsibility: string
           cleaning_notes: string | null
+          buffer_days: number
           tanning_policy: string
           safety_pin: boolean
           perfume: boolean
@@ -107,6 +108,7 @@ export interface Database {
           allows_handover?: boolean
           cleaning_responsibility?: string
           cleaning_notes?: string | null
+          buffer_days?: number
           tanning_policy?: string
           safety_pin?: boolean
           perfume?: boolean
@@ -131,6 +133,7 @@ export interface Database {
           allows_handover?: boolean
           cleaning_responsibility?: string
           cleaning_notes?: string | null
+          buffer_days?: number
           tanning_policy?: string
           safety_pin?: boolean
           perfume?: boolean

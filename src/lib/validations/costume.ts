@@ -38,6 +38,11 @@ export const costumeSchema = z.object({
     { message: 'クリーニング設定を選択してください' }
   ),
   cleaning_notes: z.string().max(200, '200文字以内で入力してください').optional(),
+  buffer_days: z
+    .number({ message: '数値を入力してください' })
+    .int('整数を入力してください')
+    .min(0, '0日以上で設定してください')
+    .max(30, '30日以下で設定してください'),
   tanning_policy: z.enum(
     TANNING_POLICY_OPTIONS.map((o) => o.value) as [string, ...string[]],
     { message: '日焼けポリシーを選択してください' }
