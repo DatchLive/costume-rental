@@ -109,10 +109,15 @@ export default async function CostumePage({ params }: CostumePageProps) {
             <CategoryBadge category={costume.category} />
             <h1 className="mt-2 text-2xl font-bold text-gray-900">{costume.title}</h1>
 
-            <div className="mt-2 flex items-baseline gap-1">
+            <div className="mt-2 flex items-baseline gap-2">
               <span className="text-3xl font-bold text-amber-700">
                 {formatPrice(costume.rental_price)}
               </span>
+              {costume.student_price != null && (
+                <span className="rounded-full bg-blue-50 px-2 py-0.5 text-sm font-medium text-blue-700">
+                  学生 {formatPrice(costume.student_price)}
+                </span>
+              )}
             </div>
           </div>
 

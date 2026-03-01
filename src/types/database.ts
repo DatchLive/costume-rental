@@ -75,6 +75,7 @@ export interface Database {
           height_min: number | null
           height_max: number | null
           rental_price: number
+          student_price: number | null
           images: string[]
           area: string | null
           ships_nationwide: boolean
@@ -94,6 +95,7 @@ export interface Database {
           height_min?: number | null
           height_max?: number | null
           rental_price: number
+          student_price?: number | null
           images?: string[]
           area?: string | null
           ships_nationwide?: boolean
@@ -113,6 +115,7 @@ export interface Database {
           height_min?: number | null
           height_max?: number | null
           rental_price?: number
+          student_price?: number | null
           images?: string[]
           area?: string | null
           ships_nationwide?: boolean

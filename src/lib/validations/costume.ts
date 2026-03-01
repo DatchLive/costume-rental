@@ -21,6 +21,12 @@ export const costumeSchema = z.object({
     .int('整数を入力してください')
     .min(100, '100円以上で設定してください')
     .max(100000, '100,000円以下で設定してください'),
+  student_price: z
+    .number({ message: '数値を入力してください' })
+    .int('整数を入力してください')
+    .min(0, '0円以上で設定してください')
+    .max(100000, '100,000円以下で設定してください')
+    .optional(),
   area: z
     .enum([...JAPAN_PREFECTURES, ''] as [string, ...string[]])
     .optional(),

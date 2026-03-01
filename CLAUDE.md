@@ -77,7 +77,7 @@ costumes (
   height_min int,                      -- ✅ 身長下限（cm）
   height_max int,                      -- ✅ 身長上限（cm）
   rental_price int not null,           -- ✅ 円/日（旧: price_per_day）
-  student_price int,                   -- 🔄 学生料金（任意）。表示のみ、適用確認はメッセージで当事者間が行う
+  student_price int,                   -- ✅ 学生料金（任意）。表示のみ、適用確認はメッセージで当事者間が行う
   colors text[],                       -- ✅ カラー（最大2色）。選択肢は constants.ts の COSTUME_COLORS で管理
   images text[],                       -- ✅ Supabase StorageのURL配列（無料3枚・プレミアム10枚）
   area text,                           -- ✅ 都道府県
@@ -462,7 +462,6 @@ WHERE NOT EXISTS (
 
 **仕様変更対応（コードへの反映が必要）🔄**
 - costumes テーブルに新フィールド追加
-  - `student_price`（学生料金・任意表示。適用確認はメッセージで当事者間が行う）
   - `handover_area`（手渡し可能エリア）
   - `cleaning_responsibility`, `cleaning_notes`（クリーニング設定）
   - `buffer_days`（準備日数）

@@ -26,6 +26,7 @@ export function NewCostumeClient({ userId, maxImages }: NewCostumeClientProps) {
         height_min: data.height_min ?? null,
         height_max: data.height_max ?? null,
         rental_price: data.rental_price,
+        student_price: data.student_price ?? null,
         images,
         area: data.area ?? null,
         ships_nationwide: data.ships_nationwide,

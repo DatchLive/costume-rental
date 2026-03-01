@@ -190,14 +190,27 @@ export function CostumeForm({
           {...register('rental_price', { valueAsNumber: true })}
         />
 
-        <Select
-          label="エリア（都道府県）"
-          placeholder="選択してください"
-          options={JAPAN_PREFECTURES.map((p) => ({ value: p, label: p }))}
-          error={errors.area?.message}
-          {...register('area')}
-        />
+        <div className="flex flex-col gap-1">
+          <Input
+            label="学生料金（任意）"
+            type="number"
+            min={0}
+            max={100000}
+            placeholder="未設定の場合は空欄"
+            error={errors.student_price?.message}
+            {...register('student_price', { valueAsNumber: true })}
+          />
+          <p className="text-xs text-gray-400">適用はメッセージで当事者間にて確認してください</p>
+        </div>
       </div>
+
+      <Select
+        label="エリア（都道府県）"
+        placeholder="選択してください"
+        options={JAPAN_PREFECTURES.map((p) => ({ value: p, label: p }))}
+        error={errors.area?.message}
+        {...register('area')}
+      />
 
       <label className="flex cursor-pointer items-center gap-3">
         <input
