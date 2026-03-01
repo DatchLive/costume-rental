@@ -10,7 +10,7 @@ import { StarRating } from '@/components/ui/StarRating'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { formatPrice, formatDate } from '@/lib/utils'
-import { CLEANING_RESPONSIBILITY_LABEL } from '@/lib/constants'
+import { CLEANING_RESPONSIBILITY_LABEL, TANNING_POLICY_LABEL } from '@/lib/constants'
 import { RentalRequestFormWrapper } from './RentalRequestFormWrapper'
 import type { CostumeWithProfile } from '@/types/database'
 
@@ -150,11 +150,10 @@ export default async function CostumePage({ params }: CostumePageProps) {
                 )}
               </span>
             )}
-            {costume.certan_ok && (
-              <Badge variant="outline">セルタン可</Badge>
-            )}
-            {costume.body_foundation_ok && (
-              <Badge variant="outline">ボディファンデ可</Badge>
+            {costume.tanning_policy !== 'none' && (
+              <Badge variant="outline">
+                {TANNING_POLICY_LABEL[costume.tanning_policy] ?? costume.tanning_policy}
+              </Badge>
             )}
           </div>
 

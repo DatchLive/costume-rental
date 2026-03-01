@@ -58,8 +58,7 @@ export default async function EditCostumePage({ params }: EditCostumePageProps) 
               handover_area: costume.handover_area ?? undefined,
               cleaning_responsibility: costume.cleaning_responsibility,
               cleaning_notes: costume.cleaning_notes ?? undefined,
-              certan_ok: costume.certan_ok,
-              body_foundation_ok: costume.body_foundation_ok,
+              tanning_policy: costume.tanning_policy,
               colors: costume.colors ?? [],
             }}
             initialImages={costume.images}

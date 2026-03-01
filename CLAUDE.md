@@ -91,7 +91,7 @@ costumes (
   -- 'other'       → その他
   cleaning_notes text,                 -- ✅ クリーニング特記事項（200文字以内）
   buffer_days int default 2,           -- 🔄 返却後〜次回貸出可能までの準備日数
-  tanning_policy text default 'none',  -- 🔄（現在: certan_ok, body_foundation_ok で暫定対応）
+  tanning_policy text default 'none',  -- ✅
   -- 'all'  → ボディファン・セルタン可
   -- 'self' → セルタンのみ可
   -- 'none' → すべて不可
@@ -448,7 +448,7 @@ WHERE NOT EXISTS (
 
 **実装済み ✅**
 - 認証（Google + メール）
-- 衣装登録・一覧・詳細（高さ範囲・手渡し対応・全国発送・セルタン可・ボディファンデ可）
+- 衣装登録・一覧・詳細（高さ範囲・手渡し対応・全国発送・日焼けポリシー）
 - レンタル申請・承認フロー（start_date/end_dateで実装）
 - メッセージ機能（Supabase Realtime）
 - 評価機能（星評価で実装）
@@ -463,7 +463,6 @@ WHERE NOT EXISTS (
 **仕様変更対応（コードへの反映が必要）🔄**
 - costumes テーブルに新フィールド追加
   - `buffer_days`（準備日数）
-  - `tanning_policy`（certan_ok / body_foundation_ok から置き換え）
   - `safety_pin`, `perfume`
   - status から `renting` を削除
 - rentals テーブル: `start_date`/`end_date` → `use_date` に変更

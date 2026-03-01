@@ -116,6 +116,20 @@ export const CLEANING_RESPONSIBILITY_LABEL: Record<string, string> = {
   other:       'その他',
 }
 
+export const TANNING_POLICY_OPTIONS = [
+  { value: 'none', label: 'すべて不可' },
+  { value: 'self', label: 'セルタンのみ可' },
+  { value: 'all',  label: 'ボディファン・セルタン可' },
+] as const
+
+export type TanningPolicy = typeof TANNING_POLICY_OPTIONS[number]['value']
+
+export const TANNING_POLICY_LABEL: Record<string, string> = {
+  none: 'すべて不可',
+  self: 'セルタンのみ可',
+  all:  'ボディファン・セルタン可',
+}
+
 export const RENTAL_STATUS_LABELS: Record<string, string> = {
   pending: '申請中',
   approved: '承認済み',

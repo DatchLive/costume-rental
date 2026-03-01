@@ -83,8 +83,7 @@ export interface Database {
           allows_handover: boolean
           cleaning_responsibility: string
           cleaning_notes: string | null
-          certan_ok: boolean
-          body_foundation_ok: boolean
+          tanning_policy: string
           colors: string[] | null
           status: string
           created_at: string
@@ -106,8 +105,7 @@ export interface Database {
           allows_handover?: boolean
           cleaning_responsibility?: string
           cleaning_notes?: string | null
-          certan_ok?: boolean
-          body_foundation_ok?: boolean
+          tanning_policy?: string
           colors?: string[] | null
           status?: string
           created_at?: string
@@ -129,8 +127,7 @@ export interface Database {
           allows_handover?: boolean
           cleaning_responsibility?: string
           cleaning_notes?: string | null
-          certan_ok?: boolean
-          body_foundation_ok?: boolean
+          tanning_policy?: string
           colors?: string[] | null
           status?: string
           created_at?: string

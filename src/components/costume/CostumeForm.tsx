@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { costumeSchema, type CostumeFormData } from '@/lib/validations/costume'
-import { CLEANING_RESPONSIBILITY_OPTIONS, COSTUME_CATEGORIES, COSTUME_COLOR_MAP, COSTUME_COLORS, JAPAN_PREFECTURES } from '@/lib/constants'
+import { CLEANING_RESPONSIBILITY_OPTIONS, COSTUME_CATEGORIES, COSTUME_COLOR_MAP, COSTUME_COLORS, JAPAN_PREFECTURES, TANNING_POLICY_OPTIONS } from '@/lib/constants'
 import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
 import { Select } from '@/components/ui/Select'
@@ -42,8 +42,7 @@ export function CostumeForm({
     defaultValues: {
       ships_nationwide: false,
       allows_handover: false,
-      certan_ok: false,
-      body_foundation_ok: false,
+      tanning_policy: 'none',
       colors: [],
       cleaning_responsibility: 'renter_home',
       ...defaultValues,
@@ -261,23 +260,25 @@ export function CostumeForm({
         />
       </div>
 
-      <label className="flex cursor-pointer items-center gap-3">
-        <input
-          type="checkbox"
-          className="h-4 w-4 rounded border-gray-300 text-amber-700 focus:ring-amber-500"
-          {...register('certan_ok')}
-        />
-        <span className="text-sm font-medium text-gray-700">セルタン可</span>
-      </label>
-
-      <label className="flex cursor-pointer items-center gap-3">
-        <input
-          type="checkbox"
-          className="h-4 w-4 rounded border-gray-300 text-amber-700 focus:ring-amber-500"
-          {...register('body_foundation_ok')}
-        />
-        <span className="text-sm font-medium text-gray-700">ボディファンデ可</span>
-      </label>
+      <div className="flex flex-col gap-2">
+        <label className="text-sm font-medium text-gray-700">セルタン・ボディファン</label>
+        <div className="flex flex-col gap-2">
+          {TANNING_POLICY_OPTIONS.map((opt) => (
+            <label key={opt.value} className="flex cursor-pointer items-center gap-3">
+              <input
+                type="radio"
+                value={opt.value}
+                className="h-4 w-4 border-gray-300 text-amber-700 focus:ring-amber-500"
+                {...register('tanning_policy')}
+              />
+              <span className="text-sm text-gray-700">{opt.label}</span>
+            </label>
+          ))}
+        </div>
+        {errors.tanning_policy && (
+          <p className="text-xs text-red-600">{errors.tanning_policy.message}</p>
+        )}
+      </div>
 
       <div className="flex justify-end gap-3">
         <Button type="button" variant="outline" onClick={() => history.back()}>
