@@ -56,6 +56,8 @@ export default async function EditCostumePage({ params }: EditCostumePageProps) 
               ships_nationwide: costume.ships_nationwide,
               allows_handover: costume.allows_handover,
               handover_area: costume.handover_area ?? undefined,
+              cleaning_responsibility: costume.cleaning_responsibility,
+              cleaning_notes: costume.cleaning_notes ?? undefined,
               certan_ok: costume.certan_ok,
               body_foundation_ok: costume.body_foundation_ok,
               colors: costume.colors ?? [],

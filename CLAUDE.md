@@ -84,12 +84,12 @@ costumes (
   handover_area text,                  -- ✅ 手渡し可能エリア（自由記述）
   ships_nationwide boolean default false, -- ✅ 全国配送対応
   allows_handover boolean default true,   -- ✅ 手渡し対応（仕様名: accepts_handover だが実装は allows_handover）
-  cleaning_responsibility text default 'renter_home',  -- 🔄
+  cleaning_responsibility text default 'renter_home',  -- ✅
   -- 'renter_home' → 借り手負担（ホームクリーニング可）
   -- 'renter_shop' → 借り手負担（クリーニング店）
   -- 'owner'       → オーナー負担
   -- 'other'       → その他
-  cleaning_notes text,                 -- 🔄 クリーニング特記事項（200文字以内）
+  cleaning_notes text,                 -- ✅ クリーニング特記事項（200文字以内）
   buffer_days int default 2,           -- 🔄 返却後〜次回貸出可能までの準備日数
   tanning_policy text default 'none',  -- 🔄（現在: certan_ok, body_foundation_ok で暫定対応）
   -- 'all'  → ボディファン・セルタン可
@@ -217,7 +217,7 @@ reports (                     -- 🔲
 - 支払い：当事者間で自由に取り決め（現金・PayPay・銀行振込等）
 - サービス手数料：**無料（フェーズ1・2）**
 
-### クリーニングルール 🔄 未実装
+### クリーニングルール ✅
 
 衣装ごとに出品者が事前に設定する。借り手は申請前に確認できる。
 
@@ -462,7 +462,6 @@ WHERE NOT EXISTS (
 
 **仕様変更対応（コードへの反映が必要）🔄**
 - costumes テーブルに新フィールド追加
-  - `cleaning_responsibility`, `cleaning_notes`（クリーニング設定）
   - `buffer_days`（準備日数）
   - `tanning_policy`（certan_ok / body_foundation_ok から置き換え）
   - `safety_pin`, `perfume`

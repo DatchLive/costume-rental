@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { costumeSchema, type CostumeFormData } from '@/lib/validations/costume'
-import { COSTUME_CATEGORIES, COSTUME_COLOR_MAP, COSTUME_COLORS, JAPAN_PREFECTURES } from '@/lib/constants'
+import { CLEANING_RESPONSIBILITY_OPTIONS, COSTUME_CATEGORIES, COSTUME_COLOR_MAP, COSTUME_COLORS, JAPAN_PREFECTURES } from '@/lib/constants'
 import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
 import { Select } from '@/components/ui/Select'
@@ -45,6 +45,7 @@ export function CostumeForm({
       certan_ok: false,
       body_foundation_ok: false,
       colors: [],
+      cleaning_responsibility: 'renter_home',
       ...defaultValues,
     },
   })
@@ -240,6 +241,25 @@ export function CostumeForm({
           {...register('handover_area')}
         />
       )}
+
+      <div className="flex flex-col gap-3 rounded-xl border border-gray-200 p-4">
+        <h3 className="text-sm font-medium text-gray-700">クリーニング設定</h3>
+        <Select
+          label="クリーニング負担"
+          required
+          options={CLEANING_RESPONSIBILITY_OPTIONS.map((o) => ({ value: o.value, label: o.label }))}
+          error={errors.cleaning_responsibility?.message}
+          {...register('cleaning_responsibility')}
+        />
+        <Textarea
+          label="クリーニング特記事項（任意）"
+          rows={2}
+          maxLength={200}
+          placeholder="例：ホームクリーニング時はネット使用をお願いします"
+          error={errors.cleaning_notes?.message}
+          {...register('cleaning_notes')}
+        />
+      </div>
 
       <label className="flex cursor-pointer items-center gap-3">
         <input

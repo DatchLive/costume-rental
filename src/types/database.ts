@@ -81,6 +81,8 @@ export interface Database {
           handover_area: string | null
           ships_nationwide: boolean
           allows_handover: boolean
+          cleaning_responsibility: string
+          cleaning_notes: string | null
           certan_ok: boolean
           body_foundation_ok: boolean
           colors: string[] | null
@@ -102,6 +104,8 @@ export interface Database {
           handover_area?: string | null
           ships_nationwide?: boolean
           allows_handover?: boolean
+          cleaning_responsibility?: string
+          cleaning_notes?: string | null
           certan_ok?: boolean
           body_foundation_ok?: boolean
           colors?: string[] | null
@@ -123,6 +127,8 @@ export interface Database {
           handover_area?: string | null
           ships_nationwide?: boolean
           allows_handover?: boolean
+          cleaning_responsibility?: string
+          cleaning_notes?: string | null
           certan_ok?: boolean
           body_foundation_ok?: boolean
           colors?: string[] | null

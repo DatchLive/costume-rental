@@ -40,6 +40,8 @@ export function EditCostumeClient({
         ships_nationwide: data.ships_nationwide,
         allows_handover: data.allows_handover,
         handover_area: data.allows_handover ? (data.handover_area ?? null) : null,
+        cleaning_responsibility: data.cleaning_responsibility,
+        cleaning_notes: data.cleaning_notes ?? null,
         certan_ok: data.certan_ok,
         body_foundation_ok: data.body_foundation_ok,
         colors: data.colors ?? [],

@@ -10,6 +10,7 @@ import { StarRating } from '@/components/ui/StarRating'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { formatPrice, formatDate } from '@/lib/utils'
+import { CLEANING_RESPONSIBILITY_LABEL } from '@/lib/constants'
 import { RentalRequestFormWrapper } from './RentalRequestFormWrapper'
 import type { CostumeWithProfile } from '@/types/database'
 
@@ -164,6 +165,17 @@ export default async function CostumePage({ params }: CostumePageProps) {
               <p className="whitespace-pre-wrap text-sm text-gray-600">{costume.description}</p>
             </div>
           )}
+
+          {/* Cleaning */}
+          <div className="rounded-xl border border-gray-200 p-4">
+            <h2 className="mb-2 text-sm font-medium text-gray-700">クリーニング</h2>
+            <p className="text-sm text-gray-800">
+              {CLEANING_RESPONSIBILITY_LABEL[costume.cleaning_responsibility] ?? costume.cleaning_responsibility}
+            </p>
+            {costume.cleaning_notes && (
+              <p className="mt-1 whitespace-pre-wrap text-sm text-gray-500">{costume.cleaning_notes}</p>
+            )}
+          </div>
 
           {/* Owner */}
           <div className="rounded-xl border border-gray-200 p-4">

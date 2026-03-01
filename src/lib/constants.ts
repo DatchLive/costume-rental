@@ -100,6 +100,22 @@ export const COSTUME_COLOR_MAP: Record<string, string> = {
   'マルチカラー': 'conic-gradient(#dc2626, #f97316, #fbbf24, #22c55e, #3b82f6, #a855f7, #dc2626)',
 }
 
+export const CLEANING_RESPONSIBILITY_OPTIONS = [
+  { value: 'renter_home', label: '借り手負担（ホームクリーニング可）' },
+  { value: 'renter_shop', label: '借り手負担（クリーニング店）' },
+  { value: 'owner',       label: 'オーナー負担' },
+  { value: 'other',       label: 'その他' },
+] as const
+
+export type CleaningResponsibility = typeof CLEANING_RESPONSIBILITY_OPTIONS[number]['value']
+
+export const CLEANING_RESPONSIBILITY_LABEL: Record<string, string> = {
+  renter_home: '借り手負担（ホームクリーニング可）',
+  renter_shop: '借り手負担（クリーニング店）',
+  owner:       'オーナー負担',
+  other:       'その他',
+}
+
 export const RENTAL_STATUS_LABELS: Record<string, string> = {
   pending: '申請中',
   approved: '承認済み',

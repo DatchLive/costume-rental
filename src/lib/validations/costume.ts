@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { COSTUME_CATEGORIES, COSTUME_COLORS, JAPAN_PREFECTURES } from '@/lib/constants'
+import { CLEANING_RESPONSIBILITY_OPTIONS, COSTUME_CATEGORIES, COSTUME_COLORS, JAPAN_PREFECTURES } from '@/lib/constants'
 
 const heightField = z
   .number({ message: '数値を入力してください' })
@@ -33,6 +33,11 @@ export const costumeSchema = z.object({
   ships_nationwide: z.boolean(),
   allows_handover: z.boolean(),
   handover_area: z.string().max(200, '200文字以内で入力してください').optional(),
+  cleaning_responsibility: z.enum(
+    CLEANING_RESPONSIBILITY_OPTIONS.map((o) => o.value) as [string, ...string[]],
+    { message: 'クリーニング設定を選択してください' }
+  ),
+  cleaning_notes: z.string().max(200, '200文字以内で入力してください').optional(),
   certan_ok: z.boolean(),
   body_foundation_ok: z.boolean(),
   colors: z.array(z.enum([...COSTUME_COLORS] as [string, ...string[]])).max(2, { message: 'カラーは2つまで選択できます' }).optional(),
