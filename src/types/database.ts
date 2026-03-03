@@ -9,7 +9,7 @@ export type CostumeCategory =
   | 'アクセサリー・小物'
   | 'その他'
 
-export type CostumeStatus = 'available' | 'renting' | 'hidden'
+export type CostumeStatus = 'available' | 'hidden'
 export type RentalStatus = 'pending' | 'approved' | 'rejected' | 'active' | 'returned' | 'cancelled'
 export type ReviewRole = 'owner' | 'renter'
 export type NotificationType =

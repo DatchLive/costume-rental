@@ -36,13 +36,23 @@ export default async function CostumePage({ params }: CostumePageProps) {
   const { id } = await params
   const supabase = await createClient()
 
-  const { data: costumeData } = await supabase
-    .from('costumes')
-    .select('*, profiles(id, name, avatar_url, good_count, total_count, is_verified, area)')
-    .eq('id', id)
-    .single()
+  const [{ data: costumeData }, { data: activeRental }] = await Promise.all([
+    supabase
+      .from('costumes')
+      .select('*, profiles(id, name, avatar_url, good_count, total_count, is_verified, area)')
+      .eq('id', id)
+      .single(),
+    supabase
+      .from('rentals')
+      .select('id')
+      .eq('costume_id', id)
+      .in('status', ['approved', 'active', 'returning'])
+      .limit(1)
+      .maybeSingle(),
+  ])
 
   if (!costumeData) notFound()
+  const isRenting = !!activeRental
 
   const costume = costumeData as unknown as CostumeWithProfile & {
     profiles: { id: string; name: string | null; avatar_url: string | null; good_count: number; total_count: number; is_verified: boolean; area: string | null }
@@ -80,7 +90,7 @@ export default async function CostumePage({ params }: CostumePageProps) {
                 </svg>
               </div>
             )}
-            {costume.status === 'renting' && (
+            {isRenting && (
               <div className="absolute inset-0 flex items-center justify-center bg-black/40">
                 <Badge variant="warning" className="text-sm">レンタル中</Badge>
               </div>

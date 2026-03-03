@@ -40,13 +40,6 @@ export function RentalActionButtons({
       body: JSON.stringify({ type: `rental_${newStatus}`, rentalId }),
     })
 
-    // Update costume status if active/returned
-    if (newStatus === 'approved') {
-      await supabase.from('costumes').update({ status: 'renting' }).eq('id', costumeId)
-    } else if (newStatus === 'returned' || newStatus === 'rejected' || newStatus === 'cancelled') {
-      await supabase.from('costumes').update({ status: 'available' }).eq('id', costumeId)
-    }
-
     setLoading(null)
     router.refresh()
   }
@@ -59,7 +52,6 @@ export function RentalActionButtons({
       .update({ status: 'cancelled', cancel_reason: cancelReason || null })
       .eq('id', rentalId)
 
-    await supabase.from('costumes').update({ status: 'available' }).eq('id', costumeId)
     setCancelModalOpen(false)
     setLoading(null)
     router.refresh()

@@ -16,15 +16,23 @@ export default async function MyCostumesPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login?next=/mypage/costumes')
 
-  const { data: costumes } = await supabase
-    .from('costumes')
-    .select('*')
-    .eq('user_id', user.id)
-    .order('created_at', { ascending: false })
+  const [{ data: costumes }, { data: activeRentals }] = await Promise.all([
+    supabase
+      .from('costumes')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false }),
+    supabase
+      .from('rentals')
+      .select('costume_id')
+      .eq('owner_id', user.id)
+      .in('status', ['approved', 'active', 'returning']),
+  ])
+
+  const rentingCostumeIds = new Set((activeRentals ?? []).map((r) => r.costume_id))
 
   const statusLabel: Record<string, { label: string; variant: 'success' | 'warning' | 'default' }> = {
     available: { label: '公開中', variant: 'success' },
-    renting: { label: 'レンタル中', variant: 'warning' },
     hidden: { label: '非公開', variant: 'default' },
   }
 
@@ -50,7 +58,10 @@ export default async function MyCostumesPage() {
       ) : (
         <div className="flex flex-col gap-3">
           {costumes.map((costume) => {
-            const status = statusLabel[costume.status] ?? statusLabel.hidden
+            const isRenting = rentingCostumeIds.has(costume.id)
+            const status = isRenting
+              ? { label: 'レンタル中', variant: 'warning' as const }
+              : (statusLabel[costume.status] ?? statusLabel.hidden)
             return (
               <div
                 key={costume.id}
@@ -91,7 +102,7 @@ export default async function MyCostumesPage() {
 
                 {/* Actions */}
                 <div className="flex items-center gap-2">
-                  {costume.status !== 'renting' && (
+                  {!isRenting && (
                     <StatusToggleClient costumeId={costume.id} currentStatus={costume.status as 'available' | 'hidden'} />
                   )}
                   <Link href={`/costumes/${costume.id}/edit`}>

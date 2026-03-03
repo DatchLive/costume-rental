@@ -97,8 +97,7 @@ costumes (
   -- 'none' → すべて不可
   safety_pin boolean default false,    -- ✅ 安全ピン（背番号など）使用可能
   perfume boolean default false,       -- ✅ 香水使用可能
-  status text default 'available',     -- ✅ 'available' | 'hidden'
-  -- ※ 'renting' ステータスは削除予定 🔄（レンタル中かどうかはrentalsテーブルで管理）
+  status text default 'available',     -- ✅ 'available' | 'hidden'（'renting' は削除済み。レンタル中かどうかはrentalsテーブルで管理）
   created_at timestamptz default now() -- ✅
 )
 
@@ -462,7 +461,7 @@ WHERE NOT EXISTS (
 
 **仕様変更対応（コードへの反映が必要）🔄**
 - costumes テーブルに新フィールド追加
-  - status から `renting` を削除
+  - status から `renting` を削除 ✅
 - rentals テーブル: `start_date`/`end_date` → `use_date` に変更
 - rentals status に `returning` を追加
 - reviews テーブル: 星評価 → 「良かった/残念だった」+ タグ方式に変更 ✅
