@@ -542,30 +542,57 @@ yourname+renter@gmail.com → 借り手アカウント用
 **テスト手順**
 
 ```
-① Aで衣装を登録
-② Bで衣装を検索して申請
+① Aで衣装を登録（/costumes/new）
+   確認: costumes.status = 'available'
+
+② Bでトップページから衣装を検索 → 詳細ページで「使用日」を選んで申請
+   確認: rentals.status = 'pending'、rentals.use_date に日付が入っている
+
 ③ Aに申請通知が来るか確認
-④ Aで承認ボタンを押す
+   確認: notifications に rental_requested レコード、Resend Logs にメール
+
+④ Aで取引詳細ページ（/rentals/[id]）を開き「承認する」を押す
+   確認: rentals.status = 'approved'
+
 ⑤ Bに承認通知が来るか確認
-⑥ A・B間でメッセージをやり取り
-⑦ Bで「受け取りました」ボタンを押す → status: active を確認
-⑧ Bで「返却しました」ボタンを押す
-⑨ Aで「受け取りました」ボタンを押す → status: returning → returned を確認
-⑩ A・Bに評価依頼通知が来るか確認
-⑪ お互い評価を投稿
-⑫ Aで「貸し出し可能にする」ボタンを押す
+   確認: notifications に rental_approved レコード、Resend Logs にメール
+
+⑥ A・B間で /messages/[rentalId] を使って配送方法・住所・支払い方法をやり取り
+
+⑦ Aで「発送済みにする」を押す（出品者が発送 or 手渡し完了）
+   確認: rentals.status = 'active'
+
+⑧ Bで「返却しました」を押す（借り手が返送 or 手渡し）
+   確認: rentals.status = 'returning'
+
+⑨ Aで「受け取りました」を押す（出品者が受取確認）
+   確認: rentals.status = 'returned'
+
+⑩ A・Bの /rentals/[id] に「評価を投稿する」ボタンが表示されることを確認
+
+⑪ A・B双方が評価を投稿（「良かった/残念だった」+ タグ選択）
+   確認: reviews に2件レコード、双方投稿完了で is_published = true になる
+   確認: profiles.good_count / total_count が更新されている
 ```
 
-**statusの確認方法**
-Supabase → Table Editor → rentals で各ステップのstatusを直接確認する。
+**Supabaseで確認すること**
+
+| テーブル | 確認ポイント |
+|---------|------------|
+| `rentals` | `status` の遷移、`use_date` が正しいこと |
+| `reviews` | `rating`（'good' or 'bad'）、`tags`、`is_published` |
+| `profiles` | 評価公開後に `good_count`/`total_count` が更新されること |
+| `notifications` | 各ステップで通知レコードが作成されること |
 
 **通知の確認方法**
 - アプリ内通知: notificationsテーブルにレコードが追加されているか確認
 - メール通知: Resend → Logs で送信ログを確認
 
 **よくある詰まりポイント**
+- 衣装が表示されない → costumes.status が 'available' か確認（'hidden' だと一覧に出ない）
 - RLSで操作できない → RLSポリシーをClaude Codeに確認させる
 - statusが変わらない → ブラウザのDevTools → Console でエラーを確認してClaude Codeに貼る
+- 「評価を投稿する」が出ない → rentals.status が 'returned' になっているか確認
 - 通知が届かない → Supabase Realtimeの購読設定を確認する
 
 ---
