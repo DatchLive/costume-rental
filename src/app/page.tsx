@@ -33,7 +33,7 @@ async function CostumeList({ searchParams }: HomePageProps) {
   const supabase = await createClient()
   let query = supabase
     .from('costumes')
-    .select('*, profiles(id, name, avatar_url, rating_avg, rating_count, is_verified)')
+    .select('*, profiles(id, name, avatar_url, good_count, total_count, is_verified)')
     .eq('status', 'available')
     .order('created_at', { ascending: false })
     .range(offset, offset + PAGE_SIZE - 1)

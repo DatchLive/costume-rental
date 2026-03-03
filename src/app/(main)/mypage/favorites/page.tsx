@@ -15,7 +15,7 @@ export default async function FavoritesPage() {
     .from('favorites')
     .select(`
       costume_id,
-      costumes(*, profiles(id, name, avatar_url, rating_avg, rating_count, is_verified))
+      costumes(*, profiles(id, name, avatar_url, good_count, total_count, is_verified))
     `)
     .eq('user_id', user.id)
     .order('created_at', { ascending: false })
