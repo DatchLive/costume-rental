@@ -61,8 +61,8 @@ profiles (
   bio text,                                    -- ✅
   avatar_url text,                             -- ✅
   is_verified boolean default false,           -- ✅
-  good_count int default 0,    -- 🔄 良かった評価の件数（現在: rating_avg, rating_count）
-  total_count int default 0,   -- 🔄 総評価件数（現在: rating_avg, rating_count）
+  good_count int default 0,    -- ✅ 良かった評価の件数
+  total_count int default 0,   -- ✅ 総評価件数
   plan text default 'free',    -- ✅ 'free' | 'premium'
   created_at timestamptz default now()         -- ✅
 )
@@ -140,8 +140,8 @@ reviews (
   reviewer_id uuid references profiles(id),        -- ✅
   reviewee_id uuid references profiles(id),        -- ✅
   role text not null,        -- ✅ 'owner' | 'renter'
-  rating text not null,      -- 🔄 'good'（良かった）| 'bad'（残念だった）（現在: int 1〜5の星評価）
-  tags text[],               -- 🔄 選択されたタグの配列（現在: accuracy_rating等のint）
+  rating text not null,      -- ✅ 'good'（良かった）| 'bad'（残念だった）
+  tags text[],               -- ✅ 選択されたタグの配列
   comment text,              -- ✅
   is_published boolean default false,  -- ✅ 双方投稿 or 7日経過で同時公開
   created_at timestamptz default now() -- ✅
@@ -411,15 +411,15 @@ WHERE NOT EXISTS (
 
 - 取引完了後、双方に評価依頼を通知 ✅
 - 両者が投稿 or 7日経過で同時公開（先出し不利を防ぐ）✅
-- メルカリと同じ「良かった / 残念だった」の二択 🔄（現在: 1〜5の星評価で実装）
-- 評価はユーザーページに「良かった率」として表示（例: 良かった 12件）🔄（現在: 星平均で表示）
+- メルカリと同じ「良かった / 残念だった」の二択 ✅
+- 評価はユーザーページに「良かった率」として表示（例: 良かった 12件）✅
 
-**出品者への評価タグ（借り手が選択）** 🔄 未実装（現在: accuracy_rating, response_rating のスコア）
+**出品者への評価タグ（借り手が選択）** ✅
 - 説明通りの衣装だった
 - 対応が丁寧だった
 - 発送・受け渡しが早かった
 
-**借り手への評価タグ（出品者が選択）** 🔄 未実装（現在: return_rating のスコア）
+**借り手への評価タグ（出品者が選択）** ✅
 - 返却が丁寧だった
 - 連絡が早かった
 - クリーニングが丁寧だった
@@ -465,8 +465,8 @@ WHERE NOT EXISTS (
   - status から `renting` を削除
 - rentals テーブル: `start_date`/`end_date` → `use_date` に変更
 - rentals status に `returning` を追加
-- reviews テーブル: 星評価 → 「良かった/残念だった」+ タグ方式に変更
-- profiles テーブル: `rating_avg`/`rating_count` → `good_count`/`total_count` に変更
+- reviews テーブル: 星評価 → 「良かった/残念だった」+ タグ方式に変更 ✅
+- profiles テーブル: `rating_avg`/`rating_count` → `good_count`/`total_count` に変更 ✅
 - 希望日フィルタ（use_date + buffer_days で空き確認）の実装
 - メール通知: `message_received`（メッセージ受信時）
 - メール通知: `ready_to_list`（buffer_days 経過後の貸し出し促進）

@@ -3,7 +3,6 @@ import type { Metadata } from 'next'
 import { MapPin } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { Avatar } from '@/components/ui/Avatar'
-import { StarRating } from '@/components/ui/StarRating'
 import { CostumeGrid } from '@/components/costume/CostumeGrid'
 import { ReviewCard } from '@/components/review/ReviewCard'
 import type { CostumeWithProfile, Review, Profile } from '@/types/database'
@@ -34,7 +33,7 @@ export default async function UserPage({ params }: UserPageProps) {
   const [{ data: costumes }, { data: reviews }] = await Promise.all([
     supabase
       .from('costumes')
-      .select('*, profiles(id, name, avatar_url, rating_avg, rating_count, is_verified)')
+      .select('*, profiles(id, name, avatar_url, good_count, total_count, is_verified)')
       .eq('user_id', id)
       .eq('status', 'available')
       .order('created_at', { ascending: false })
@@ -70,11 +69,10 @@ export default async function UserPage({ params }: UserPageProps) {
               {profile.area}
             </p>
           )}
-          {(profile.rating_count ?? 0) > 0 && (
-            <div className="mt-2 flex items-center gap-2">
-              <StarRating value={profile.rating_avg ?? 0} readonly size="md" />
-              <span className="text-sm text-gray-500">({profile.rating_count}件の評価)</span>
-            </div>
+          {(profile.total_count ?? 0) > 0 && (
+            <p className="mt-2 text-sm text-gray-600">
+              👍 良かった {profile.good_count}件 / {profile.total_count}件
+            </p>
           )}
           {profile.bio && (
             <p className="mt-3 max-w-lg text-sm text-gray-600">{profile.bio}</p>

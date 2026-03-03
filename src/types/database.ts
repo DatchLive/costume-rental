@@ -34,8 +34,8 @@ export interface Database {
           bio: string | null
           avatar_url: string | null
           is_verified: boolean
-          rating_avg: number | null
-          rating_count: number
+          good_count: number
+          total_count: number
           plan: UserPlan
           created_at: string
         }
@@ -46,8 +46,8 @@ export interface Database {
           bio?: string | null
           avatar_url?: string | null
           is_verified?: boolean
-          rating_avg?: number | null
-          rating_count?: number
+          good_count?: number
+          total_count?: number
           plan?: UserPlan
           created_at?: string
         }
@@ -58,8 +58,8 @@ export interface Database {
           bio?: string | null
           avatar_url?: string | null
           is_verified?: boolean
-          rating_avg?: number | null
-          rating_count?: number
+          good_count?: number
+          total_count?: number
           plan?: UserPlan
           created_at?: string
         }
@@ -257,10 +257,8 @@ export interface Database {
           reviewer_id: string
           reviewee_id: string
           role: string
-          rating: number
-          accuracy_rating: number | null
-          response_rating: number | null
-          return_rating: number | null
+          rating: string
+          tags: string[] | null
           comment: string | null
           is_published: boolean
           created_at: string
@@ -271,10 +269,8 @@ export interface Database {
           reviewer_id: string
           reviewee_id: string
           role: string
-          rating: number
-          accuracy_rating?: number | null
-          response_rating?: number | null
-          return_rating?: number | null
+          rating: string
+          tags?: string[] | null
           comment?: string | null
           is_published?: boolean
           created_at?: string
@@ -285,10 +281,8 @@ export interface Database {
           reviewer_id?: string
           reviewee_id?: string
           role?: string
-          rating?: number
-          accuracy_rating?: number | null
-          response_rating?: number | null
-          return_rating?: number | null
+          rating?: string
+          tags?: string[] | null
           comment?: string | null
           is_published?: boolean
           created_at?: string
@@ -420,7 +414,7 @@ export type Report = Database['public']['Tables']['reports']['Row']
 
 // Extended types with joined relations
 export type CostumeWithProfile = Costume & {
-  profiles: Pick<Profile, 'id' | 'name' | 'avatar_url' | 'rating_avg' | 'rating_count' | 'is_verified'>
+  profiles: Pick<Profile, 'id' | 'name' | 'avatar_url' | 'good_count' | 'total_count' | 'is_verified'>
 }
 
 export type RentalWithDetails = Rental & {

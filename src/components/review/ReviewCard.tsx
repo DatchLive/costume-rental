@@ -1,5 +1,4 @@
 import { Avatar } from '@/components/ui/Avatar'
-import { StarRating } from '@/components/ui/StarRating'
 import { formatDate } from '@/lib/utils'
 import type { Review, Profile } from '@/types/database'
 
@@ -10,6 +9,8 @@ interface ReviewCardProps {
 }
 
 export function ReviewCard({ review }: ReviewCardProps) {
+  const isGood = review.rating === 'good'
+
   return (
     <div className="rounded-xl border border-gray-200 bg-white p-4">
       <div className="flex items-center gap-3">
@@ -20,8 +21,28 @@ export function ReviewCard({ review }: ReviewCardProps) {
         </div>
       </div>
       <div className="mt-3">
-        <StarRating value={review.rating} readonly size="sm" />
+        <span
+          className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-sm font-medium ${
+            isGood
+              ? 'bg-green-100 text-green-700'
+              : 'bg-red-100 text-red-700'
+          }`}
+        >
+          {isGood ? '👍 良かった' : '👎 残念だった'}
+        </span>
       </div>
+      {(review.tags?.length ?? 0) > 0 && (
+        <div className="mt-2 flex flex-wrap gap-1">
+          {review.tags!.map((tag) => (
+            <span
+              key={tag}
+              className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
       {review.comment && (
         <p className="mt-2 text-sm text-gray-600">{review.comment}</p>
       )}
