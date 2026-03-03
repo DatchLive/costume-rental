@@ -2,8 +2,7 @@ interface RentalApprovedEmailProps {
   renterName: string
   ownerName: string
   costumeTitle: string
-  startDate: string
-  endDate: string
+  useDate: string
   totalPrice: number
   rentalLink: string
 }
@@ -12,8 +11,7 @@ export function rentalApprovedEmail({
   renterName,
   ownerName,
   costumeTitle,
-  startDate,
-  endDate,
+  useDate,
   totalPrice,
   rentalLink,
 }: RentalApprovedEmailProps): { subject: string; html: string } {
@@ -26,8 +24,8 @@ export function rentalApprovedEmail({
         <p>「${costumeTitle}」のレンタル申請が ${ownerName} 様に承認されました。</p>
         <table style="border-collapse: collapse; width: 100%; margin: 16px 0;">
           <tr>
-            <td style="padding: 8px; border: 1px solid #e5e7eb; background: #f9fafb; width: 40%;">レンタル期間</td>
-            <td style="padding: 8px; border: 1px solid #e5e7eb;">${startDate} 〜 ${endDate}</td>
+            <td style="padding: 8px; border: 1px solid #e5e7eb; background: #f9fafb; width: 40%;">使用日</td>
+            <td style="padding: 8px; border: 1px solid #e5e7eb;">${useDate}</td>
           </tr>
           <tr>
             <td style="padding: 8px; border: 1px solid #e5e7eb; background: #f9fafb;">合計金額</td>

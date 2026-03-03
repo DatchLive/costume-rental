@@ -135,6 +135,7 @@ export const RENTAL_STATUS_LABELS: Record<string, string> = {
   approved: '承認済み',
   rejected: '却下',
   active: 'レンタル中',
+  returning: '返却確認中',
   returned: '返却完了',
   cancelled: 'キャンセル',
 }
@@ -144,6 +145,7 @@ export const RENTAL_STATUS_COLORS: Record<string, string> = {
   approved: 'bg-blue-100 text-blue-800',
   rejected: 'bg-red-100 text-red-800',
   active: 'bg-green-100 text-green-800',
+  returning: 'bg-orange-100 text-orange-800',
   returned: 'bg-gray-100 text-gray-800',
   cancelled: 'bg-gray-100 text-gray-500',
 }
@@ -153,11 +155,7 @@ export const FREE_PLAN_MAX_COSTUMES = 3
 export const FREE_PLAN_MAX_IMAGES = 3
 export const PREMIUM_PLAN_MAX_IMAGES = 10
 
-// Rental constraints
-export const MIN_RENTAL_DAYS = 2
-export const MAX_RENTAL_DAYS = 14
-
-// Cancel policy (days before start_date -> fee percentage)
+// Cancel policy (days before use_date -> fee percentage)
 export const CANCEL_POLICY = [
   { daysBeforeStart: 7, feePercent: 0 },
   { daysBeforeStart: 3, feePercent: 30 },

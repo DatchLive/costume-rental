@@ -10,7 +10,7 @@ export type CostumeCategory =
   | 'その他'
 
 export type CostumeStatus = 'available' | 'hidden'
-export type RentalStatus = 'pending' | 'approved' | 'rejected' | 'active' | 'returned' | 'cancelled'
+export type RentalStatus = 'pending' | 'approved' | 'rejected' | 'active' | 'returning' | 'returned' | 'cancelled'
 export type ReviewRole = 'owner' | 'renter'
 export type NotificationType =
   | 'rental_requested'
@@ -157,8 +157,7 @@ export interface Database {
           costume_id: string
           renter_id: string
           owner_id: string
-          start_date: string
-          end_date: string
+          use_date: string
           total_price: number
           platform_fee: number
           status: string
@@ -170,8 +169,7 @@ export interface Database {
           costume_id: string
           renter_id: string
           owner_id: string
-          start_date: string
-          end_date: string
+          use_date: string
           total_price: number
           platform_fee?: number
           status?: string
@@ -183,8 +181,7 @@ export interface Database {
           costume_id?: string
           renter_id?: string
           owner_id?: string
-          start_date?: string
-          end_date?: string
+          use_date?: string
           total_price?: number
           platform_fee?: number
           status?: string

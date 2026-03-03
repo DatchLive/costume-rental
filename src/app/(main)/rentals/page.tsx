@@ -72,7 +72,7 @@ export default async function RentalsPage() {
                   {costume?.title ?? '（削除された衣装）'}
                 </p>
                 <p className="text-xs text-gray-500">
-                  {formatDate(rental.start_date)} 〜 {formatDate(rental.end_date)}
+                  使用日: {formatDate(rental.use_date)}
                 </p>
                 <p className="text-sm font-medium text-amber-700">
                   {formatPrice(rental.total_price)}

@@ -61,6 +61,11 @@ export function RentalActionButtons({
     return null
   }
 
+  // returning: オーナーのみ受取確認ボタンを表示（借り手はボタンなし）
+  if (status === 'returning') {
+    if (!isOwner) return null
+  }
+
   return (
     <>
       <div className="flex flex-wrap gap-3">
@@ -91,12 +96,21 @@ export function RentalActionButtons({
           </Button>
         )}
 
-        {isOwner && status === 'active' && (
+        {isRenter && status === 'active' && (
+          <Button
+            onClick={() => updateStatus('returning')}
+            loading={loading === 'returning'}
+          >
+            返却しました
+          </Button>
+        )}
+
+        {isOwner && status === 'returning' && (
           <Button
             onClick={() => updateStatus('returned')}
             loading={loading === 'returned'}
           >
-            返却完了
+            受け取りました
           </Button>
         )}
 
@@ -109,7 +123,7 @@ export function RentalActionButtons({
           </Button>
         )}
 
-        {(isRenter || isOwner) && (status === 'approved' || status === 'active') && (
+        {(isRenter || isOwner) && (status === 'approved' || status === 'active' || status === 'returning') && (
           <Button
             variant="danger"
             onClick={() => setCancelModalOpen(true)}

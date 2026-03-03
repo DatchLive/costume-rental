@@ -61,16 +61,14 @@ export async function POST(request: Request) {
     const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
     const rentalLink = `${appUrl}/rentals/${rentalId}`
 
-    const startDate = formatDate(rental.start_date)
-    const endDate = formatDate(rental.end_date)
+    const useDate = formatDate(rental.use_date)
 
     if (type === 'rental_requested' && ownerEmail) {
       const { subject, html } = rentalRequestedEmail({
         ownerName: owner.name ?? '出品者',
         renterName: renter.name ?? '借り手',
         costumeTitle: costume.title,
-        startDate,
-        endDate,
+        useDate,
         totalPrice: rental.total_price,
         rentalLink,
       })
@@ -91,8 +89,7 @@ export async function POST(request: Request) {
         renterName: renter.name ?? '借り手',
         ownerName: owner.name ?? '出品者',
         costumeTitle: costume.title,
-        startDate,
-        endDate,
+        useDate,
         totalPrice: rental.total_price,
         rentalLink,
       })

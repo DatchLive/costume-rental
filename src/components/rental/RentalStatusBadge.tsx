@@ -10,6 +10,7 @@ const statusVariants: Record<string, 'default' | 'success' | 'warning' | 'danger
   approved: 'info',
   rejected: 'danger',
   active: 'success',
+  returning: 'warning',
   returned: 'default',
   cancelled: 'default',
 }

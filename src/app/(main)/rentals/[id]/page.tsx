@@ -8,13 +8,21 @@ import { RentalStatusBadge } from '@/components/rental/RentalStatusBadge'
 import { RentalActionButtons } from '@/components/rental/RentalActionButtons'
 import { Avatar } from '@/components/ui/Avatar'
 import { Button } from '@/components/ui/Button'
-import { formatDate, formatPrice, calcRentalDays } from '@/lib/utils'
+import { formatDate, formatPrice } from '@/lib/utils'
 import type { RentalStatus } from '@/types/database'
 
 export const metadata: Metadata = { title: '取引詳細' }
 
 interface RentalDetailPageProps {
   params: Promise<{ id: string }>
+}
+
+const STATUS_GUIDE: Record<string, { renter: string; owner: string }> = {
+  pending:   { renter: '承認をお待ちください',                        owner: '申請を確認して承認・却下してください' },
+  approved:  { renter: '受け渡し方法をメッセージで確認してください',   owner: '受け渡し方法をメッセージで確認してください' },
+  active:    { renter: '返却の準備ができたら返却報告してください',       owner: '返却をお待ちください' },
+  returning: { renter: 'オーナーの受取確認をお待ちください',            owner: '返却を受け取ったら確認してください' },
+  returned:  { renter: '評価を投稿してください',                        owner: 'クリーニング・準備が完了したら貸し出し可能にしてください' },
 }
 
 export default async function RentalDetailPage({ params }: RentalDetailPageProps) {
@@ -43,7 +51,8 @@ export default async function RentalDetailPage({ params }: RentalDetailPageProps
   const renter = (rental as unknown as { renter: { id: string; name: string | null; avatar_url: string | null } }).renter
   const owner = (rental as unknown as { owner: { id: string; name: string | null; avatar_url: string | null } }).owner
 
-  const days = calcRentalDays(rental.start_date, rental.end_date)
+  const guide = STATUS_GUIDE[rental.status]
+  const guideText = guide ? (isRenter ? guide.renter : guide.owner) : null
 
   // Check if user has already reviewed
   const { data: existingReview } = await supabase
@@ -63,6 +72,13 @@ export default async function RentalDetailPage({ params }: RentalDetailPageProps
       </div>
 
       <div className="flex flex-col gap-6">
+        {/* Status guidance */}
+        {guideText && (
+          <div className="rounded-xl bg-amber-50 px-4 py-3 text-sm font-medium text-amber-800">
+            {guideText}
+          </div>
+        )}
+
         {/* Costume info */}
         <div className="flex items-center gap-4 rounded-xl border border-gray-200 bg-white p-4">
           <div className="relative h-20 w-16 shrink-0 overflow-hidden rounded-lg bg-gray-100">
@@ -91,11 +107,8 @@ export default async function RentalDetailPage({ params }: RentalDetailPageProps
           <h2 className="mb-4 font-semibold text-gray-900">取引内容</h2>
           <dl className="flex flex-col gap-3 text-sm">
             <div className="flex justify-between">
-              <dt className="text-gray-500">レンタル期間</dt>
-              <dd className="font-medium text-gray-900">
-                {formatDate(rental.start_date)} 〜 {formatDate(rental.end_date)}
-                <span className="ml-1 text-gray-500">（{days}日間）</span>
-              </dd>
+              <dt className="text-gray-500">使用日</dt>
+              <dd className="font-medium text-gray-900">{formatDate(rental.use_date)}</dd>
             </div>
             <div className="flex justify-between">
               <dt className="text-gray-500">レンタル料金</dt>

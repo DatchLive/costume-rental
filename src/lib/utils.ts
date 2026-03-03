@@ -46,23 +46,19 @@ export function formatRelativeTime(dateStr: string): string {
   return formatDate(dateStr)
 }
 
-export function calcRentalDays(startDate: string, endDate: string): number {
-  return differenceInCalendarDays(new Date(endDate), new Date(startDate))
-}
-
 export function calcTotalPrice(rentalPrice: number): number {
   return rentalPrice
 }
 
 export function calcCancelFee(
   totalPrice: number,
-  startDate: string
+  useDate: string
 ): number {
-  const daysUntilStart = differenceInCalendarDays(new Date(startDate), new Date())
+  const daysUntilUse = differenceInCalendarDays(new Date(useDate), new Date())
 
-  if (daysUntilStart >= 7) return 0
-  if (daysUntilStart >= 3) return Math.floor(totalPrice * 0.3)
-  if (daysUntilStart >= 1) return Math.floor(totalPrice * 0.5)
+  if (daysUntilUse >= 7) return 0
+  if (daysUntilUse >= 3) return Math.floor(totalPrice * 0.3)
+  if (daysUntilUse >= 1) return Math.floor(totalPrice * 0.5)
   return totalPrice
 }
 

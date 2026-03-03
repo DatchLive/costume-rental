@@ -107,14 +107,14 @@ rentals (
   costume_id uuid references costumes(id),         -- ✅
   renter_id uuid references profiles(id),          -- ✅
   owner_id uuid references profiles(id),           -- ✅
-  use_date date not null,      -- 🔄 使用したい日（現在: start_date, end_date で実装）
+  use_date date not null,      -- ✅ 使用したい日
   total_price int not null,    -- ✅ 申請時点の価格で確定
   platform_fee int default 0,  -- ✅ 手数料（フェーズ1・2は0）
   status text default 'pending',  -- ✅
   -- 'pending'    → 申請中（借り手が申請、出品者の承認待ち）
   -- 'approved'   → 承認済み・メッセージで交渉中
   -- 'active'     → 使用中（受け渡し完了〜返却前）
-  -- 'returning'  → 返却確認中（借り手が返却済みボタン押下後）🔄 未実装
+  -- 'returning'  → 返却確認中（借り手が返却済みボタン押下後）✅
   -- 'returned'   → 返却完了・クリーニング／準備中
   -- 'rejected'   → 却下
   -- 'cancelled'  → キャンセル
@@ -462,8 +462,8 @@ WHERE NOT EXISTS (
 **仕様変更対応（コードへの反映が必要）🔄**
 - costumes テーブルに新フィールド追加
   - status から `renting` を削除 ✅
-- rentals テーブル: `start_date`/`end_date` → `use_date` に変更
-- rentals status に `returning` を追加
+- rentals テーブル: `start_date`/`end_date` → `use_date` に変更 ✅
+- rentals status に `returning` を追加 ✅
 - reviews テーブル: 星評価 → 「良かった/残念だった」+ タグ方式に変更 ✅
 - profiles テーブル: `rating_avg`/`rating_count` → `good_count`/`total_count` に変更 ✅
 - 希望日フィルタ（use_date + buffer_days で空き確認）の実装
