@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/Button'
 import { formatPrice, formatDate } from '@/lib/utils'
 import { CLEANING_RESPONSIBILITY_LABEL, TANNING_POLICY_LABEL } from '@/lib/constants'
 import { RentalRequestFormWrapper } from './RentalRequestFormWrapper'
+import { FavoriteButton } from '@/components/costume/FavoriteButton'
 import type { CostumeWithProfile } from '@/types/database'
 
 interface CostumePageProps {
@@ -36,7 +37,10 @@ export default async function CostumePage({ params }: CostumePageProps) {
   const { id } = await params
   const supabase = await createClient()
 
-  const [{ data: costumeData }, { data: activeRental }] = await Promise.all([
+  const { data: { user } } = await supabase.auth.getUser()
+  const userId = user?.id ?? null
+
+  const [{ data: costumeData }, { data: activeRental }, { data: favoriteRow }] = await Promise.all([
     supabase
       .from('costumes')
       .select('*, profiles(id, name, avatar_url, good_count, total_count, is_verified, area)')
@@ -49,21 +53,28 @@ export default async function CostumePage({ params }: CostumePageProps) {
       .in('status', ['approved', 'active', 'returning'])
       .limit(1)
       .maybeSingle(),
+    userId
+      ? supabase
+          .from('favorites')
+          .select('id')
+          .eq('user_id', userId)
+          .eq('costume_id', id)
+          .maybeSingle()
+      : Promise.resolve({ data: null }),
   ])
 
   if (!costumeData) notFound()
   const isRenting = !!activeRental
+  const isFavorited = !!favoriteRow
 
   const costume = costumeData as unknown as CostumeWithProfile & {
     profiles: { id: string; name: string | null; avatar_url: string | null; good_count: number; total_count: number; is_verified: boolean; area: string | null }
   }
 
   if (costume.status === 'hidden') {
-    const { data: { user } } = await supabase.auth.getUser()
     if (!user || user.id !== costume.user_id) notFound()
   }
 
-  const { data: { user } } = await supabase.auth.getUser()
   const isOwner = user?.id === costume.user_id
 
   const images = costume.images.length > 0 ? costume.images : []
@@ -116,7 +127,15 @@ export default async function CostumePage({ params }: CostumePageProps) {
         {/* Info */}
         <div className="flex flex-col gap-5">
           <div>
-            <CategoryBadge category={costume.category} />
+            <div className="flex items-start justify-between gap-3">
+              <CategoryBadge category={costume.category} />
+              <FavoriteButton
+                costumeId={id}
+                userId={userId}
+                isFavorited={isFavorited}
+                size="md"
+              />
+            </div>
             <h1 className="mt-2 text-2xl font-bold text-gray-900">{costume.title}</h1>
 
             <div className="mt-2 flex items-baseline gap-2">

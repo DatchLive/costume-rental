@@ -31,6 +31,10 @@ async function CostumeList({ searchParams }: HomePageProps) {
   const offset = (page - 1) * PAGE_SIZE
 
   const supabase = await createClient()
+
+  const { data: { user } } = await supabase.auth.getUser()
+  const userId = user?.id ?? null
+
   let query = supabase
     .from('costumes')
     .select('*, profiles(id, name, avatar_url, good_count, total_count, is_verified)')
@@ -63,9 +67,15 @@ async function CostumeList({ searchParams }: HomePageProps) {
   if (params.max_price) query = query.lte('rental_price', Number(params.max_price))
   if (params.color) query = query.contains('colors', [params.color])
 
-  const { data: costumes } = await query
+  const [{ data: costumes }, { data: favoritesData }] = await Promise.all([
+    query,
+    userId
+      ? supabase.from('favorites').select('costume_id').eq('user_id', userId)
+      : Promise.resolve({ data: [] }),
+  ])
 
   const typedCostumes = (costumes ?? []) as unknown as CostumeWithProfile[]
+  const favoritedIds = new Set((favoritesData ?? []).map((f) => (f as { costume_id: string }).costume_id))
 
   return (
     <div>
@@ -74,7 +84,7 @@ async function CostumeList({ searchParams }: HomePageProps) {
           ? `${typedCostumes.length}件の衣装が見つかりました`
           : ''}
       </div>
-      <CostumeGrid costumes={typedCostumes} />
+      <CostumeGrid costumes={typedCostumes} favoritedIds={favoritedIds} userId={userId} />
       {typedCostumes.length === PAGE_SIZE && (
         <div className="mt-8 flex justify-center">
           <Link

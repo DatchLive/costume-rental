@@ -4,9 +4,11 @@ import type { CostumeWithProfile } from '@/types/database'
 interface CostumeGridProps {
   costumes: CostumeWithProfile[]
   emptyMessage?: string
+  favoritedIds?: Set<string>
+  userId?: string | null
 }
 
-export function CostumeGrid({ costumes, emptyMessage = '衣装が見つかりませんでした' }: CostumeGridProps) {
+export function CostumeGrid({ costumes, emptyMessage = '衣装が見つかりませんでした', favoritedIds, userId }: CostumeGridProps) {
   if (costumes.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center text-gray-500">
@@ -21,7 +23,12 @@ export function CostumeGrid({ costumes, emptyMessage = '衣装が見つかりま
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
       {costumes.map((costume) => (
-        <CostumeCard key={costume.id} costume={costume} />
+        <CostumeCard
+          key={costume.id}
+          costume={costume}
+          isFavorited={favoritedIds?.has(costume.id) ?? false}
+          userId={userId}
+        />
       ))}
     </div>
   )

@@ -4,13 +4,16 @@ import { MapPin, Truck, Handshake } from 'lucide-react'
 import { formatPrice } from '@/lib/utils'
 import { COSTUME_COLOR_MAP } from '@/lib/constants'
 import { CategoryBadge } from './CategoryBadge'
+import { FavoriteButton } from './FavoriteButton'
 import type { CostumeWithProfile } from '@/types/database'
 
 interface CostumeCardProps {
   costume: CostumeWithProfile
+  isFavorited?: boolean
+  userId?: string | null
 }
 
-export function CostumeCard({ costume }: CostumeCardProps) {
+export function CostumeCard({ costume, isFavorited = false, userId = null }: CostumeCardProps) {
   const mainImage = costume.images[0]
 
   return (
@@ -37,6 +40,14 @@ export function CostumeCard({ costume }: CostumeCardProps) {
         )}
         <div className="absolute left-2 top-2">
           <CategoryBadge category={costume.category} />
+        </div>
+        <div className="absolute right-2 top-2">
+          <FavoriteButton
+            costumeId={costume.id}
+            userId={userId}
+            isFavorited={isFavorited}
+            size="sm"
+          />
         </div>
       </div>
 

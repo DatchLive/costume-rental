@@ -172,8 +172,8 @@ notifications (
   created_at timestamptz default now()             -- ✅
 )
 
--- お気に入り（フェーズ2）
-favorites (                   -- 🔲
+-- お気に入り
+favorites (                   -- ✅
   id uuid primary key default gen_random_uuid(),
   user_id uuid references profiles(id),
   costume_id uuid references costumes(id),
@@ -364,9 +364,9 @@ WHERE NOT EXISTS (
 
 - `/notifications` - 通知一覧
 
-### お気に入り 🔲 フェーズ2
+### お気に入り ✅ 実装済み
 
-- `/mypage/favorites` - お気に入り一覧
+- `/mypage/favorites` - お気に入り一覧（衣装カード・詳細ページにハートボタン）
 
 ### 管理者 🔲 フェーズ2
 
@@ -472,7 +472,6 @@ WHERE NOT EXISTS (
 
 ### フェーズ2
 
-- お気に入り機能
 - 貸出カレンダー（空き状況表示）
 - ブラウザプッシュ通知
 - 管理者画面
