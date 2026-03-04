@@ -146,8 +146,8 @@ reviews (
   created_at timestamptz default now() -- ✅
 )
 
--- 衣装評価（フェーズ2で実装）
-costume_reviews (                         -- 🔲
+-- 衣装評価
+costume_reviews (                         -- ✅
   id uuid primary key default gen_random_uuid(),
   rental_id uuid references rentals(id),
   costume_id uuid references costumes(id),
@@ -423,10 +423,10 @@ WHERE NOT EXISTS (
 - 連絡が早かった
 - クリーニングが丁寧だった
 
-### 衣装評価（フェーズ2）🔲
+### 衣装評価 ✅ 実装済み
 
-- 星評価ではなくタグ選択式にしてネガティブ評価が出にくい設計にする
-- 項目：サイズ感・写真との一致度・コンディション・おすすめシーン
+- タグ選択式（サイズ感・写真との一致度・コンディション・おすすめシーン）
+- 借り手が `/rentals/[id]/review` でユーザー評価と同時に投稿
 - 衣装詳細ページに「借りた人の声」として表示
 
 ---
@@ -477,7 +477,6 @@ WHERE NOT EXISTS (
 - 管理者画面
 - 通報・ブロック機能
 - プレミアムプラン（登録数制限 + Stripe）
-- 衣装評価機能（タグ選択式）
 
 ### フェーズ3（要検討）
 

@@ -340,6 +340,45 @@ export interface Database {
         }
         Relationships: []
       }
+      costume_reviews: {
+        Row: {
+          id: string
+          rental_id: string
+          costume_id: string
+          reviewer_id: string
+          size_fit: string | null
+          photo_match: string | null
+          condition: string | null
+          recommended_scene: string[]
+          comment: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          rental_id: string
+          costume_id: string
+          reviewer_id: string
+          size_fit?: string | null
+          photo_match?: string | null
+          condition?: string | null
+          recommended_scene?: string[]
+          comment?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          rental_id?: string
+          costume_id?: string
+          reviewer_id?: string
+          size_fit?: string | null
+          photo_match?: string | null
+          condition?: string | null
+          recommended_scene?: string[]
+          comment?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
       reports: {
         Row: {
           id: string
@@ -408,6 +447,7 @@ export type Review = Database['public']['Tables']['reviews']['Row']
 export type Notification = Database['public']['Tables']['notifications']['Row']
 export type Favorite = Database['public']['Tables']['favorites']['Row']
 export type Report = Database['public']['Tables']['reports']['Row']
+export type CostumeReview = Database['public']['Tables']['costume_reviews']['Row']
 
 // Extended types with joined relations
 export type CostumeWithProfile = Costume & {

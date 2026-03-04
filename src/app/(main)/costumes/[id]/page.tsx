@@ -12,7 +12,8 @@ import { formatPrice, formatDate } from '@/lib/utils'
 import { CLEANING_RESPONSIBILITY_LABEL, TANNING_POLICY_LABEL } from '@/lib/constants'
 import { RentalRequestFormWrapper } from './RentalRequestFormWrapper'
 import { FavoriteButton } from '@/components/costume/FavoriteButton'
-import type { CostumeWithProfile } from '@/types/database'
+import { CostumeReviewCard } from '@/components/review/CostumeReviewCard'
+import type { CostumeWithProfile, CostumeReview, Profile } from '@/types/database'
 
 interface CostumePageProps {
   params: Promise<{ id: string }>
@@ -40,7 +41,7 @@ export default async function CostumePage({ params }: CostumePageProps) {
   const { data: { user } } = await supabase.auth.getUser()
   const userId = user?.id ?? null
 
-  const [{ data: costumeData }, { data: activeRental }, { data: favoriteRow }] = await Promise.all([
+  const [{ data: costumeData }, { data: activeRental }, { data: favoriteRow }, { data: costumeReviewsData }] = await Promise.all([
     supabase
       .from('costumes')
       .select('*, profiles(id, name, avatar_url, good_count, total_count, is_verified, area)')
@@ -61,11 +62,21 @@ export default async function CostumePage({ params }: CostumePageProps) {
           .eq('costume_id', id)
           .maybeSingle()
       : Promise.resolve({ data: null }),
+    supabase
+      .from('costume_reviews')
+      .select('*, reviewer:profiles!costume_reviews_reviewer_id_fkey(id, name, avatar_url)')
+      .eq('costume_id', id)
+      .order('created_at', { ascending: false }),
   ])
 
   if (!costumeData) notFound()
   const isRenting = !!activeRental
   const isFavorited = !!favoriteRow
+
+  type CostumeReviewWithReviewer = CostumeReview & {
+    reviewer: Pick<Profile, 'id' | 'name' | 'avatar_url'>
+  }
+  const costumeReviews = (costumeReviewsData ?? []) as unknown as CostumeReviewWithReviewer[]
 
   const costume = costumeData as unknown as CostumeWithProfile & {
     profiles: { id: string; name: string | null; avatar_url: string | null; good_count: number; total_count: number; is_verified: boolean; area: string | null }
@@ -273,6 +284,21 @@ export default async function CostumePage({ params }: CostumePageProps) {
           </p>
         </div>
       </div>
+
+      {/* Costume reviews */}
+      {costumeReviews.length > 0 && (
+        <section className="mt-10">
+          <h2 className="mb-4 text-lg font-bold text-gray-900">
+            借りた人の声
+            <span className="ml-2 text-sm font-normal text-gray-400">({costumeReviews.length}件)</span>
+          </h2>
+          <div className="flex flex-col gap-4">
+            {costumeReviews.map((review) => (
+              <CostumeReviewCard key={review.id} review={review} />
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   )
 }

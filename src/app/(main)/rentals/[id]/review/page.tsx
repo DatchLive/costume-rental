@@ -1,7 +1,6 @@
 import { notFound, redirect } from 'next/navigation'
 import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
-import { Card, CardContent } from '@/components/ui/Card'
 import { ReviewSubmitClient } from './ReviewSubmitClient'
 
 export const metadata: Metadata = { title: '評価を投稿する' }
@@ -18,7 +17,7 @@ export default async function ReviewPage({ params }: ReviewPageProps) {
 
   const { data: rental } = await supabase
     .from('rentals')
-    .select('id, status, renter_id, owner_id')
+    .select('id, status, renter_id, owner_id, costume_id')
     .eq('id', id)
     .single()
 
@@ -45,16 +44,13 @@ export default async function ReviewPage({ params }: ReviewPageProps) {
       <p className="mb-6 text-sm text-gray-500">
         双方が評価を投稿するか、7日間経過すると公開されます。
       </p>
-      <Card>
-        <CardContent className="pt-6">
-          <ReviewSubmitClient
-            rentalId={id}
-            reviewerId={user.id}
-            revieweeId={revieweeId}
-            role={isOwner ? 'owner' : 'renter'}
-          />
-        </CardContent>
-      </Card>
+      <ReviewSubmitClient
+        rentalId={id}
+        reviewerId={user.id}
+        revieweeId={revieweeId}
+        role={isOwner ? 'owner' : 'renter'}
+        costumeId={!isOwner ? rental.costume_id : undefined}
+      />
     </div>
   )
 }

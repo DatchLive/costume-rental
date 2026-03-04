@@ -150,6 +150,51 @@ export const RENTAL_STATUS_COLORS: Record<string, string> = {
   cancelled: 'bg-gray-100 text-gray-500',
 }
 
+// Costume review labels
+export const COSTUME_REVIEW_SIZE_FIT_OPTIONS = [
+  { value: 'small', label: '小さかった' },
+  { value: 'just',  label: 'ちょうどよかった' },
+  { value: 'large', label: '大きかった' },
+] as const
+
+export const COSTUME_REVIEW_PHOTO_MATCH_OPTIONS = [
+  { value: 'same',               label: '写真通り' },
+  { value: 'slightly_different', label: '少し違った' },
+] as const
+
+export const COSTUME_REVIEW_CONDITION_OPTIONS = [
+  { value: 'good',   label: '良好' },
+  { value: 'normal', label: '普通' },
+] as const
+
+export const COSTUME_REVIEW_SCENE_OPTIONS = [
+  { value: 'competition', label: '競技会' },
+  { value: 'party',       label: 'パーティー' },
+  { value: 'demo',        label: 'デモンストレーション' },
+] as const
+
+export const COSTUME_REVIEW_SIZE_FIT_LABELS: Record<string, string> = {
+  small: '小さかった',
+  just:  'ちょうどよかった',
+  large: '大きかった',
+}
+
+export const COSTUME_REVIEW_PHOTO_MATCH_LABELS: Record<string, string> = {
+  same:               '写真通り',
+  slightly_different: '少し違った',
+}
+
+export const COSTUME_REVIEW_CONDITION_LABELS: Record<string, string> = {
+  good:   '良好',
+  normal: '普通',
+}
+
+export const COSTUME_REVIEW_SCENE_LABELS: Record<string, string> = {
+  competition: '競技会',
+  party:       'パーティー',
+  demo:        'デモンストレーション',
+}
+
 // Free plan limits
 export const FREE_PLAN_MAX_COSTUMES = 3
 export const FREE_PLAN_MAX_IMAGES = 3
