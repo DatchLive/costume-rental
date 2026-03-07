@@ -123,7 +123,7 @@ export function CostumeForm({
               min={50}
               max={250}
               className="h-10 w-full rounded-lg border border-gray-300 px-3 text-sm focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
-              {...register('height_min', { valueAsNumber: true })}
+              {...register('height_min', { setValueAs: (v) => v === '' || v === null ? undefined : Number(v) })}
             />
             <span className="shrink-0 text-gray-400">〜</span>
             <input
@@ -132,7 +132,7 @@ export function CostumeForm({
               min={50}
               max={250}
               className="h-10 w-full rounded-lg border border-gray-300 px-3 text-sm focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
-              {...register('height_max', { valueAsNumber: true })}
+              {...register('height_max', { setValueAs: (v) => v === '' || v === null ? undefined : Number(v) })}
             />
           </div>
           {(errors.height_min || errors.height_max) && (
@@ -202,7 +202,7 @@ export function CostumeForm({
             max={100000}
             placeholder="未設定の場合は空欄"
             error={errors.student_price?.message}
-            {...register('student_price', { valueAsNumber: true })}
+            {...register('student_price', { setValueAs: (v) => v === '' || v === null ? undefined : Number(v) })}
           />
           <p className="text-xs text-gray-400">適用はメッセージで当事者間にて確認してください</p>
         </div>
