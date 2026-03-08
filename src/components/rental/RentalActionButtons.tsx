@@ -114,8 +114,8 @@ export function RentalActionButtons({
           </Button>
         )}
 
-        {/* オーナーは発送完了（active）前のみキャンセル可 */}
-        {isOwner && (status === 'pending' || status === 'approved') && (
+        {/* オーナーは承認済み（approved）のみキャンセル可。pending は却下ボタンで対応 */}
+        {isOwner && status === 'approved' && (
           <Button
             variant="danger"
             onClick={() => setCancelModalOpen(true)}
