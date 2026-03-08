@@ -7,9 +7,10 @@ import { createClient } from '@/lib/supabase/client'
 interface MessageInputProps {
   rentalId: string
   senderId: string
+  disabled?: boolean
 }
 
-export function MessageInput({ rentalId, senderId }: MessageInputProps) {
+export function MessageInput({ rentalId, senderId, disabled }: MessageInputProps) {
   const [content, setContent] = useState('')
   const [sending, setSending] = useState(false)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
@@ -35,6 +36,14 @@ export function MessageInput({ rentalId, senderId }: MessageInputProps) {
       e.preventDefault()
       handleSend()
     }
+  }
+
+  if (disabled) {
+    return (
+      <div className="border-t border-gray-200 bg-white px-4 py-3 text-center text-sm text-gray-400">
+        この取引のメッセージは締め切られました
+      </div>
+    )
   }
 
   return (

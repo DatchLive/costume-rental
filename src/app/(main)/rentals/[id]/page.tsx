@@ -148,7 +148,10 @@ export default async function RentalDetailPage({
         {guideTexts.length > 0 && (
           <div className="flex flex-col gap-2">
             {guideTexts.map((text) => (
-              <div key={text} className="rounded-xl bg-amber-50 px-4 py-3 text-sm font-medium text-amber-800">
+              <div
+                key={text}
+                className="rounded-xl bg-amber-50 px-4 py-3 text-sm font-medium text-amber-800"
+              >
                 {text}
               </div>
             ))}
@@ -343,6 +346,14 @@ export default async function RentalDetailPage({
           </div>
         </div>
 
+        {/* Message link */}
+        <Link href={`/messages/${id}`}>
+          <Button variant="outline" className="w-full gap-2">
+            <MessageSquare className="h-4 w-4" aria-hidden="true" />
+            メッセージを見る
+          </Button>
+        </Link>
+
         {/* Actions */}
         <RentalActionButtons
           rentalId={id}
@@ -351,14 +362,6 @@ export default async function RentalDetailPage({
           isOwner={isOwner}
           isRenter={isRenter}
         />
-
-        {/* Message link */}
-        <Link href={`/messages/${id}`}>
-          <Button variant="outline" className="w-full gap-2">
-            <MessageSquare className="h-4 w-4" aria-hidden="true" />
-            メッセージを見る
-          </Button>
-        </Link>
       </div>
     </div>
   );

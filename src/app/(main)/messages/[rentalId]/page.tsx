@@ -3,9 +3,8 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 import { ArrowLeft } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
-import { MessageThread } from '@/components/message/MessageThread'
-import { MessageInput } from '@/components/message/MessageInput'
-import type { Message, Profile } from '@/types/database'
+import { MessagePanel } from '@/components/message/MessagePanel'
+import type { Profile } from '@/types/database'
 
 export const metadata: Metadata = { title: 'メッセージ' }
 
@@ -78,18 +77,13 @@ export default async function MessagePage({ params }: MessagePageProps) {
         </div>
       </div>
 
-      {/* Messages */}
-      <div className="flex-1 overflow-y-auto bg-stone-50">
-        <MessageThread
-          rentalId={rentalId}
-          currentUserId={user.id}
-          initialMessages={(messages ?? []) as Message[]}
-          participants={participants}
-        />
-      </div>
-
-      {/* Input */}
-      <MessageInput rentalId={rentalId} senderId={user.id} />
+      <MessagePanel
+        rentalId={rentalId}
+        currentUserId={user.id}
+        initialMessages={messages ?? []}
+        participants={participants}
+        inputDisabled={['completed', 'rejected', 'cancelled'].includes(rental.status)}
+      />
     </div>
   )
 }
