@@ -178,6 +178,14 @@ export default async function RentalDetailPage({
           </div>
         )}
 
+        {/* 却下理由 */}
+        {rental.status === 'rejected' && rental.cancel_reason && (
+          <div className="rounded-xl border border-red-100 bg-red-50 p-6">
+            <h2 className="mb-2 font-semibold text-red-800">却下理由</h2>
+            <p className="whitespace-pre-wrap text-sm text-red-700">{rental.cancel_reason}</p>
+          </div>
+        )}
+
         {/* My submitted review: owner review */}
         {myReview && (
           <div className="rounded-xl border border-gray-200 bg-white p-6">
