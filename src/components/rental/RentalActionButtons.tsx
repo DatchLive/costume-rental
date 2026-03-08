@@ -114,16 +114,8 @@ export function RentalActionButtons({
           </Button>
         )}
 
-        {isRenter && status === 'pending' && (
-          <Button
-            variant="danger"
-            onClick={() => setCancelModalOpen(true)}
-          >
-            申請をキャンセル
-          </Button>
-        )}
-
-        {(isRenter || isOwner) && (status === 'approved' || status === 'active' || status === 'returning') && (
+        {/* オーナーは発送完了（active）前のみキャンセル可 */}
+        {isOwner && (status === 'pending' || status === 'approved') && (
           <Button
             variant="danger"
             onClick={() => setCancelModalOpen(true)}
