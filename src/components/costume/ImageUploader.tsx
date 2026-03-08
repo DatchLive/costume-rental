@@ -7,6 +7,7 @@ import { X, Upload } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { compressCostumeImage } from '@/lib/compressImage'
 import { Spinner } from '@/components/ui/Spinner'
+import { CostumeCropper } from './CostumeCropper'
 
 interface ImageUploaderProps {
   userId: string
@@ -24,61 +25,70 @@ export function ImageUploader({
   const [images, setImages] = useState<string[]>(initialImages)
   const [uploading, setUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  // クロップ待ちのファイルキュー
+  const [cropQueue, setCropQueue] = useState<File[]>([])
 
   const onDrop = useCallback(
-    async (acceptedFiles: File[]) => {
+    (acceptedFiles: File[]) => {
       const remaining = maxImages - images.length
-      const filesToUpload = acceptedFiles.slice(0, remaining)
+      const filesToCrop = acceptedFiles.slice(0, remaining)
 
-      if (filesToUpload.length === 0) {
+      if (filesToCrop.length === 0) {
         setError(`最大${maxImages}枚までアップロードできます`)
         return
       }
 
       setError(null)
-      setUploading(true)
-
-      const supabase = createClient()
-      const newUrls: string[] = []
-
-      for (const file of filesToUpload) {
-        const compressed = await compressCostumeImage(file)
-        const path = `${userId}/${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`
-
-        const { error: uploadError } = await supabase.storage
-          .from('costume-images')
-          .upload(path, compressed, { contentType: 'image/jpeg' })
-
-        if (uploadError) {
-          setError('画像のアップロードに失敗しました')
-          continue
-        }
-
-        const { data: { publicUrl } } = supabase.storage
-          .from('costume-images')
-          .getPublicUrl(path)
-
-        newUrls.push(publicUrl)
-      }
-
-      const updated = [...images, ...newUrls]
-      setImages(updated)
-      onImagesChange(updated)
-      setUploading(false)
+      setCropQueue(filesToCrop)
     },
-    [images, maxImages, userId, onImagesChange]
+    [images, maxImages]
   )
+
+  async function handleCropped(blob: Blob) {
+    // キューから先頭を取り出す
+    const remaining = cropQueue.slice(1)
+    setCropQueue(remaining)
+
+    setUploading(true)
+    const supabase = createClient()
+
+    const compressed = await compressCostumeImage(new File([blob], 'costume.jpg', { type: 'image/jpeg' }))
+    const path = `${userId}/${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`
+
+    const { error: uploadError } = await supabase.storage
+      .from('costume-images')
+      .upload(path, compressed, { contentType: 'image/jpeg' })
+
+    if (uploadError) {
+      setError('画像のアップロードに失敗しました')
+      setUploading(false)
+      return
+    }
+
+    const { data: { publicUrl } } = supabase.storage
+      .from('costume-images')
+      .getPublicUrl(path)
+
+    const updated = [...images, publicUrl]
+    setImages(updated)
+    onImagesChange(updated)
+    setUploading(false)
+  }
+
+  function handleCropCancel() {
+    // キャンセル時はキュー全体を破棄
+    setCropQueue([])
+  }
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: { 'image/jpeg': [], 'image/png': [], 'image/webp': [] },
-    maxSize: 20 * 1024 * 1024, // 20MB（圧縮するので大きめに許容）
-    disabled: uploading || images.length >= maxImages,
+    maxSize: 20 * 1024 * 1024,
+    disabled: uploading || images.length >= maxImages || cropQueue.length > 0,
   })
 
   async function removeImage(url: string, index: number) {
     const supabase = createClient()
-    // Extract path from URL
     const urlObj = new URL(url)
     const path = urlObj.pathname.split('/costume-images/')[1]
     if (path) {
@@ -95,11 +105,20 @@ export function ImageUploader({
         衣装の写真（最大{maxImages}枚）
       </label>
 
-      {/* Thumbnails */}
+      {/* クロッパー：キューの先頭ファイルを表示 */}
+      {cropQueue.length > 0 && (
+        <CostumeCropper
+          file={cropQueue[0]}
+          onCropped={handleCropped}
+          onCancel={handleCropCancel}
+        />
+      )}
+
+      {/* サムネイル */}
       {images.length > 0 && (
         <div className="flex flex-wrap gap-2">
           {images.map((url, index) => (
-            <div key={url} className="relative h-24 w-24 overflow-hidden rounded-lg border border-gray-200">
+            <div key={url} className="relative h-24 w-[72px] overflow-hidden rounded-lg border border-gray-200">
               <Image src={url} alt={`衣装画像${index + 1}`} fill className="object-cover" />
               <button
                 type="button"
@@ -114,7 +133,7 @@ export function ImageUploader({
         </div>
       )}
 
-      {/* Drop zone */}
+      {/* ドロップゾーン */}
       {images.length < maxImages && (
         <div
           {...getRootProps()}
@@ -122,7 +141,7 @@ export function ImageUploader({
             isDragActive
               ? 'border-amber-500 bg-amber-50'
               : 'border-gray-300 hover:border-amber-400 hover:bg-amber-50'
-          } ${uploading ? 'cursor-not-allowed opacity-50' : ''}`}
+          } ${uploading || cropQueue.length > 0 ? 'cursor-not-allowed opacity-50' : ''}`}
         >
           <input {...getInputProps()} />
           {uploading ? (
