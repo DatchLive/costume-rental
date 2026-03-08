@@ -4,6 +4,10 @@ import { sendEmail } from '@/lib/email/resend'
 import { rentalRequestedEmail } from '@/lib/email/templates/rental-requested'
 import { rentalApprovedEmail } from '@/lib/email/templates/rental-approved'
 import { rentalRejectedEmail } from '@/lib/email/templates/rental-rejected'
+import { rentalActiveEmail } from '@/lib/email/templates/rental-active'
+import { rentalReturningEmail } from '@/lib/email/templates/rental-returning'
+import { rentalReturnedEmail } from '@/lib/email/templates/rental-returned'
+import { rentalCancelledEmail } from '@/lib/email/templates/rental-cancelled'
 import { formatDate } from '@/lib/utils'
 
 export async function POST(request: Request) {
@@ -162,6 +166,59 @@ export async function POST(request: Request) {
           costumeTitle: costume.title,
         })
         await sendEmail({ to: renterEmail, subject, html })
+      }
+
+      if (type === 'rental_active' && renterEmail) {
+        const { subject, html } = rentalActiveEmail({
+          renterName: renter.name ?? '借り手',
+          costumeTitle: costume.title,
+          rentalLink,
+        })
+        await sendEmail({ to: renterEmail, subject, html })
+      }
+
+      if (type === 'rental_returning' && ownerEmail) {
+        const { subject, html } = rentalReturningEmail({
+          ownerName: owner.name ?? '出品者',
+          costumeTitle: costume.title,
+          rentalLink,
+        })
+        await sendEmail({ to: ownerEmail, subject, html })
+      }
+
+      if (type === 'rental_returned') {
+        if (renterEmail) {
+          const { subject, html } = rentalReturnedEmail({
+            userName: renter.name ?? '借り手',
+            costumeTitle: costume.title,
+            rentalLink,
+          })
+          await sendEmail({ to: renterEmail, subject, html })
+        }
+        if (ownerEmail) {
+          const { subject, html } = rentalReturnedEmail({
+            userName: owner.name ?? '出品者',
+            costumeTitle: costume.title,
+            rentalLink,
+          })
+          await sendEmail({ to: ownerEmail, subject, html })
+        }
+      }
+
+      if (type === 'rental_cancelled') {
+        const { cancelled_by } = body as { cancelled_by?: string }
+        const notifyEmail = cancelled_by === 'renter' ? ownerEmail : renterEmail
+        const notifyName = cancelled_by === 'renter' ? (owner.name ?? '出品者') : (renter.name ?? '借り手')
+        const cancellerName = cancelled_by === 'renter' ? (renter.name ?? '借り手') : (owner.name ?? '出品者')
+        if (notifyEmail) {
+          const { subject, html } = rentalCancelledEmail({
+            userName: notifyName,
+            cancellerName,
+            costumeTitle: costume.title,
+            rentalLink,
+          })
+          await sendEmail({ to: notifyEmail, subject, html })
+        }
       }
     } catch (emailError) {
       console.error('[Email send error (non-fatal)]', emailError)

@@ -9,6 +9,7 @@ import type { Message, Profile } from '@/types/database'
 interface MessagePanelProps {
   rentalId: string
   currentUserId: string
+  currentUserName: string
   otherUserId: string
   initialMessages: Message[]
   participants: Record<string, Pick<Profile, 'id' | 'name' | 'avatar_url'>>
@@ -18,6 +19,7 @@ interface MessagePanelProps {
 export function MessagePanel({
   rentalId,
   currentUserId,
+  currentUserName,
   otherUserId,
   initialMessages,
   participants,
@@ -137,13 +139,15 @@ export function MessagePanel({
       setMessages((prev) => prev.filter((m) => m.id !== tempId))
       setContent(trimmed)
     } else {
-      // 相手への message_received 通知（未読の同通知がなければ保存）
+      // 相手への message_received 通知・メール（未読の同通知がなければ保存）
       await fetch('/api/notifications', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           rentalId,
           targetUserId: otherUserId,
+          senderName: currentUserName,
+          messagePreview: trimmed.slice(0, 100),
         }),
       })
     }

@@ -48,6 +48,7 @@ export default async function MessagePage({ params }: MessagePageProps) {
 
   const renter = (rental as unknown as { renter: Pick<Profile, 'id' | 'name' | 'avatar_url'> }).renter
   const owner = (rental as unknown as { owner: Pick<Profile, 'id' | 'name' | 'avatar_url'> }).owner
+  const currentUserProfile = user.id === rental.renter_id ? renter : owner
   const costume = (rental as unknown as { costumes: { id: string; title: string } }).costumes
 
   const participants: Record<string, Pick<Profile, 'id' | 'name' | 'avatar_url'>> = {
@@ -80,6 +81,7 @@ export default async function MessagePage({ params }: MessagePageProps) {
       <MessagePanel
         rentalId={rentalId}
         currentUserId={user.id}
+        currentUserName={currentUserProfile.name ?? '利用者'}
         otherUserId={otherUser.id}
         initialMessages={messages ?? []}
         participants={participants}
