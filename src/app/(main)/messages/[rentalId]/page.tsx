@@ -80,6 +80,7 @@ export default async function MessagePage({ params }: MessagePageProps) {
       <MessagePanel
         rentalId={rentalId}
         currentUserId={user.id}
+        otherUserId={otherUser.id}
         initialMessages={messages ?? []}
         participants={participants}
         inputDisabled={['completed', 'rejected', 'cancelled'].includes(rental.status)}

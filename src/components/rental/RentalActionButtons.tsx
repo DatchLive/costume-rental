@@ -89,6 +89,16 @@ export function RentalActionButtons({
       .update({ status: 'cancelled', cancel_reason: cancelReason || null })
       .eq('id', rentalId)
 
+    await fetch('/api/email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'rental_cancelled',
+        rentalId,
+        cancelled_by: isOwner ? 'owner' : 'renter',
+      }),
+    })
+
     setCancelModalOpen(false)
     setLoading(null)
     router.refresh()

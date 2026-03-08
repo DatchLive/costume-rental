@@ -9,6 +9,7 @@ import type { Message, Profile } from '@/types/database'
 interface MessagePanelProps {
   rentalId: string
   currentUserId: string
+  otherUserId: string
   initialMessages: Message[]
   participants: Record<string, Pick<Profile, 'id' | 'name' | 'avatar_url'>>
   inputDisabled?: boolean
@@ -17,6 +18,7 @@ interface MessagePanelProps {
 export function MessagePanel({
   rentalId,
   currentUserId,
+  otherUserId,
   initialMessages,
   participants,
   inputDisabled,
@@ -134,6 +136,16 @@ export function MessagePanel({
       pendingMap.current.delete(tempId)
       setMessages((prev) => prev.filter((m) => m.id !== tempId))
       setContent(trimmed)
+    } else {
+      // 相手への message_received 通知（未読の同通知がなければ保存）
+      await fetch('/api/notifications', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          rentalId,
+          targetUserId: otherUserId,
+        }),
+      })
     }
 
     setSending(false)
