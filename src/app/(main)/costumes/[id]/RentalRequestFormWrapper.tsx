@@ -47,6 +47,15 @@ export function RentalRequestFormWrapper({
 
     if (error) throw error
 
+    // 申請メッセージがあれば messages テーブルにも保存
+    if (data.message?.trim()) {
+      await supabase.from('messages').insert({
+        rental_id: rental.id,
+        sender_id: user.id,
+        content: data.message.trim(),
+      })
+    }
+
     await fetch('/api/email', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

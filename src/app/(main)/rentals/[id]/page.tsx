@@ -100,6 +100,18 @@ export default async function RentalDetailPage({
     }
   ).owner;
 
+  // 申請時のメッセージ（最初のメッセージ）をオーナー向けに取得
+  const { data: requestMessage } = isOwner && rental.status === 'pending'
+    ? await supabase
+        .from('messages')
+        .select('content')
+        .eq('rental_id', id)
+        .eq('sender_id', rental.renter_id)
+        .order('created_at', { ascending: true })
+        .limit(1)
+        .single()
+    : { data: null }
+
   // Fetch the user's submitted review (full data)
   const { data: myReview } = await supabase
     .from("reviews")
@@ -155,6 +167,14 @@ export default async function RentalDetailPage({
                 {text}
               </div>
             ))}
+          </div>
+        )}
+
+        {/* 申請時のメッセージ（オーナー向け・pending のみ） */}
+        {requestMessage && (
+          <div className="rounded-xl border border-gray-200 bg-white p-6">
+            <h2 className="mb-2 font-semibold text-gray-900">借り手からのメッセージ</h2>
+            <p className="whitespace-pre-wrap text-sm text-gray-700">{requestMessage.content}</p>
           </div>
         )}
 
