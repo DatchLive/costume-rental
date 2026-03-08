@@ -10,7 +10,7 @@ import { useNotifications } from '@/hooks/useNotifications'
 import { Avatar } from '@/components/ui/Avatar'
 
 export function Header() {
-  const { user, loading } = useAuth()
+  const { user, profile, loading } = useAuth()
   const { unreadCount } = useNotifications(user?.id)
   const router = useRouter()
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -73,8 +73,8 @@ export function Header() {
                   aria-label="ユーザーメニュー"
                 >
                   <Avatar
-                    src={user.user_metadata.avatar_url}
-                    name={user.user_metadata.full_name ?? user.email}
+                    src={profile?.avatar_url ?? user.user_metadata.avatar_url}
+                    name={profile?.name ?? user.user_metadata.full_name ?? user.email}
                     size="sm"
                   />
                 </button>
@@ -89,7 +89,7 @@ export function Header() {
                     <div className="absolute right-0 z-20 mt-2 w-52 rounded-xl border border-gray-200 bg-white py-1 shadow-lg">
                       <div className="border-b border-gray-100 px-4 py-2">
                         <p className="truncate text-sm font-medium text-gray-900">
-                          {user.user_metadata.full_name ?? user.email}
+                          {profile?.name ?? user.user_metadata.full_name ?? user.email}
                         </p>
                         <p className="truncate text-xs text-gray-500">{user.email}</p>
                       </div>
