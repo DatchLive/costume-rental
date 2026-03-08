@@ -61,7 +61,7 @@ export default async function MessagePage({ params }: MessagePageProps) {
     <div className="mx-auto flex h-[calc(100vh-4rem)] max-w-2xl flex-col">
       {/* Header */}
       <div className="flex items-center gap-3 border-b border-gray-200 bg-white px-4 py-3">
-        <Link href="/messages" className="rounded-lg p-1 text-gray-600 hover:bg-gray-100">
+        <Link href={`/rentals/${rentalId}`} className="rounded-lg p-1 text-gray-600 hover:bg-gray-100">
           <ArrowLeft className="h-5 w-5" aria-hidden="true" />
         </Link>
         <div className="min-w-0">
