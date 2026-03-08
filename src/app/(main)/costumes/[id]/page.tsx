@@ -269,6 +269,7 @@ export default async function CostumePage({ params }: CostumePageProps) {
             <RentalRequestFormWrapper
               costumeId={id}
               rentalPrice={costume.rental_price}
+              studentPrice={costume.student_price}
               ownerId={costume.user_id}
             />
           ) : !user ? (

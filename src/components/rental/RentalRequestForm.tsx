@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { rentalRequestSchema, type RentalRequestFormData } from '@/lib/validations/rental'
 import { Button } from '@/components/ui/Button'
@@ -10,17 +10,26 @@ import { formatPrice } from '@/lib/utils'
 
 interface RentalRequestFormProps {
   rentalPrice: number
+  studentPrice?: number | null
   onSubmit: (data: RentalRequestFormData) => Promise<void>
 }
 
-export function RentalRequestForm({ rentalPrice, onSubmit }: RentalRequestFormProps) {
+export function RentalRequestForm({ rentalPrice, studentPrice, onSubmit }: RentalRequestFormProps) {
   const [serverError, setServerError] = useState<string | null>(null)
+  const hasStudentPrice = !!studentPrice
 
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors, isSubmitting },
-  } = useForm<RentalRequestFormData>({ resolver: zodResolver(rentalRequestSchema) })
+  } = useForm<RentalRequestFormData>({
+    resolver: zodResolver(rentalRequestSchema),
+    defaultValues: { price_type: 'regular' },
+  })
+
+  const priceType = useWatch({ control, name: 'price_type' })
+  const selectedPrice = priceType === 'student' && studentPrice ? studentPrice : rentalPrice
 
   const minDateStr = new Date().toISOString().slice(0, 10)
 
@@ -54,10 +63,33 @@ export function RentalRequestForm({ rentalPrice, onSubmit }: RentalRequestFormPr
         )}
       </div>
 
+      {/* 料金選択（学生料金がある場合のみ） */}
+      {hasStudentPrice && (
+        <div className="flex flex-col gap-2">
+          <p className="text-sm font-medium text-gray-700">料金プラン <span className="text-red-500">*</span></p>
+          <label className={`flex cursor-pointer items-center justify-between rounded-lg border p-3 transition-colors ${priceType === 'regular' ? 'border-amber-500 bg-amber-50' : 'border-gray-200 hover:bg-gray-50'}`}>
+            <div className="flex items-center gap-2">
+              <input type="radio" value="regular" {...register('price_type')} className="accent-amber-700" />
+              <span className="text-sm text-gray-700">通常料金</span>
+            </div>
+            <span className="font-bold text-amber-700">{formatPrice(rentalPrice)}</span>
+          </label>
+          <label className={`flex cursor-pointer items-center justify-between rounded-lg border p-3 transition-colors ${priceType === 'student' ? 'border-amber-500 bg-amber-50' : 'border-gray-200 hover:bg-gray-50'}`}>
+            <div className="flex items-center gap-2">
+              <input type="radio" value="student" {...register('price_type')} className="accent-amber-700" />
+              <span className="text-sm text-gray-700">学生料金</span>
+            </div>
+            <span className="font-bold text-amber-700">{formatPrice(studentPrice!)}</span>
+          </label>
+          <p className="text-xs text-gray-400">※ 学生料金の適用はオーナーとのメッセージで確認してください</p>
+        </div>
+      )}
+
+      {/* 料金サマリ */}
       <div className="rounded-lg bg-amber-50 p-3">
         <div className="flex justify-between text-sm">
           <span className="text-gray-600">レンタル料金</span>
-          <span className="font-bold text-amber-700">{formatPrice(rentalPrice)}</span>
+          <span className="font-bold text-amber-700">{formatPrice(selectedPrice)}</span>
         </div>
         <p className="mt-1 text-xs text-gray-500">
           ※ 詳細な期間・受け渡し方法はメッセージで調整してください

@@ -7,6 +7,7 @@ export const rentalRequestSchema = z.object({
     .refine((d) => d >= new Date().toISOString().slice(0, 10), {
       message: '使用日は本日以降で設定してください',
     }),
+  price_type: z.enum(['regular', 'student']),
   message: z.string().max(500, '500文字以内で入力してください').optional(),
 })
 

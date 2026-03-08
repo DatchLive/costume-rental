@@ -12,12 +12,14 @@ import { calcTotalPrice } from '@/lib/utils'
 interface RentalRequestFormWrapperProps {
   costumeId: string
   rentalPrice: number
+  studentPrice?: number | null
   ownerId: string
 }
 
 export function RentalRequestFormWrapper({
   costumeId,
   rentalPrice,
+  studentPrice,
   ownerId,
 }: RentalRequestFormWrapperProps) {
   const router = useRouter()
@@ -29,7 +31,8 @@ export function RentalRequestFormWrapper({
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) throw new Error('Not authenticated')
 
-    const totalPrice = calcTotalPrice(rentalPrice)
+    const basePrice = data.price_type === 'student' && studentPrice ? studentPrice : rentalPrice
+    const totalPrice = calcTotalPrice(basePrice)
 
     const { data: rental, error } = await supabase
       .from('rentals')
@@ -82,7 +85,7 @@ export function RentalRequestFormWrapper({
             申請を送信しました。取引ページに移動します...
           </div>
         ) : (
-          <RentalRequestForm rentalPrice={rentalPrice} onSubmit={handleSubmit} />
+          <RentalRequestForm rentalPrice={rentalPrice} studentPrice={studentPrice} onSubmit={handleSubmit} />
         )}
       </Modal>
     </>

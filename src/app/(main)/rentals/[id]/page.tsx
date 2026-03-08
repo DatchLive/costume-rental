@@ -325,12 +325,6 @@ export default async function RentalDetailPage({
                 {formatDate(rental.use_date)}
               </dd>
             </div>
-            <div className="flex justify-between">
-              <dt className="text-gray-500">レンタル料金</dt>
-              <dd className="text-gray-900">
-                {formatPrice(costume?.rental_price ?? 0)}
-              </dd>
-            </div>
             <div className="flex justify-between border-t border-gray-100 pt-3">
               <dt className="font-medium text-gray-700">合計金額</dt>
               <dd className="text-xl font-bold text-amber-700">
