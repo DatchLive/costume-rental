@@ -109,9 +109,18 @@ export default async function RentalDetailPage({
     .single();
 
   const guide = STATUS_GUIDE[rental.status];
-  const rawGuideText = guide ? (isRenter ? guide.renter : guide.owner) : null;
-  // 評価済みの場合は「評価を投稿してください」を非表示にする
-  const guideText = myReview && rental.status === "returned" ? null : rawGuideText;
+  const guideTexts: string[] = [];
+  if (guide) {
+    const baseText = isRenter ? guide.renter : guide.owner;
+    // 借り手: 評価済みなら「評価してください」を表示しない
+    if (!(isRenter && myReview && rental.status === "returned")) {
+      guideTexts.push(baseText);
+    }
+    // 出品者: returned かつ未評価なら「評価してください」を追加
+    if (isOwner && rental.status === "returned" && !myReview) {
+      guideTexts.push("評価を投稿してください");
+    }
+  }
 
   // Fetch the user's costume review (renter only)
   const { data: myCostumeReview } = isRenter
@@ -136,9 +145,13 @@ export default async function RentalDetailPage({
 
       <div className="flex flex-col gap-6">
         {/* Status guidance */}
-        {guideText && (
-          <div className="rounded-xl bg-amber-50 px-4 py-3 text-sm font-medium text-amber-800">
-            {guideText}
+        {guideTexts.length > 0 && (
+          <div className="flex flex-col gap-2">
+            {guideTexts.map((text) => (
+              <div key={text} className="rounded-xl bg-amber-50 px-4 py-3 text-sm font-medium text-amber-800">
+                {text}
+              </div>
+            ))}
           </div>
         )}
 
