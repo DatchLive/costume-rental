@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import type { Metadata } from 'next'
 import { Plus, Pencil } from 'lucide-react'
+import { DeleteCostumeButton } from './DeleteCostumeButton'
 import { createClient } from '@/lib/supabase/server'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
@@ -26,7 +27,7 @@ export default async function MyCostumesPage() {
       .from('rentals')
       .select('costume_id')
       .eq('owner_id', user.id)
-      .in('status', ['approved', 'active', 'returning']),
+      .in('status', ['pending', 'approved', 'active', 'returning', 'returned']),
   ])
 
   const rentingCostumeIds = new Set((activeRentals ?? []).map((r) => r.costume_id))
@@ -111,6 +112,11 @@ export default async function MyCostumesPage() {
                       編集
                     </Button>
                   </Link>
+                  <DeleteCostumeButton
+                    costumeId={costume.id}
+                    images={costume.images}
+                    isDeletable={!isRenting}
+                  />
                 </div>
               </div>
             )

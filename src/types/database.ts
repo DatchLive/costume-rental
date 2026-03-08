@@ -418,6 +418,10 @@ export interface Database {
         Args: { p_rental_id: string }
         Returns: undefined
       }
+      delete_costume: {
+        Args: { p_costume_id: string }
+        Returns: undefined
+      }
       create_notification: {
         Args: {
           p_user_id: string
