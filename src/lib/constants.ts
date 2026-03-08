@@ -137,6 +137,7 @@ export const RENTAL_STATUS_LABELS: Record<string, string> = {
   active: 'レンタル中',
   returning: '返却確認中',
   returned: '返却完了',
+  completed: '取引完了',
   cancelled: 'キャンセル',
 }
 
@@ -147,6 +148,7 @@ export const RENTAL_STATUS_COLORS: Record<string, string> = {
   active: 'bg-green-100 text-green-800',
   returning: 'bg-orange-100 text-orange-800',
   returned: 'bg-gray-100 text-gray-800',
+  completed: 'bg-green-100 text-green-800',
   cancelled: 'bg-gray-100 text-gray-500',
 }
 

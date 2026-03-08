@@ -23,6 +23,7 @@ const STATUS_GUIDE: Record<string, { renter: string; owner: string }> = {
   active:    { renter: '返却の準備ができたら返却報告してください',       owner: '返却をお待ちください' },
   returning: { renter: 'オーナーの受取確認をお待ちください',            owner: '返却を受け取ったら確認してください' },
   returned:  { renter: '評価を投稿してください',                        owner: 'クリーニング・準備が完了したら貸し出し可能にしてください' },
+  completed: { renter: '取引が完了しました。ありがとうございました！',   owner: '取引が完了しました。ありがとうございました！' },
 }
 
 export default async function RentalDetailPage({ params }: RentalDetailPageProps) {

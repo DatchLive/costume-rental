@@ -57,7 +57,7 @@ export function RentalActionButtons({
     router.refresh()
   }
 
-  if (status === 'rejected' || status === 'cancelled' || status === 'returned') {
+  if (status === 'rejected' || status === 'cancelled' || status === 'returned' || status === 'completed') {
     return null
   }
 
