@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { Card, CardContent } from '@/components/ui/Card'
 import { ProfileEditClient } from './ProfileEditClient'
+import { PasswordChangeClient } from './PasswordChangeClient'
 
 export const metadata: Metadata = { title: 'プロフィール設定' }
 
@@ -16,6 +17,9 @@ export default async function ProfileEditPage() {
     .select('*')
     .eq('id', user.id)
     .single()
+
+  // Googleログインのみのユーザーはパスワード変更不要
+  const isEmailUser = user.identities?.some((i) => i.provider === 'email')
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6">
@@ -33,6 +37,17 @@ export default async function ProfileEditPage() {
           />
         </CardContent>
       </Card>
+
+      {isEmailUser && (
+        <div className="mt-6">
+          <h2 className="mb-3 text-lg font-semibold text-gray-900">パスワード変更</h2>
+          <Card>
+            <CardContent className="pt-6">
+              <PasswordChangeClient />
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   )
 }
