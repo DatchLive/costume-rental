@@ -5,12 +5,47 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/Button'
 import { Modal } from '@/components/ui/Modal'
+
 interface RentalActionButtonsProps {
   rentalId: string
   costumeId: string
   status: string
   isOwner: boolean
   isRenter: boolean
+}
+
+type ConfirmAction = {
+  newStatus: string
+  title: string
+  message: string
+  label: string
+}
+
+const CONFIRM_ACTIONS: Record<string, ConfirmAction> = {
+  approved: {
+    newStatus: 'approved',
+    title: '申請を承認しますか？',
+    message: '承認すると借り手に通知されます。メッセージで受け渡し方法などを確認してください。',
+    label: '承認する',
+  },
+  active: {
+    newStatus: 'active',
+    title: '発送済みにしますか？',
+    message: '衣装を発送・手渡し済みの場合に押してください。借り手に通知されます。',
+    label: '発送済みにする',
+  },
+  returning: {
+    newStatus: 'returning',
+    title: '返却しましたか？',
+    message: '衣装を返送・手渡し済みの場合に押してください。出品者に通知されます。',
+    label: '返却しました',
+  },
+  returned: {
+    newStatus: 'returned',
+    title: '受け取りを確認しますか？',
+    message: '衣装を受け取った場合に押してください。取引が完了に向けて進みます。',
+    label: '受け取りました',
+  },
 }
 
 export function RentalActionButtons({
@@ -22,21 +57,20 @@ export function RentalActionButtons({
 }: RentalActionButtonsProps) {
   const router = useRouter()
   const [loading, setLoading] = useState<string | null>(null)
-  const [cancelModalOpen, setCancelModalOpen] = useState(false)
-  const [cancelReason, setCancelReason] = useState('')
+  const [confirmAction, setConfirmAction] = useState<ConfirmAction | null>(null)
   const [rejectModalOpen, setRejectModalOpen] = useState(false)
   const [rejectReason, setRejectReason] = useState('')
   const [rejectError, setRejectError] = useState(false)
 
   async function updateStatus(newStatus: string) {
     setLoading(newStatus)
+    setConfirmAction(null)
     const supabase = createClient()
     await supabase
       .from('rentals')
       .update({ status: newStatus })
       .eq('id', rentalId)
 
-    // Notify via API
     await fetch('/api/email', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -61,7 +95,6 @@ export function RentalActionButtons({
       .update({ status: 'rejected', cancel_reason: rejectReason.trim() })
       .eq('id', rentalId)
 
-    // 却下理由をメッセージとしても保存
     if (user) {
       await supabase.from('messages').insert({
         rental_id: rentalId,
@@ -81,45 +114,19 @@ export function RentalActionButtons({
     router.refresh()
   }
 
-  async function handleCancel() {
-    setLoading('cancelled')
-    const supabase = createClient()
-    await supabase
-      .from('rentals')
-      .update({ status: 'cancelled', cancel_reason: cancelReason || null })
-      .eq('id', rentalId)
-
-    await fetch('/api/email', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        type: 'rental_cancelled',
-        rentalId,
-        cancelled_by: isOwner ? 'owner' : 'renter',
-      }),
-    })
-
-    setCancelModalOpen(false)
-    setLoading(null)
-    router.refresh()
-  }
-
   if (status === 'rejected' || status === 'cancelled' || status === 'returned' || status === 'completed') {
     return null
   }
 
-  // returning: オーナーのみ受取確認ボタンを表示（借り手はボタンなし）
-  if (status === 'returning') {
-    if (!isOwner) return null
-  }
+  if (status === 'returning' && !isOwner) return null
 
   return (
     <>
-      <div className="flex flex-wrap gap-3">
+      <div className="flex flex-wrap justify-center gap-3">
         {isOwner && status === 'pending' && (
           <>
             <Button
-              onClick={() => updateStatus('approved')}
+              onClick={() => setConfirmAction(CONFIRM_ACTIONS.approved)}
               loading={loading === 'approved'}
             >
               承認する
@@ -135,7 +142,7 @@ export function RentalActionButtons({
 
         {isOwner && status === 'approved' && (
           <Button
-            onClick={() => updateStatus('active')}
+            onClick={() => setConfirmAction(CONFIRM_ACTIONS.active)}
             loading={loading === 'active'}
           >
             発送済みにする
@@ -144,7 +151,7 @@ export function RentalActionButtons({
 
         {isRenter && status === 'active' && (
           <Button
-            onClick={() => updateStatus('returning')}
+            onClick={() => setConfirmAction(CONFIRM_ACTIONS.returning)}
             loading={loading === 'returning'}
           >
             返却しました
@@ -153,24 +160,37 @@ export function RentalActionButtons({
 
         {isOwner && status === 'returning' && (
           <Button
-            onClick={() => updateStatus('returned')}
+            onClick={() => setConfirmAction(CONFIRM_ACTIONS.returned)}
             loading={loading === 'returned'}
           >
             受け取りました
           </Button>
         )}
-
-        {/* オーナーは承認済み（approved）のみキャンセル可。pending は却下ボタンで対応 */}
-        {isOwner && status === 'approved' && (
-          <Button
-            variant="danger"
-            onClick={() => setCancelModalOpen(true)}
-          >
-            キャンセルする
-          </Button>
-        )}
       </div>
 
+      {/* 確認モーダル */}
+      <Modal
+        open={!!confirmAction}
+        onClose={() => setConfirmAction(null)}
+        title={confirmAction?.title ?? ''}
+      >
+        <div className="flex flex-col gap-4">
+          <p className="text-sm text-gray-600">{confirmAction?.message}</p>
+          <div className="flex justify-end gap-3">
+            <Button variant="outline" onClick={() => setConfirmAction(null)}>
+              戻る
+            </Button>
+            <Button
+              loading={loading === confirmAction?.newStatus}
+              onClick={() => confirmAction && updateStatus(confirmAction.newStatus)}
+            >
+              {confirmAction?.label}
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* 却下モーダル */}
       <Modal
         open={rejectModalOpen}
         onClose={() => setRejectModalOpen(false)}
@@ -205,39 +225,6 @@ export function RentalActionButtons({
               onClick={handleReject}
             >
               却下する
-            </Button>
-          </div>
-        </div>
-      </Modal>
-
-      <Modal
-        open={cancelModalOpen}
-        onClose={() => setCancelModalOpen(false)}
-        title="キャンセルの確認"
-      >
-        <div className="flex flex-col gap-4">
-          <p className="text-sm text-gray-600">
-            本当にキャンセルしますか？キャンセルポリシーに基づいてキャンセル料が発生する場合があります。
-          </p>
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-gray-700">キャンセル理由（任意）</label>
-            <textarea
-              value={cancelReason}
-              onChange={(e) => setCancelReason(e.target.value)}
-              className="h-24 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:outline-none"
-              maxLength={500}
-            />
-          </div>
-          <div className="flex justify-end gap-3">
-            <Button variant="outline" onClick={() => setCancelModalOpen(false)}>
-              戻る
-            </Button>
-            <Button
-              variant="danger"
-              loading={loading === 'cancelled'}
-              onClick={handleCancel}
-            >
-              キャンセルする
             </Button>
           </div>
         </div>
