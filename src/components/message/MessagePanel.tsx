@@ -65,11 +65,35 @@ export function MessagePanel({
             }
           }
 
-          // 相手のメッセージ、または temp が見つからない場合はそのまま追加
+          // 相手のメッセージ: 画面を見ているのですぐ既読にする
+          if (incoming.sender_id !== currentUserId) {
+            supabase
+              .from('messages')
+              .update({ is_read: true })
+              .eq('id', incoming.id)
+              .then(() => {})
+          }
+
           setMessages((prev) => {
             if (prev.some((m) => m.id === incoming.id)) return prev
-            return [...prev, incoming]
+            return [...prev, { ...incoming, is_read: incoming.sender_id !== currentUserId ? true : incoming.is_read }]
           })
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'messages',
+          filter: `rental_id=eq.${rentalId}`,
+        },
+        (payload) => {
+          const updated = payload.new as Message
+          // 自分が送ったメッセージの既読状態を更新
+          setMessages((prev) =>
+            prev.map((m) => (m.id === updated.id ? { ...m, is_read: updated.is_read } : m))
+          )
         }
       )
       .subscribe()

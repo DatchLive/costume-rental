@@ -27,7 +27,14 @@ export function MessageBubble({ message, sender, isOwn }: MessageBubbleProps) {
         >
           <p className="whitespace-pre-wrap break-words">{message.content}</p>
         </div>
-        <span className="text-xs text-gray-400">{formatDateTime(message.created_at)}</span>
+        <div className="flex items-center gap-2">
+          {isOwn && (
+            <span className={`text-xs ${message.is_read ? 'text-amber-600' : 'text-gray-300'}`}>
+              {message.is_read ? '既読' : '未読'}
+            </span>
+          )}
+          <span className="text-xs text-gray-400">{formatDateTime(message.created_at)}</span>
+        </div>
       </div>
     </div>
   )
