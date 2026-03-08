@@ -5,6 +5,7 @@ import { useDropzone } from 'react-dropzone'
 import Image from 'next/image'
 import { X, Upload } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import { compressCostumeImage } from '@/lib/compressImage'
 import { Spinner } from '@/components/ui/Spinner'
 
 interface ImageUploaderProps {
@@ -41,12 +42,12 @@ export function ImageUploader({
       const newUrls: string[] = []
 
       for (const file of filesToUpload) {
-        const ext = file.name.split('.').pop()
-        const path = `${userId}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+        const compressed = await compressCostumeImage(file)
+        const path = `${userId}/${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`
 
         const { error: uploadError } = await supabase.storage
           .from('costume-images')
-          .upload(path, file, { contentType: file.type })
+          .upload(path, compressed, { contentType: 'image/jpeg' })
 
         if (uploadError) {
           setError('画像のアップロードに失敗しました')
@@ -71,7 +72,7 @@ export function ImageUploader({
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: { 'image/jpeg': [], 'image/png': [], 'image/webp': [] },
-    maxSize: 5 * 1024 * 1024, // 5MB
+    maxSize: 20 * 1024 * 1024, // 20MB（圧縮するので大きめに許容）
     disabled: uploading || images.length >= maxImages,
   })
 
@@ -132,7 +133,7 @@ export function ImageUploader({
               <p className="text-sm text-gray-600">
                 {isDragActive ? 'ドロップして追加' : 'クリックまたはドラッグで追加'}
               </p>
-              <p className="mt-1 text-xs text-gray-400">JPEG / PNG / WebP・5MB以内</p>
+              <p className="mt-1 text-xs text-gray-400">JPEG / PNG / WebP・自動圧縮されます</p>
             </>
           )}
         </div>

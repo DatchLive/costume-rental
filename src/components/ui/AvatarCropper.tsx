@@ -5,6 +5,7 @@ import ReactCrop, { type Crop, centerCrop, makeAspectCrop } from 'react-image-cr
 import 'react-image-crop/dist/ReactCrop.css'
 import { Button } from '@/components/ui/Button'
 import { Modal } from '@/components/ui/Modal'
+import { compressAvatarBlob } from '@/lib/compressImage'
 
 interface AvatarCropperProps {
   onCropped: (blob: Blob) => void
@@ -68,9 +69,10 @@ export function AvatarCropper({ onCropped }: AvatarCropperProps) {
 
     ctx.drawImage(img, cropX, cropY, cropW, cropH, 0, 0, size, size)
 
-    canvas.toBlob((blob) => {
+    canvas.toBlob(async (blob) => {
       if (!blob) return
-      onCropped(blob)
+      const compressed = await compressAvatarBlob(blob)
+      onCropped(compressed)
       setOpen(false)
       if (srcUrl) URL.revokeObjectURL(srcUrl)
       setSrcUrl(null)
