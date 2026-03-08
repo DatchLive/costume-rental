@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -12,6 +12,7 @@ import { Textarea } from '@/components/ui/Textarea'
 import { Select } from '@/components/ui/Select'
 import { Button } from '@/components/ui/Button'
 import { Avatar } from '@/components/ui/Avatar'
+import { AvatarCropper } from '@/components/ui/AvatarCropper'
 import { Pencil } from 'lucide-react'
 
 interface ProfileEditClientProps {
@@ -31,7 +32,6 @@ export function ProfileEditClient({ userId, initialValues, initialAvatarUrl }: P
   const [avatarUploading, setAvatarUploading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [serverError, setServerError] = useState<string | null>(null)
-  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const {
     register,
@@ -53,18 +53,14 @@ export function ProfileEditClient({ userId, initialValues, initialAvatarUrl }: P
     setEditing(false)
   }
 
-  async function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0]
-    if (!file) return
-
+  async function handleAvatarCropped(blob: Blob) {
     setAvatarUploading(true)
     const supabase = createClient()
-    const ext = file.name.split('.').pop()
-    const path = `${userId}/avatar.${ext}`
+    const path = `${userId}/avatar.jpg`
 
     const { error } = await supabase.storage
       .from('avatars')
-      .upload(path, file, { upsert: true, contentType: file.type })
+      .upload(path, blob, { upsert: true, contentType: 'image/jpeg' })
 
     if (error) {
       setServerError('アバター画像のアップロードに失敗しました')
@@ -152,24 +148,13 @@ export function ProfileEditClient({ userId, initialValues, initialAvatarUrl }: P
       {/* Avatar */}
       <div className="flex items-center gap-4">
         <Avatar src={avatarUrl} name={currentValues.name} size="xl" />
-        <div>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            loading={avatarUploading}
-            onClick={() => fileInputRef.current?.click()}
-          >
-            画像を変更
-          </Button>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/jpeg,image/png,image/webp"
-            className="hidden"
-            onChange={handleAvatarChange}
-          />
-          <p className="mt-1 text-xs text-gray-500">JPEG / PNG / WebP・2MB以内</p>
+        <div className="flex flex-col gap-1">
+          {avatarUploading ? (
+            <p className="text-sm text-gray-500">アップロード中...</p>
+          ) : (
+            <AvatarCropper onCropped={handleAvatarCropped} />
+          )}
+          <p className="text-xs text-gray-500">JPEG / PNG / WebP</p>
         </div>
       </div>
 
