@@ -9,10 +9,22 @@ import type { RentalWithDetails } from '@/types/database'
 
 export const metadata: Metadata = { title: '取引一覧' }
 
-export default async function RentalsPage() {
+const ACTIVE_STATUSES = ['pending', 'approved', 'active', 'returning', 'returned']
+const HISTORY_STATUSES = ['completed', 'rejected', 'cancelled']
+
+interface RentalsPageProps {
+  searchParams: Promise<{ tab?: string }>
+}
+
+export default async function RentalsPage({ searchParams }: RentalsPageProps) {
+  const { tab } = await searchParams
+  const isHistory = tab === 'history'
+
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login?next=/rentals')
+
+  const statuses = isHistory ? HISTORY_STATUSES : ACTIVE_STATUSES
 
   const { data: asRenter } = await supabase
     .from('rentals')
@@ -23,6 +35,7 @@ export default async function RentalsPage() {
       owner:profiles!rentals_owner_id_fkey(id, name, avatar_url)
     `)
     .eq('renter_id', user.id)
+    .in('status', statuses)
     .order('created_at', { ascending: false })
 
   const { data: asOwner } = await supabase
@@ -34,6 +47,7 @@ export default async function RentalsPage() {
       owner:profiles!rentals_owner_id_fkey(id, name, avatar_url)
     `)
     .eq('owner_id', user.id)
+    .in('status', statuses)
     .order('created_at', { ascending: false })
 
   const renderList = (rentals: RentalWithDetails[] | null, emptyMessage: string) => {
@@ -86,18 +100,41 @@ export default async function RentalsPage() {
     )
   }
 
+  const renterEmpty = isHistory ? '過去の取引はありません' : '取引中の申請はありません'
+  const ownerEmpty = isHistory ? '過去の取引はありません' : '取引中の申請はありません'
+
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
       <h1 className="mb-6 text-2xl font-bold text-gray-900">取引一覧</h1>
 
+      {/* Tabs */}
+      <div className="mb-6 flex gap-1 rounded-xl bg-gray-100 p-1">
+        <Link
+          href="/rentals"
+          className={`flex-1 rounded-lg py-2 text-center text-sm font-medium transition-colors ${
+            !isHistory ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+          }`}
+        >
+          取引中
+        </Link>
+        <Link
+          href="/rentals?tab=history"
+          className={`flex-1 rounded-lg py-2 text-center text-sm font-medium transition-colors ${
+            isHistory ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+          }`}
+        >
+          過去の取引
+        </Link>
+      </div>
+
       <div className="mb-8">
         <h2 className="mb-3 text-lg font-semibold text-gray-700">借りた衣装</h2>
-        {renderList(asRenter as unknown as RentalWithDetails[], 'レンタル申請した衣装はありません')}
+        {renderList(asRenter as unknown as RentalWithDetails[], renterEmpty)}
       </div>
 
       <div>
         <h2 className="mb-3 text-lg font-semibold text-gray-700">貸した衣装</h2>
-        {renderList(asOwner as unknown as RentalWithDetails[], '申請を受けた取引はありません')}
+        {renderList(asOwner as unknown as RentalWithDetails[], ownerEmpty)}
       </div>
     </div>
   )
