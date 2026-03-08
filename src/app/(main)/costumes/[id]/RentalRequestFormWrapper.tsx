@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { RentalRequestForm } from '@/components/rental/RentalRequestForm'
+import { Modal } from '@/components/ui/Modal'
+import { Button } from '@/components/ui/Button'
 import type { RentalRequestFormData } from '@/lib/validations/rental'
 import { calcTotalPrice } from '@/lib/utils'
 
@@ -19,6 +21,7 @@ export function RentalRequestFormWrapper({
   ownerId,
 }: RentalRequestFormWrapperProps) {
   const router = useRouter()
+  const [modalOpen, setModalOpen] = useState(false)
   const [success, setSuccess] = useState(false)
 
   async function handleSubmit(data: RentalRequestFormData) {
@@ -44,32 +47,35 @@ export function RentalRequestFormWrapper({
 
     if (error) throw error
 
-    // Notify via API
     await fetch('/api/email', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        type: 'rental_requested',
-        rentalId: rental.id,
-      }),
+      body: JSON.stringify({ type: 'rental_requested', rentalId: rental.id }),
     })
 
     setSuccess(true)
     setTimeout(() => router.push(`/rentals/${rental.id}`), 1500)
   }
 
-  if (success) {
-    return (
-      <div className="rounded-xl bg-green-50 p-4 text-center text-sm text-green-700">
-        申請を送信しました。取引ページに移動します...
-      </div>
-    )
-  }
-
   return (
-    <RentalRequestForm
-      rentalPrice={rentalPrice}
-      onSubmit={handleSubmit}
-    />
+    <>
+      <Button size="lg" className="w-full" onClick={() => setModalOpen(true)}>
+        レンタルを申請する
+      </Button>
+
+      <Modal
+        open={modalOpen}
+        onClose={() => !success && setModalOpen(false)}
+        title="レンタル申請"
+      >
+        {success ? (
+          <div className="py-4 text-center text-sm text-green-700">
+            申請を送信しました。取引ページに移動します...
+          </div>
+        ) : (
+          <RentalRequestForm rentalPrice={rentalPrice} onSubmit={handleSubmit} />
+        )}
+      </Modal>
+    </>
   )
 }

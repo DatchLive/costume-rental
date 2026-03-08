@@ -35,8 +35,6 @@ export function RentalRequestForm({ rentalPrice, onSubmit }: RentalRequestFormPr
 
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} className="flex flex-col gap-4">
-      <h2 className="font-semibold text-gray-900">レンタル申請</h2>
-
       {serverError && (
         <div className="rounded-lg bg-red-50 p-3 text-sm text-red-700">{serverError}</div>
       )}
