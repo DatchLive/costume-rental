@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Menu, X, Bell, LogOut, User, ShirtIcon, Heart, ClipboardList } from 'lucide-react'
+import { Bell, LogOut, User, ShirtIcon, Heart, ClipboardList } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/hooks/useAuth'
 import { useNotifications } from '@/hooks/useNotifications'
@@ -13,7 +13,6 @@ export function Header() {
   const { user, profile, loading } = useAuth()
   const { unreadCount } = useNotifications(user?.id)
   const router = useRouter()
-  const [mobileOpen, setMobileOpen] = useState(false)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
 
   async function handleSignOut() {
@@ -152,76 +151,8 @@ export function Header() {
               </Link>
             </div>
           )}
-
-          {/* Mobile hamburger */}
-          <button
-            type="button"
-            className="rounded-lg p-2 text-gray-600 hover:bg-gray-100 md:hidden"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            aria-expanded={mobileOpen}
-            aria-label="メニュー"
-          >
-            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
         </div>
       </div>
-
-      {/* Mobile menu */}
-      {mobileOpen && (
-        <div className="border-t border-gray-200 bg-white px-4 py-4 md:hidden">
-          <nav className="flex flex-col gap-2">
-            <Link
-              href="/"
-              onClick={() => setMobileOpen(false)}
-              className="rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
-            >
-              衣装を探す
-            </Link>
-            {user ? (
-              <>
-                <Link
-                  href="/costumes/new"
-                  onClick={() => setMobileOpen(false)}
-                  className="rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
-                >
-                  出品する
-                </Link>
-                <Link
-                  href="/rentals"
-                  onClick={() => setMobileOpen(false)}
-                  className="rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
-                >
-                  取引一覧
-                </Link>
-                <Link
-                  href="/messages"
-                  onClick={() => setMobileOpen(false)}
-                  className="rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
-                >
-                  メッセージ
-                </Link>
-              </>
-            ) : (
-              <>
-                <Link
-                  href="/login"
-                  onClick={() => setMobileOpen(false)}
-                  className="rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
-                >
-                  ログイン
-                </Link>
-                <Link
-                  href="/signup"
-                  onClick={() => setMobileOpen(false)}
-                  className="rounded-lg bg-amber-700 px-3 py-2 text-sm font-medium text-white"
-                >
-                  新規登録
-                </Link>
-              </>
-            )}
-          </nav>
-        </div>
-      )}
     </header>
   )
 }
