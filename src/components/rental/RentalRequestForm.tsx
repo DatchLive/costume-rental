@@ -11,12 +11,16 @@ import { formatPrice } from '@/lib/utils'
 interface RentalRequestFormProps {
   rentalPrice: number
   studentPrice?: number | null
+  shipsNationwide: boolean
+  allowsHandover: boolean
   onSubmit: (data: RentalRequestFormData) => Promise<void>
 }
 
-export function RentalRequestForm({ rentalPrice, studentPrice, onSubmit }: RentalRequestFormProps) {
+export function RentalRequestForm({ rentalPrice, studentPrice, shipsNationwide, allowsHandover, onSubmit }: RentalRequestFormProps) {
   const [serverError, setServerError] = useState<string | null>(null)
   const hasStudentPrice = !!studentPrice
+  const bothAvailable = shipsNationwide && allowsHandover
+  const defaultDelivery = allowsHandover ? 'handover' : 'shipping'
 
   const {
     register,
@@ -25,7 +29,7 @@ export function RentalRequestForm({ rentalPrice, studentPrice, onSubmit }: Renta
     formState: { errors, isSubmitting },
   } = useForm<RentalRequestFormData>({
     resolver: zodResolver(rentalRequestSchema),
-    defaultValues: { price_type: 'regular' },
+    defaultValues: { price_type: 'regular', delivery_method: defaultDelivery },
   })
 
   const priceType = useWatch({ control, name: 'price_type' })
@@ -60,6 +64,40 @@ export function RentalRequestForm({ rentalPrice, studentPrice, onSubmit }: Renta
         />
         {errors.use_date && (
           <p className="text-xs text-red-500">{errors.use_date.message}</p>
+        )}
+      </div>
+
+      {/* 受け渡し方法 */}
+      <div className="flex flex-col gap-2">
+        <p className="text-sm font-medium text-gray-700">受け渡し方法 <span className="text-red-500">*</span></p>
+        {bothAvailable ? (
+          <div className="flex flex-col gap-2">
+            <label className="flex cursor-pointer items-center gap-3 rounded-lg border border-gray-200 p-3 hover:bg-gray-50">
+              <input
+                type="radio"
+                value="shipping"
+                className="accent-amber-700"
+                {...register('delivery_method')}
+              />
+              <span className="text-sm text-gray-700">全国発送</span>
+            </label>
+            <label className="flex cursor-pointer items-center gap-3 rounded-lg border border-gray-200 p-3 hover:bg-gray-50">
+              <input
+                type="radio"
+                value="handover"
+                className="accent-amber-700"
+                {...register('delivery_method')}
+              />
+              <span className="text-sm text-gray-700">手渡し</span>
+            </label>
+          </div>
+        ) : (
+          <p className="rounded-lg bg-gray-50 px-3 py-2 text-sm text-gray-700">
+            {shipsNationwide ? '全国発送' : '手渡し'}
+          </p>
+        )}
+        {errors.delivery_method && (
+          <p className="text-xs text-red-500">{errors.delivery_method.message}</p>
         )}
       </div>
 

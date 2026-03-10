@@ -6,6 +6,7 @@ import { MessageSquare } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { RentalStatusBadge } from "@/components/rental/RentalStatusBadge";
 import { RentalActionButtons } from "@/components/rental/RentalActionButtons";
+import { ShippingAddressSection } from "@/components/rental/ShippingAddressSection";
 import { Avatar } from "@/components/ui/Avatar";
 import { Button } from "@/components/ui/Button";
 import { formatDate, formatPrice } from "@/lib/utils";
@@ -29,8 +30,8 @@ const STATUS_GUIDE: Record<string, { renter: string; owner: string }> = {
     owner: "申請を確認して承認・却下してください",
   },
   approved: {
-    renter: "受け渡し方法をメッセージで確認してください",
-    owner: "受け渡し方法をメッセージで確認してください",
+    renter: "日程・住所などをメッセージで確認してください",
+    owner: "日程・住所などをメッセージで確認してください",
   },
   active: {
     renter: "返却の準備ができたら返却報告してください",
@@ -326,6 +327,12 @@ export default async function RentalDetailPage({
               </dd>
             </div>
             <div className="flex justify-between border-t border-gray-100 pt-3">
+              <dt className="text-gray-500">受け渡し方法</dt>
+              <dd className="font-medium text-gray-900">
+                {rental.delivery_method === 'handover' ? '手渡し' : '全国発送'}
+              </dd>
+            </div>
+            <div className="flex justify-between border-t border-gray-100 pt-3">
               <dt className="font-medium text-gray-700">合計金額</dt>
               <dd className="text-xl font-bold text-amber-700">
                 {formatPrice(rental.total_price)}
@@ -367,6 +374,15 @@ export default async function RentalDetailPage({
             )}
           </div>
         </div>
+
+        {/* 配送先情報（全国発送かつ approved 以降） */}
+        {rental.delivery_method === 'shipping' &&
+          ['approved', 'active', 'returning', 'returned'].includes(rental.status) && (
+            <ShippingAddressSection
+              rentalId={id}
+              myRole={isOwner ? 'owner' : 'renter'}
+            />
+          )}
 
         {/* Message link */}
         <Link href={`/messages/${id}`}>

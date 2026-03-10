@@ -14,6 +14,8 @@ interface RentalRequestFormWrapperProps {
   rentalPrice: number
   studentPrice?: number | null
   ownerId: string
+  shipsNationwide: boolean
+  allowsHandover: boolean
 }
 
 export function RentalRequestFormWrapper({
@@ -21,6 +23,8 @@ export function RentalRequestFormWrapper({
   rentalPrice,
   studentPrice,
   ownerId,
+  shipsNationwide,
+  allowsHandover,
 }: RentalRequestFormWrapperProps) {
   const router = useRouter()
   const [modalOpen, setModalOpen] = useState(false)
@@ -43,6 +47,7 @@ export function RentalRequestFormWrapper({
         use_date: data.use_date,
         total_price: totalPrice,
         platform_fee: 0,
+        delivery_method: data.delivery_method,
         status: 'pending',
       })
       .select('id')
@@ -85,7 +90,13 @@ export function RentalRequestFormWrapper({
             申請を送信しました。取引ページに移動します...
           </div>
         ) : (
-          <RentalRequestForm rentalPrice={rentalPrice} studentPrice={studentPrice} onSubmit={handleSubmit} />
+          <RentalRequestForm
+            rentalPrice={rentalPrice}
+            studentPrice={studentPrice}
+            shipsNationwide={shipsNationwide}
+            allowsHandover={allowsHandover}
+            onSubmit={handleSubmit}
+          />
         )}
       </Modal>
     </>

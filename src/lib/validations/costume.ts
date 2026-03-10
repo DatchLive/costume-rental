@@ -53,6 +53,9 @@ export const costumeSchema = z.object({
 }).refine(
   (data) => !(data.height_min && data.height_max) || data.height_max >= data.height_min,
   { message: '最高身長は最低身長以上に設定してください', path: ['height_max'] }
+).refine(
+  (data) => data.ships_nationwide || data.allows_handover,
+  { message: '全国発送か手渡しのどちらか一方は必ず選択してください', path: ['ships_nationwide'] }
 )
 
 export type CostumeFormData = z.infer<typeof costumeSchema>

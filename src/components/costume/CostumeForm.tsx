@@ -216,23 +216,31 @@ export function CostumeForm({
         {...register('area')}
       />
 
-      <label className="flex cursor-pointer items-center gap-3">
-        <input
-          type="checkbox"
-          className="h-4 w-4 rounded border-gray-300 text-amber-700 focus:ring-amber-500"
-          {...register('ships_nationwide')}
-        />
-        <span className="text-sm font-medium text-gray-700">全国発送に対応する</span>
-      </label>
-
-      <label className="flex cursor-pointer items-center gap-3">
-        <input
-          type="checkbox"
-          className="h-4 w-4 rounded border-gray-300 text-amber-700 focus:ring-amber-500"
-          {...register('allows_handover')}
-        />
-        <span className="text-sm font-medium text-gray-700">手渡しに対応する</span>
-      </label>
+      <div className="flex flex-col gap-2">
+        <p className="text-sm font-medium text-gray-700">
+          受け渡し方法 <span className="text-red-500">*</span>
+          <span className="ml-1 text-xs font-normal text-gray-400">（どちらか一方は必須）</span>
+        </p>
+        <label className="flex cursor-pointer items-center gap-3">
+          <input
+            type="checkbox"
+            className="h-4 w-4 rounded border-gray-300 text-amber-700 focus:ring-amber-500"
+            {...register('ships_nationwide')}
+          />
+          <span className="text-sm text-gray-700">全国発送に対応する</span>
+        </label>
+        <label className="flex cursor-pointer items-center gap-3">
+          <input
+            type="checkbox"
+            className="h-4 w-4 rounded border-gray-300 text-amber-700 focus:ring-amber-500"
+            {...register('allows_handover')}
+          />
+          <span className="text-sm text-gray-700">手渡しに対応する</span>
+        </label>
+        {errors.ships_nationwide && (
+          <p className="text-xs text-red-500">{errors.ships_nationwide.message}</p>
+        )}
+      </div>
 
       {allowsHandover && (
         <Input

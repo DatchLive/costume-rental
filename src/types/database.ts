@@ -160,8 +160,10 @@ export interface Database {
           use_date: string
           total_price: number
           platform_fee: number
+          delivery_method: string
           status: string
           cancel_reason: string | null
+          completed_at: string | null
           created_at: string
         }
         Insert: {
@@ -172,8 +174,10 @@ export interface Database {
           use_date: string
           total_price: number
           platform_fee?: number
+          delivery_method?: string
           status?: string
           cancel_reason?: string | null
+          completed_at?: string | null
           created_at?: string
         }
         Update: {
@@ -184,8 +188,10 @@ export interface Database {
           use_date?: string
           total_price?: number
           platform_fee?: number
+          delivery_method?: string
           status?: string
           cancel_reason?: string | null
+          completed_at?: string | null
           created_at?: string
         }
         Relationships: [
@@ -379,6 +385,50 @@ export interface Database {
         }
         Relationships: []
       }
+      rental_addresses: {
+        Row: {
+          id: string
+          rental_id: string
+          role: string
+          name: string
+          postal_code: string
+          address: string
+          phone: string | null
+          notes: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          rental_id: string
+          role: string
+          name: string
+          postal_code: string
+          address: string
+          phone?: string | null
+          notes?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          rental_id?: string
+          role?: string
+          name?: string
+          postal_code?: string
+          address?: string
+          phone?: string | null
+          notes?: string | null
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'rental_addresses_rental_id_fkey'
+            columns: ['rental_id']
+            isOneToOne: false
+            referencedRelation: 'rentals'
+            referencedColumns: ['id']
+          }
+        ]
+      }
       reports: {
         Row: {
           id: string
@@ -451,6 +501,7 @@ export type Review = Database['public']['Tables']['reviews']['Row']
 export type Notification = Database['public']['Tables']['notifications']['Row']
 export type Favorite = Database['public']['Tables']['favorites']['Row']
 export type Report = Database['public']['Tables']['reports']['Row']
+export type RentalAddress = Database['public']['Tables']['rental_addresses']['Row']
 export type CostumeReview = Database['public']['Tables']['costume_reviews']['Row']
 
 // Extended types with joined relations

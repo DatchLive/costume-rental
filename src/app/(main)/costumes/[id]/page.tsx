@@ -236,6 +236,8 @@ export default async function CostumePage({ params }: CostumePageProps) {
               rentalPrice={costume.rental_price}
               studentPrice={costume.student_price}
               ownerId={costume.user_id}
+              shipsNationwide={costume.ships_nationwide}
+              allowsHandover={costume.allows_handover}
             />
           ) : !user ? (
             <Link href={`/login?next=/costumes/${id}`}>
