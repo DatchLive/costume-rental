@@ -32,18 +32,6 @@ export function Header() {
           <span className="font-bold sm:hidden">ダンス衣装</span>
         </Link>
 
-        {/* Desktop nav */}
-        <nav className="hidden items-center gap-6 md:flex">
-          <Link href="/" className="text-sm font-medium text-gray-700 hover:text-amber-700">
-            衣装を探す
-          </Link>
-          {user && (
-            <Link href="/costumes/new" className="text-sm font-medium text-gray-700 hover:text-amber-700">
-              出品する
-            </Link>
-          )}
-        </nav>
-
         {/* Right side */}
         <div className="flex items-center gap-3">
           {loading ? null : user ? (
