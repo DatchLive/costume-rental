@@ -6,7 +6,7 @@ export const metadata: Metadata = { title: 'プライバシーポリシー' }
 export default function PrivacyPage() {
   return (
     <StaticPageLayout title="プライバシーポリシー">
-      <p>最終更新日: 2024年1月1日</p>
+      <p>最終更新日: 2026年3月1日</p>
 
       <h2>1. 収集する情報</h2>
       <p>当社は、本サービスの提供のため、以下の情報を収集します。</p>
