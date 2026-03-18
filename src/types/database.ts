@@ -352,6 +352,7 @@ export interface Database {
           rental_id: string
           costume_id: string
           reviewer_id: string
+          rating: string | null
           size_fit: string | null
           photo_match: string | null
           condition: string | null
@@ -364,6 +365,7 @@ export interface Database {
           rental_id: string
           costume_id: string
           reviewer_id: string
+          rating?: string | null
           size_fit?: string | null
           photo_match?: string | null
           condition?: string | null
@@ -376,6 +378,7 @@ export interface Database {
           rental_id?: string
           costume_id?: string
           reviewer_id?: string
+          rating?: string | null
           size_fit?: string | null
           photo_match?: string | null
           condition?: string | null

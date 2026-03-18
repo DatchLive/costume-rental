@@ -18,6 +18,7 @@ interface ReviewSubmitClientProps {
 }
 
 const DEFAULT_COSTUME_DATA: CostumeReviewData = {
+  rating: null,
   size_fit: null,
   photo_match: null,
   condition: null,
@@ -35,7 +36,7 @@ export function ReviewSubmitClient({ rentalId, reviewerId, revieweeId, role, cos
   async function handleSubmit(data: Record<string, unknown>) {
     // Validate costume review fields when required
     if (showCostumeReview) {
-      if (!costumeData.size_fit || !costumeData.photo_match || !costumeData.condition) {
+      if (!costumeData.rating || !costumeData.size_fit || !costumeData.photo_match || !costumeData.condition) {
         setCostumeError(true)
         throw new Error('衣装評価の必須項目を選択してください')
       }
@@ -62,6 +63,7 @@ export function ReviewSubmitClient({ rentalId, reviewerId, revieweeId, role, cos
         rental_id: rentalId,
         costume_id: costumeId,
         reviewer_id: reviewerId,
+        rating: costumeData.rating,
         size_fit: costumeData.size_fit,
         photo_match: costumeData.photo_match,
         condition: costumeData.condition,

@@ -33,12 +33,25 @@ export function CostumeReviewCard({ review }: CostumeReviewCardProps) {
   return (
     <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
       {/* Reviewer */}
-      <div className="mb-3 flex items-center gap-2">
-        <Avatar src={review.reviewer.avatar_url} name={review.reviewer.name} size="sm" />
-        <div>
-          <p className="text-sm font-medium text-gray-800">{review.reviewer.name ?? '匿名'}</p>
-          <p className="text-xs text-gray-400">{formatDate(review.created_at)}</p>
+      <div className="mb-3 flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <Avatar src={review.reviewer.avatar_url} name={review.reviewer.name} size="sm" />
+          <div>
+            <p className="text-sm font-medium text-gray-800">{review.reviewer.name ?? '匿名'}</p>
+            <p className="text-xs text-gray-400">{formatDate(review.created_at)}</p>
+          </div>
         </div>
+        {review.rating && (
+          <span
+            className={`flex items-center gap-1 rounded-full px-3 py-1 text-sm font-medium ${
+              review.rating === 'good'
+                ? 'bg-green-50 text-green-700'
+                : 'bg-red-50 text-red-700'
+            }`}
+          >
+            {review.rating === 'good' ? '👍 良かった' : '👎 残念だった'}
+          </span>
+        )}
       </div>
 
       {/* Meta info */}

@@ -256,10 +256,18 @@ export default async function CostumePage({ params }: CostumePageProps) {
       {/* Costume reviews */}
       {costumeReviews.length > 0 && (
         <section className="mt-10">
-          <h2 className="mb-4 text-lg font-bold text-gray-900">
-            借りた人の声
-            <span className="ml-2 text-sm font-normal text-gray-400">({costumeReviews.length}件)</span>
-          </h2>
+          <div className="mb-4 flex items-center gap-4">
+            <h2 className="text-lg font-bold text-gray-900">
+              借りた人の声
+              <span className="ml-2 text-sm font-normal text-gray-400">({costumeReviews.length}件)</span>
+            </h2>
+            {costumeReviews.some((r) => r.rating) && (
+              <p className="text-sm text-gray-600">
+                👍 良かった {costumeReviews.filter((r) => r.rating === 'good').length}件
+                {' / '}{costumeReviews.filter((r) => r.rating).length}件
+              </p>
+            )}
+          </div>
           <div className="flex flex-col gap-4">
             {costumeReviews.map((review) => (
               <CostumeReviewCard key={review.id} review={review} />

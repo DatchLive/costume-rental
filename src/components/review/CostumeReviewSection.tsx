@@ -9,6 +9,7 @@ import {
 } from '@/lib/constants'
 
 export type CostumeReviewData = {
+  rating: string | null
   size_fit: string | null
   photo_match: string | null
   condition: string | null
@@ -77,6 +78,42 @@ export function CostumeReviewSection({ value, onChange, hasError }: CostumeRevie
 
   return (
     <div className="flex flex-col gap-5">
+      {/* 総合評価 */}
+      <div>
+        <p className={`mb-2 text-sm font-medium ${hasError && !value.rating ? 'text-red-600' : 'text-gray-700'}`}>
+          総合評価 *
+        </p>
+        <div className="flex gap-3">
+          <button
+            type="button"
+            onClick={() => update({ rating: 'good' })}
+            className={`flex flex-1 items-center justify-center gap-2 rounded-xl border-2 py-4 text-base font-medium transition-colors ${
+              value.rating === 'good'
+                ? 'border-green-500 bg-green-50 text-green-700'
+                : 'border-gray-200 bg-white text-gray-600 hover:border-green-300'
+            }`}
+          >
+            <span className="text-2xl">👍</span>
+            良かった
+          </button>
+          <button
+            type="button"
+            onClick={() => update({ rating: 'bad' })}
+            className={`flex flex-1 items-center justify-center gap-2 rounded-xl border-2 py-4 text-base font-medium transition-colors ${
+              value.rating === 'bad'
+                ? 'border-red-400 bg-red-50 text-red-700'
+                : 'border-gray-200 bg-white text-gray-600 hover:border-red-300'
+            }`}
+          >
+            <span className="text-2xl">👎</span>
+            残念だった
+          </button>
+        </div>
+        {hasError && !value.rating && (
+          <p className="mt-1 text-xs text-red-500">選択してください</p>
+        )}
+      </div>
+
       <ToggleGroup
         label="サイズ感"
         options={[...COSTUME_REVIEW_SIZE_FIT_OPTIONS]}
