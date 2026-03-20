@@ -184,9 +184,6 @@ export default async function CostumePage({ params }: CostumePageProps) {
             {costume.cleaning_notes && (
               <p className="mt-1 whitespace-pre-wrap text-sm text-gray-500">{costume.cleaning_notes}</p>
             )}
-            <p className="mt-2 text-xs text-gray-400">
-              返却後の準備日数：{costume.buffer_days}日
-            </p>
           </div>
 
           {/* Owner */}

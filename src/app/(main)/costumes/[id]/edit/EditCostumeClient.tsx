@@ -42,7 +42,6 @@ export function EditCostumeClient({
         handover_area: data.allows_handover ? (data.handover_area ?? null) : null,
         cleaning_responsibility: data.cleaning_responsibility,
         cleaning_notes: data.cleaning_notes ?? null,
-        buffer_days: data.buffer_days,
         tanning_policy: data.tanning_policy,
         safety_pin: data.safety_pin,
         perfume: data.perfume,

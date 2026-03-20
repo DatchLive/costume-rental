@@ -58,7 +58,6 @@ export default async function EditCostumePage({ params }: EditCostumePageProps) 
               handover_area: costume.handover_area ?? undefined,
               cleaning_responsibility: costume.cleaning_responsibility,
               cleaning_notes: costume.cleaning_notes ?? undefined,
-              buffer_days: costume.buffer_days,
               tanning_policy: costume.tanning_policy,
               safety_pin: costume.safety_pin,
               perfume: costume.perfume,
