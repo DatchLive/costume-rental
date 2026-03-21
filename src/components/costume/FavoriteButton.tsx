@@ -12,7 +12,12 @@ interface FavoriteButtonProps {
   size?: 'sm' | 'md'
 }
 
-export function FavoriteButton({ costumeId, userId, isFavorited: initialIsFavorited, size = 'sm' }: FavoriteButtonProps) {
+export function FavoriteButton({
+  costumeId,
+  userId,
+  isFavorited: initialIsFavorited,
+  size = 'sm',
+}: FavoriteButtonProps) {
   const [isFavorited, setIsFavorited] = useState(initialIsFavorited)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
@@ -59,7 +64,7 @@ export function FavoriteButton({ costumeId, userId, isFavorited: initialIsFavori
       type="button"
       onClick={handleClick}
       aria-label={isFavorited ? 'お気に入りから削除' : 'お気に入りに追加'}
-      className={`flex items-center justify-center rounded-full bg-white/90 shadow-sm backdrop-blur-sm transition-all hover:bg-white hover:scale-110 ${buttonSize} ${isLoading ? 'opacity-60' : ''}`}
+      className={`flex items-center justify-center rounded-full bg-white/90 shadow-sm backdrop-blur-sm transition-all hover:scale-110 hover:bg-white ${buttonSize} ${isLoading ? 'opacity-60' : ''}`}
     >
       <Heart
         className={`${iconSize} transition-colors ${isFavorited ? 'fill-rose-500 text-rose-500' : 'fill-none text-gray-500'}`}

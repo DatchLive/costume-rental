@@ -56,7 +56,7 @@ export function MessageInput({ rentalId, senderId, disabled }: MessageInputProps
         placeholder="メッセージを入力（Enter で送信 / Shift+Enter で改行）"
         rows={2}
         maxLength={1000}
-        className="flex-1 resize-none rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
+        className="flex-1 resize-none rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none"
       />
       <button
         type="button"

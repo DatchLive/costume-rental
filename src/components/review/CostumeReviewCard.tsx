@@ -16,15 +16,23 @@ interface CostumeReviewCardProps {
   review: CostumeReviewWithReviewer
 }
 
-type LabelItem = { label: string; value: string }
-
-const META_ITEMS: LabelItem[] = []
-
 export function CostumeReviewCard({ review }: CostumeReviewCardProps) {
   const meta: { label: string; value: string }[] = []
-  if (review.size_fit) meta.push({ label: 'サイズ感', value: COSTUME_REVIEW_SIZE_FIT_LABELS[review.size_fit] ?? review.size_fit })
-  if (review.photo_match) meta.push({ label: '写真との一致度', value: COSTUME_REVIEW_PHOTO_MATCH_LABELS[review.photo_match] ?? review.photo_match })
-  if (review.condition) meta.push({ label: 'コンディション', value: COSTUME_REVIEW_CONDITION_LABELS[review.condition] ?? review.condition })
+  if (review.size_fit)
+    meta.push({
+      label: 'サイズ感',
+      value: COSTUME_REVIEW_SIZE_FIT_LABELS[review.size_fit] ?? review.size_fit,
+    })
+  if (review.photo_match)
+    meta.push({
+      label: '写真との一致度',
+      value: COSTUME_REVIEW_PHOTO_MATCH_LABELS[review.photo_match] ?? review.photo_match,
+    })
+  if (review.condition)
+    meta.push({
+      label: 'コンディション',
+      value: COSTUME_REVIEW_CONDITION_LABELS[review.condition] ?? review.condition,
+    })
 
   const scenes = (review.recommended_scene ?? [])
     .map((s) => COSTUME_REVIEW_SCENE_LABELS[s] ?? s)
@@ -44,9 +52,7 @@ export function CostumeReviewCard({ review }: CostumeReviewCardProps) {
         {review.rating && (
           <span
             className={`flex items-center gap-1 rounded-full px-3 py-1 text-sm font-medium ${
-              review.rating === 'good'
-                ? 'bg-green-50 text-green-700'
-                : 'bg-red-50 text-red-700'
+              review.rating === 'good' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
             }`}
           >
             {review.rating === 'good' ? '👍 良かった' : '👎 残念だった'}
@@ -82,7 +88,7 @@ export function CostumeReviewCard({ review }: CostumeReviewCardProps) {
 
       {/* Comment */}
       {review.comment && (
-        <p className="whitespace-pre-wrap text-sm text-gray-600">{review.comment}</p>
+        <p className="text-sm whitespace-pre-wrap text-gray-600">{review.comment}</p>
       )}
     </div>
   )

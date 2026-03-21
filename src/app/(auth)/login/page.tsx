@@ -65,9 +65,7 @@ function LoginContent() {
             </div>
           )}
           {serverError && (
-            <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">
-              {serverError}
-            </div>
+            <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">{serverError}</div>
           )}
 
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
@@ -88,10 +86,7 @@ function LoginContent() {
               {...register('password')}
             />
             <div className="text-right">
-              <Link
-                href="/reset-password"
-                className="text-sm text-amber-700 hover:underline"
-              >
+              <Link href="/reset-password" className="text-sm text-amber-700 hover:underline">
                 パスワードを忘れた方
               </Link>
             </div>
@@ -122,7 +117,13 @@ function LoginContent() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="flex min-h-screen items-center justify-center"><div className="h-8 w-8 animate-spin rounded-full border-4 border-amber-500 border-t-transparent" /></div>}>
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-amber-500 border-t-transparent" />
+        </div>
+      }
+    >
       <LoginContent />
     </Suspense>
   )

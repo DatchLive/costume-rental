@@ -25,7 +25,11 @@ interface ProfileEditClientProps {
   initialAvatarUrl: string | null
 }
 
-export function ProfileEditClient({ userId, initialValues, initialAvatarUrl }: ProfileEditClientProps) {
+export function ProfileEditClient({
+  userId,
+  initialValues,
+  initialAvatarUrl,
+}: ProfileEditClientProps) {
   const router = useRouter()
   const [editing, setEditing] = useState(false)
   const [avatarUrl, setAvatarUrl] = useState<string | null>(initialAvatarUrl)
@@ -68,7 +72,9 @@ export function ProfileEditClient({ userId, initialValues, initialAvatarUrl }: P
       return
     }
 
-    const { data: { publicUrl } } = supabase.storage.from('avatars').getPublicUrl(path)
+    const {
+      data: { publicUrl },
+    } = supabase.storage.from('avatars').getPublicUrl(path)
     setAvatarUrl(`${publicUrl}?t=${Date.now()}`)
     setAvatarUploading(false)
   }
@@ -102,19 +108,16 @@ export function ProfileEditClient({ userId, initialValues, initialAvatarUrl }: P
     return (
       <div className="flex flex-col gap-6">
         {success && (
-          <div className="rounded-lg bg-green-50 p-3 text-sm text-green-700">プロフィールを保存しました</div>
+          <div className="rounded-lg bg-green-50 p-3 text-sm text-green-700">
+            プロフィールを保存しました
+          </div>
         )}
 
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Avatar src={avatarUrl} name={currentValues.name} size="xl" />
           </div>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => setEditing(true)}
-          >
+          <Button type="button" variant="outline" size="sm" onClick={() => setEditing(true)}>
             <Pencil className="mr-1.5 h-3.5 w-3.5" />
             編集する
           </Button>
@@ -131,7 +134,9 @@ export function ProfileEditClient({ userId, initialValues, initialAvatarUrl }: P
           </div>
           <div>
             <p className="text-xs font-medium text-gray-500">自己紹介</p>
-            <p className="mt-1 whitespace-pre-wrap text-sm text-gray-900">{currentValues.bio || '未設定'}</p>
+            <p className="mt-1 text-sm whitespace-pre-wrap text-gray-900">
+              {currentValues.bio || '未設定'}
+            </p>
           </div>
         </div>
       </div>

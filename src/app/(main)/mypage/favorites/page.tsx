@@ -8,15 +8,19 @@ export const metadata: Metadata = { title: 'お気に入り' }
 
 export default async function FavoritesPage() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) redirect('/login?next=/mypage/favorites')
 
   const { data: favorites } = await supabase
     .from('favorites')
-    .select(`
+    .select(
+      `
       costume_id,
       costumes(*, profiles(id, name, avatar_url, good_count, total_count, is_verified))
-    `)
+    `,
+    )
     .eq('user_id', user.id)
     .order('created_at', { ascending: false })
 

@@ -59,7 +59,14 @@ export function ShippingAddressSection({ rentalId, myRole }: ShippingAddressSect
           const other = data.find((a) => a.role === otherRole) ?? null
           setMyAddress(my)
           setOtherAddress(other)
-          if (my) reset({ name: my.name, postal_code: my.postal_code, address: my.address, phone: my.phone ?? '', notes: my.notes ?? '' })
+          if (my)
+            reset({
+              name: my.name,
+              postal_code: my.postal_code,
+              address: my.address,
+              phone: my.phone ?? '',
+              notes: my.notes ?? '',
+            })
         }
         setLoading(false)
       })
@@ -87,11 +94,7 @@ export function ShippingAddressSection({ rentalId, myRole }: ShippingAddressSect
           .eq('role', myRole)
           .select()
           .single()
-      : await supabase
-          .from('rental_addresses')
-          .insert(payload)
-          .select()
-          .single()
+      : await supabase.from('rental_addresses').insert(payload).select().single()
 
     if (error) {
       setServerError('保存中にエラーが発生しました。もう一度お試しください。')
@@ -129,9 +132,7 @@ export function ShippingAddressSection({ rentalId, myRole }: ShippingAddressSect
             <AddressCard address={myAddress} />
           ) : editing || !myAddress ? (
             <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
-              {serverError && (
-                <p className="text-xs text-red-600">{serverError}</p>
-              )}
+              {serverError && <p className="text-xs text-red-600">{serverError}</p>}
               <Input
                 label="氏名"
                 required
@@ -168,7 +169,12 @@ export function ShippingAddressSection({ rentalId, myRole }: ShippingAddressSect
               />
               <div className="flex gap-2">
                 {editing && (
-                  <Button type="button" variant="outline" size="sm" onClick={() => setEditing(false)}>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setEditing(false)}
+                  >
                     キャンセル
                   </Button>
                 )}

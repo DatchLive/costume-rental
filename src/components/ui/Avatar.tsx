@@ -24,16 +24,14 @@ const sizePx = {
 }
 
 function Avatar({ src, name, size = 'md', className }: AvatarProps) {
-  const initials = name
-    ? name.charAt(0)
-    : null
+  const initials = name ? name.charAt(0) : null
 
   return (
     <div
       className={cn(
         'relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-amber-100 text-amber-800',
         sizeClasses[size],
-        className
+        className,
       )}
     >
       {src ? (

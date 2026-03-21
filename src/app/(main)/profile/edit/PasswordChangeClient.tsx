@@ -60,19 +60,16 @@ export function PasswordChangeClient() {
     return (
       <div className="flex flex-col gap-4">
         {success && (
-          <div className="rounded-lg bg-green-50 p-3 text-sm text-green-700">パスワードを変更しました</div>
+          <div className="rounded-lg bg-green-50 p-3 text-sm text-green-700">
+            パスワードを変更しました
+          </div>
         )}
         <div className="flex items-center justify-between">
           <div>
             <p className="text-xs font-medium text-gray-500">パスワード</p>
             <p className="mt-1 text-sm text-gray-900">••••••••</p>
           </div>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => setEditing(true)}
-          >
+          <Button type="button" variant="outline" size="sm" onClick={() => setEditing(true)}>
             <Pencil className="mr-1.5 h-3.5 w-3.5" />
             変更する
           </Button>

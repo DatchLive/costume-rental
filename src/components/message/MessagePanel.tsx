@@ -56,15 +56,12 @@ export function MessagePanel({
 
           if (incoming.sender_id === currentUserId) {
             // 自分が送ったメッセージ: 楽観的に追加した temp メッセージと差し替える
-            const [tempId] = [...pendingMap.current.entries()].find(
-              ([, c]) => c === incoming.content
-            ) ?? []
+            const [tempId] =
+              [...pendingMap.current.entries()].find(([, c]) => c === incoming.content) ?? []
 
             if (tempId) {
               pendingMap.current.delete(tempId)
-              setMessages((prev) =>
-                prev.map((m) => (m.id === tempId ? incoming : m))
-              )
+              setMessages((prev) => prev.map((m) => (m.id === tempId ? incoming : m)))
               return
             }
           }
@@ -80,9 +77,15 @@ export function MessagePanel({
 
           setMessages((prev) => {
             if (prev.some((m) => m.id === incoming.id)) return prev
-            return [...prev, { ...incoming, is_read: incoming.sender_id !== currentUserId ? true : incoming.is_read }]
+            return [
+              ...prev,
+              {
+                ...incoming,
+                is_read: incoming.sender_id !== currentUserId ? true : incoming.is_read,
+              },
+            ]
           })
-        }
+        },
       )
       .on(
         'postgres_changes',
@@ -96,9 +99,9 @@ export function MessagePanel({
           const updated = payload.new as Message
           // 自分が送ったメッセージの既読状態を更新
           setMessages((prev) =>
-            prev.map((m) => (m.id === updated.id ? { ...m, is_read: updated.is_read } : m))
+            prev.map((m) => (m.id === updated.id ? { ...m, is_read: updated.is_read } : m)),
           )
-        }
+        },
       )
       .subscribe()
 
@@ -207,7 +210,7 @@ export function MessagePanel({
             placeholder="メッセージを入力（Shift+Enter で送信 / Enter で改行）"
             rows={2}
             maxLength={1000}
-            className="flex-1 resize-none rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
+            className="flex-1 resize-none rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none"
           />
           <button
             type="button"

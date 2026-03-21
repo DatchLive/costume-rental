@@ -42,7 +42,7 @@ export function useNotifications(userId: string | undefined) {
           const newNotification = payload.new as Notification
           setNotifications((prev) => [newNotification, ...prev])
           setUnreadCount((prev) => prev + 1)
-        }
+        },
       )
       .on(
         'postgres_changes',
@@ -54,11 +54,9 @@ export function useNotifications(userId: string | undefined) {
         },
         (payload) => {
           const updated = payload.new as Notification
-          setNotifications((prev) =>
-            prev.map((n) => (n.id === updated.id ? updated : n))
-          )
+          setNotifications((prev) => prev.map((n) => (n.id === updated.id ? updated : n)))
           setUnreadCount((prev) => (updated.is_read ? Math.max(0, prev - 1) : prev))
-        }
+        },
       )
       .subscribe()
 
@@ -81,9 +79,7 @@ export function useNotifications(userId: string | undefined) {
 
   async function markRead(id: string) {
     const supabase = createClient()
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, is_read: true } : n))
-    )
+    setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, is_read: true } : n)))
     setUnreadCount((prev) => Math.max(0, prev - 1))
     await supabase.from('notifications').update({ is_read: true }).eq('id', id)
   }

@@ -18,14 +18,24 @@ const sizeClasses = {
   lg: 'h-6 w-6',
 }
 
-function StarRating({ value = 0, onChange, readonly = false, size = 'md', label }: StarRatingProps) {
+function StarRating({
+  value = 0,
+  onChange,
+  readonly = false,
+  size = 'md',
+  label,
+}: StarRatingProps) {
   const [hovered, setHovered] = useState(0)
-  const displayValue = readonly ? value : (hovered || value)
+  const displayValue = readonly ? value : hovered || value
 
   return (
     <div className="flex flex-col gap-1">
       {label && <span className="text-sm font-medium text-gray-700">{label}</span>}
-      <div className="flex items-center gap-0.5" role={readonly ? undefined : 'group'} aria-label={label}>
+      <div
+        className="flex items-center gap-0.5"
+        role={readonly ? undefined : 'group'}
+        aria-label={label}
+      >
         {[1, 2, 3, 4, 5].map((star) => (
           <button
             key={star}
@@ -36,7 +46,7 @@ function StarRating({ value = 0, onChange, readonly = false, size = 'md', label 
             onMouseLeave={() => !readonly && setHovered(0)}
             className={cn(
               'transition-colors',
-              readonly ? 'cursor-default' : 'cursor-pointer hover:scale-110'
+              readonly ? 'cursor-default' : 'cursor-pointer hover:scale-110',
             )}
             aria-label={`${star}星`}
           >
@@ -45,7 +55,7 @@ function StarRating({ value = 0, onChange, readonly = false, size = 'md', label 
                 sizeClasses[size],
                 star <= displayValue
                   ? 'fill-amber-400 text-amber-400'
-                  : 'fill-gray-200 text-gray-200'
+                  : 'fill-gray-200 text-gray-200',
               )}
             />
           </button>

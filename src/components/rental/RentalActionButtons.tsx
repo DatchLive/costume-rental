@@ -8,7 +8,6 @@ import { Modal } from '@/components/ui/Modal'
 
 interface RentalActionButtonsProps {
   rentalId: string
-  costumeId: string
   status: string
   isOwner: boolean
   isRenter: boolean
@@ -50,7 +49,6 @@ const CONFIRM_ACTIONS: Record<string, ConfirmAction> = {
 
 export function RentalActionButtons({
   rentalId,
-  costumeId,
   status,
   isOwner,
   isRenter,
@@ -66,10 +64,7 @@ export function RentalActionButtons({
     setLoading(newStatus)
     setConfirmAction(null)
     const supabase = createClient()
-    await supabase
-      .from('rentals')
-      .update({ status: newStatus })
-      .eq('id', rentalId)
+    await supabase.from('rentals').update({ status: newStatus }).eq('id', rentalId)
 
     await fetch('/api/email', {
       method: 'POST',
@@ -88,7 +83,9 @@ export function RentalActionButtons({
     }
     setLoading('rejected')
     const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
 
     await supabase
       .from('rentals')
@@ -114,7 +111,12 @@ export function RentalActionButtons({
     router.refresh()
   }
 
-  if (status === 'rejected' || status === 'cancelled' || status === 'returned' || status === 'completed') {
+  if (
+    status === 'rejected' ||
+    status === 'cancelled' ||
+    status === 'returned' ||
+    status === 'completed'
+  ) {
     return null
   }
 
@@ -131,10 +133,7 @@ export function RentalActionButtons({
             >
               承認する
             </Button>
-            <Button
-              variant="danger"
-              onClick={() => setRejectModalOpen(true)}
-            >
+            <Button variant="danger" onClick={() => setRejectModalOpen(true)}>
               却下する
             </Button>
           </>
@@ -206,24 +205,21 @@ export function RentalActionButtons({
             </label>
             <textarea
               value={rejectReason}
-              onChange={(e) => { setRejectReason(e.target.value); setRejectError(false) }}
-              className={`h-24 w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 ${rejectError ? 'border-red-400 focus:border-red-400' : 'border-gray-300 focus:border-amber-500'}`}
+              onChange={(e) => {
+                setRejectReason(e.target.value)
+                setRejectError(false)
+              }}
+              className={`h-24 w-full rounded-lg border px-3 py-2 text-sm focus:ring-2 focus:ring-amber-500/20 focus:outline-none ${rejectError ? 'border-red-400 focus:border-red-400' : 'border-gray-300 focus:border-amber-500'}`}
               maxLength={500}
               placeholder="例：その日はすでに別の方に貸し出し予定です"
             />
-            {rejectError && (
-              <p className="text-xs text-red-500">却下理由を入力してください</p>
-            )}
+            {rejectError && <p className="text-xs text-red-500">却下理由を入力してください</p>}
           </div>
           <div className="flex justify-end gap-3">
             <Button variant="outline" onClick={() => setRejectModalOpen(false)}>
               戻る
             </Button>
-            <Button
-              variant="danger"
-              loading={loading === 'rejected'}
-              onClick={handleReject}
-            >
+            <Button variant="danger" loading={loading === 'rejected'} onClick={handleReject}>
               却下する
             </Button>
           </div>

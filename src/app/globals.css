@@ -1,7 +1,8 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
-  --font-sans: var(--font-noto-sans-jp), "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+  --font-sans:
+    var(--font-noto-sans-jp), 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
 
   /* Brand colors */
   --color-amber-50: #fffbeb;

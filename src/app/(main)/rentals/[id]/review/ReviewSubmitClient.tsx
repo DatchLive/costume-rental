@@ -26,7 +26,13 @@ const DEFAULT_COSTUME_DATA: CostumeReviewData = {
   comment: '',
 }
 
-export function ReviewSubmitClient({ rentalId, reviewerId, revieweeId, role, costumeId }: ReviewSubmitClientProps) {
+export function ReviewSubmitClient({
+  rentalId,
+  reviewerId,
+  revieweeId,
+  role,
+  costumeId,
+}: ReviewSubmitClientProps) {
   const router = useRouter()
   const [costumeData, setCostumeData] = useState<CostumeReviewData>(DEFAULT_COSTUME_DATA)
   const [costumeError, setCostumeError] = useState(false)
@@ -36,7 +42,12 @@ export function ReviewSubmitClient({ rentalId, reviewerId, revieweeId, role, cos
   async function handleSubmit(data: Record<string, unknown>) {
     // Validate costume review fields when required
     if (showCostumeReview) {
-      if (!costumeData.rating || !costumeData.size_fit || !costumeData.photo_match || !costumeData.condition) {
+      if (
+        !costumeData.rating ||
+        !costumeData.size_fit ||
+        !costumeData.photo_match ||
+        !costumeData.condition
+      ) {
         setCostumeError(true)
         throw new Error('衣装評価の必須項目を選択してください')
       }

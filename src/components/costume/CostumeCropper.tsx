@@ -27,7 +27,7 @@ export function CostumeCropper({ file, onCropped, onCancel }: CostumeCropperProp
         makeAspectCrop({ unit: '%', width: 90 }, ASPECT, naturalWidth, naturalHeight),
         naturalWidth,
         naturalHeight,
-      )
+      ),
     )
   }
 
@@ -54,11 +54,15 @@ export function CostumeCropper({ file, onCropped, onCancel }: CostumeCropperProp
 
     ctx.drawImage(img, cropX, cropY, cropW, cropH, 0, 0, outputW, outputH)
 
-    canvas.toBlob((blob) => {
-      if (!blob) return
-      URL.revokeObjectURL(srcUrl)
-      onCropped(blob)
-    }, 'image/jpeg', 0.92)
+    canvas.toBlob(
+      (blob) => {
+        if (!blob) return
+        URL.revokeObjectURL(srcUrl)
+        onCropped(blob)
+      },
+      'image/jpeg',
+      0.92,
+    )
   }, [crop, srcUrl, onCropped])
 
   function handleCancel() {
@@ -69,14 +73,11 @@ export function CostumeCropper({ file, onCropped, onCancel }: CostumeCropperProp
   return (
     <Modal open onClose={handleCancel} title="画像をトリミング">
       <div className="flex flex-col gap-4">
-        <p className="text-sm text-gray-500">枠をドラッグして位置・サイズを調整してください（縦長4:3）</p>
+        <p className="text-sm text-gray-500">
+          枠をドラッグして位置・サイズを調整してください（縦長4:3）
+        </p>
         <div className="flex justify-center overflow-auto">
-          <ReactCrop
-            crop={crop}
-            onChange={(c) => setCrop(c)}
-            aspect={ASPECT}
-            minWidth={50}
-          >
+          <ReactCrop crop={crop} onChange={(c) => setCrop(c)} aspect={ASPECT} minWidth={50}>
             <img
               ref={imgRef}
               src={srcUrl}

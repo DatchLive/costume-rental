@@ -7,7 +7,9 @@ export const metadata: Metadata = { title: '通知' }
 
 export default async function NotificationsPage() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) redirect('/login?next=/notifications')
 
   const { data: notifications } = await supabase
@@ -20,10 +22,7 @@ export default async function NotificationsPage() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6">
       <h1 className="mb-6 text-2xl font-bold text-gray-900">通知</h1>
-      <NotificationsClient
-        userId={user.id}
-        initialNotifications={notifications ?? []}
-      />
+      <NotificationsClient userId={user.id} initialNotifications={notifications ?? []} />
     </div>
   )
 }

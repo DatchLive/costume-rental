@@ -36,18 +36,9 @@ function Modal({ open, onClose, title, children, className }: ModalProps) {
       aria-labelledby={title ? 'modal-title' : undefined}
     >
       {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-black/50"
-        onClick={onClose}
-        aria-hidden="true"
-      />
+      <div className="absolute inset-0 bg-black/50" onClick={onClose} aria-hidden="true" />
       {/* Panel */}
-      <div
-        className={cn(
-          'relative w-full max-w-lg rounded-xl bg-white shadow-xl',
-          className
-        )}
-      >
+      <div className={cn('relative w-full max-w-lg rounded-xl bg-white shadow-xl', className)}>
         <div className="flex items-center justify-between border-b border-gray-200 p-6">
           {title && (
             <h2 id="modal-title" className="text-lg font-semibold text-gray-900">

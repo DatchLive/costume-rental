@@ -38,7 +38,9 @@ function ToggleGroup({
 }) {
   return (
     <div>
-      <p className={`mb-2 text-sm font-medium ${hasError && !selected ? 'text-red-600' : 'text-gray-700'}`}>
+      <p
+        className={`mb-2 text-sm font-medium ${hasError && !selected ? 'text-red-600' : 'text-gray-700'}`}
+      >
         {label} *
       </p>
       <div className="flex flex-wrap gap-2">
@@ -57,9 +59,7 @@ function ToggleGroup({
           </button>
         ))}
       </div>
-      {hasError && !selected && (
-        <p className="mt-1 text-xs text-red-500">選択してください</p>
-      )}
+      {hasError && !selected && <p className="mt-1 text-xs text-red-500">選択してください</p>}
     </div>
   )
 }
@@ -80,7 +80,9 @@ export function CostumeReviewSection({ value, onChange, hasError }: CostumeRevie
     <div className="flex flex-col gap-5">
       {/* 総合評価 */}
       <div>
-        <p className={`mb-2 text-sm font-medium ${hasError && !value.rating ? 'text-red-600' : 'text-gray-700'}`}>
+        <p
+          className={`mb-2 text-sm font-medium ${hasError && !value.rating ? 'text-red-600' : 'text-gray-700'}`}
+        >
           総合評価 *
         </p>
         <div className="flex gap-3">
@@ -109,9 +111,7 @@ export function CostumeReviewSection({ value, onChange, hasError }: CostumeRevie
             残念だった
           </button>
         </div>
-        {hasError && !value.rating && (
-          <p className="mt-1 text-xs text-red-500">選択してください</p>
-        )}
+        {hasError && !value.rating && <p className="mt-1 text-xs text-red-500">選択してください</p>}
       </div>
 
       <ToggleGroup

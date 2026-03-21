@@ -50,10 +50,7 @@ export function calcTotalPrice(rentalPrice: number): number {
   return rentalPrice
 }
 
-export function calcCancelFee(
-  totalPrice: number,
-  useDate: string
-): number {
+export function calcCancelFee(totalPrice: number, useDate: string): number {
   const daysUntilUse = differenceInCalendarDays(new Date(useDate), new Date())
 
   if (daysUntilUse >= 7) return 0

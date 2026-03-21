@@ -25,14 +25,16 @@ export function NotificationItem({ notification, onRead }: NotificationItemProps
         notification.is_read ? 'border-gray-200 bg-white' : 'border-amber-200 bg-amber-50'
       }`}
     >
-      <div className="mt-0.5 shrink-0">{icons[notification.type] ?? <Bell className="h-4 w-4" />}</div>
+      <div className="mt-0.5 shrink-0">
+        {icons[notification.type] ?? <Bell className="h-4 w-4" />}
+      </div>
       <div className="min-w-0 flex-1">
-        <p className={`text-sm ${notification.is_read ? 'text-gray-700' : 'font-medium text-gray-900'}`}>
+        <p
+          className={`text-sm ${notification.is_read ? 'text-gray-700' : 'font-medium text-gray-900'}`}
+        >
           {notification.title}
         </p>
-        {notification.body && (
-          <p className="mt-0.5 text-xs text-gray-500">{notification.body}</p>
-        )}
+        {notification.body && <p className="mt-0.5 text-xs text-gray-500">{notification.body}</p>}
         <p className="mt-1 text-xs text-gray-400">{formatRelativeTime(notification.created_at)}</p>
       </div>
       {!notification.is_read && (
@@ -43,11 +45,7 @@ export function NotificationItem({ notification, onRead }: NotificationItemProps
 
   if (notification.link) {
     return (
-      <Link
-        href={notification.link}
-        onClick={() => onRead?.(notification.id)}
-        className="block"
-      >
+      <Link href={notification.link} onClick={() => onRead?.(notification.id)} className="block">
         {content}
       </Link>
     )

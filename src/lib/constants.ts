@@ -60,7 +60,6 @@ export const JAPAN_PREFECTURES = [
   '沖縄県',
 ] as const
 
-
 export const COSTUME_COLORS = [
   'レッド',
   'ピンク',
@@ -79,55 +78,55 @@ export const COSTUME_COLORS = [
   'マルチカラー',
 ] as const
 
-export type CostumeColor = typeof COSTUME_COLORS[number]
+export type CostumeColor = (typeof COSTUME_COLORS)[number]
 
 // CSS color values for each costume color (use `background` shorthand to support gradients)
 export const COSTUME_COLOR_MAP: Record<string, string> = {
-  'レッド':       '#dc2626',
-  'ピンク':       '#f472b6',
-  'オレンジ':     '#f97316',
-  'イエロー':     '#fbbf24',
-  'グリーン':     '#22c55e',
-  'ブルー':       '#3b82f6',
-  'ネイビー':     '#1e3a8a',
-  'パープル':     '#a855f7',
-  'ブラック':     '#111827',
-  'ホワイト':     '#f9fafb',
-  'ゴールド':     '#d97706',
-  'シルバー':     '#94a3b8',
-  'ベージュ':     '#d4b896',
-  'ブラウン':     '#7c3f1e',
-  'マルチカラー': 'conic-gradient(#dc2626, #f97316, #fbbf24, #22c55e, #3b82f6, #a855f7, #dc2626)',
+  レッド: '#dc2626',
+  ピンク: '#f472b6',
+  オレンジ: '#f97316',
+  イエロー: '#fbbf24',
+  グリーン: '#22c55e',
+  ブルー: '#3b82f6',
+  ネイビー: '#1e3a8a',
+  パープル: '#a855f7',
+  ブラック: '#111827',
+  ホワイト: '#f9fafb',
+  ゴールド: '#d97706',
+  シルバー: '#94a3b8',
+  ベージュ: '#d4b896',
+  ブラウン: '#7c3f1e',
+  マルチカラー: 'conic-gradient(#dc2626, #f97316, #fbbf24, #22c55e, #3b82f6, #a855f7, #dc2626)',
 }
 
 export const CLEANING_RESPONSIBILITY_OPTIONS = [
   { value: 'renter_home', label: '借り手負担（ホームクリーニング可）' },
   { value: 'renter_shop', label: '借り手負担（クリーニング店）' },
-  { value: 'owner',       label: 'オーナー負担' },
-  { value: 'other',       label: 'その他' },
+  { value: 'owner', label: 'オーナー負担' },
+  { value: 'other', label: 'その他' },
 ] as const
 
-export type CleaningResponsibility = typeof CLEANING_RESPONSIBILITY_OPTIONS[number]['value']
+export type CleaningResponsibility = (typeof CLEANING_RESPONSIBILITY_OPTIONS)[number]['value']
 
 export const CLEANING_RESPONSIBILITY_LABEL: Record<string, string> = {
   renter_home: '借り手負担（ホームクリーニング可）',
   renter_shop: '借り手負担（クリーニング店）',
-  owner:       'オーナー負担',
-  other:       'その他',
+  owner: 'オーナー負担',
+  other: 'その他',
 }
 
 export const TANNING_POLICY_OPTIONS = [
   { value: 'none', label: 'すべて不可' },
   { value: 'self', label: 'セルタンのみ可' },
-  { value: 'all',  label: 'ボディファン・セルタン可' },
+  { value: 'all', label: 'ボディファン・セルタン可' },
 ] as const
 
-export type TanningPolicy = typeof TANNING_POLICY_OPTIONS[number]['value']
+export type TanningPolicy = (typeof TANNING_POLICY_OPTIONS)[number]['value']
 
 export const TANNING_POLICY_LABEL: Record<string, string> = {
   none: 'すべて不可',
   self: 'セルタンのみ可',
-  all:  'ボディファン・セルタン可',
+  all: 'ボディファン・セルタン可',
 }
 
 export const RENTAL_STATUS_LABELS: Record<string, string> = {
@@ -155,46 +154,46 @@ export const RENTAL_STATUS_COLORS: Record<string, string> = {
 // Costume review labels
 export const COSTUME_REVIEW_SIZE_FIT_OPTIONS = [
   { value: 'small', label: '小さかった' },
-  { value: 'just',  label: 'ちょうどよかった' },
+  { value: 'just', label: 'ちょうどよかった' },
   { value: 'large', label: '大きかった' },
 ] as const
 
 export const COSTUME_REVIEW_PHOTO_MATCH_OPTIONS = [
-  { value: 'same',               label: '写真通り' },
+  { value: 'same', label: '写真通り' },
   { value: 'slightly_different', label: '少し違った' },
 ] as const
 
 export const COSTUME_REVIEW_CONDITION_OPTIONS = [
-  { value: 'good',   label: '良好' },
+  { value: 'good', label: '良好' },
   { value: 'normal', label: '普通' },
 ] as const
 
 export const COSTUME_REVIEW_SCENE_OPTIONS = [
   { value: 'competition', label: '競技会' },
-  { value: 'party',       label: 'パーティー' },
-  { value: 'demo',        label: 'デモンストレーション' },
+  { value: 'party', label: 'パーティー' },
+  { value: 'demo', label: 'デモンストレーション' },
 ] as const
 
 export const COSTUME_REVIEW_SIZE_FIT_LABELS: Record<string, string> = {
   small: '小さかった',
-  just:  'ちょうどよかった',
+  just: 'ちょうどよかった',
   large: '大きかった',
 }
 
 export const COSTUME_REVIEW_PHOTO_MATCH_LABELS: Record<string, string> = {
-  same:               '写真通り',
+  same: '写真通り',
   slightly_different: '少し違った',
 }
 
 export const COSTUME_REVIEW_CONDITION_LABELS: Record<string, string> = {
-  good:   '良好',
+  good: '良好',
   normal: '普通',
 }
 
 export const COSTUME_REVIEW_SCENE_LABELS: Record<string, string> = {
   competition: '競技会',
-  party:       'パーティー',
-  demo:        'デモンストレーション',
+  party: 'パーティー',
+  demo: 'デモンストレーション',
 }
 
 // Free plan limits

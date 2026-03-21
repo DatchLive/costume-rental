@@ -9,14 +9,12 @@ export const metadata: Metadata = { title: 'プロフィール設定' }
 
 export default async function ProfileEditPage() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) redirect('/login?next=/profile/edit')
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', user.id)
-    .single()
+  const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single()
 
   // Googleログインのみのユーザーはパスワード変更不要
   const isEmailUser = user.identities?.some((i) => i.provider === 'email')

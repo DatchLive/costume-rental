@@ -1,4 +1,4 @@
-import { notFound, redirect } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import { MapPin, Truck, Handshake, Pencil } from 'lucide-react'
@@ -38,10 +38,17 @@ export default async function CostumePage({ params }: CostumePageProps) {
   const { id } = await params
   const supabase = await createClient()
 
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   const userId = user?.id ?? null
 
-  const [{ data: costumeData }, { data: activeRental }, { data: favoriteRow }, { data: costumeReviewsData }] = await Promise.all([
+  const [
+    { data: costumeData },
+    { data: activeRental },
+    { data: favoriteRow },
+    { data: costumeReviewsData },
+  ] = await Promise.all([
     supabase
       .from('costumes')
       .select('*, profiles(id, name, avatar_url, good_count, total_count, is_verified, area)')
@@ -79,7 +86,15 @@ export default async function CostumePage({ params }: CostumePageProps) {
   const costumeReviews = (costumeReviewsData ?? []) as unknown as CostumeReviewWithReviewer[]
 
   const costume = costumeData as unknown as CostumeWithProfile & {
-    profiles: { id: string; name: string | null; avatar_url: string | null; good_count: number; total_count: number; is_verified: boolean; area: string | null }
+    profiles: {
+      id: string
+      name: string | null
+      avatar_url: string | null
+      good_count: number
+      total_count: number
+      is_verified: boolean
+      area: string | null
+    }
   }
 
   if (costume.status === 'hidden') {
@@ -94,23 +109,14 @@ export default async function CostumePage({ params }: CostumePageProps) {
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
         {/* Image gallery */}
-        <ImageGallery
-          images={images}
-          title={costume.title}
-          isRenting={isRenting}
-        />
+        <ImageGallery images={images} title={costume.title} isRenting={isRenting} />
 
         {/* Info */}
         <div className="flex flex-col gap-5">
           <div>
             <div className="flex items-start justify-between gap-3">
               <CategoryBadge category={costume.category} />
-              <FavoriteButton
-                costumeId={id}
-                userId={userId}
-                isFavorited={isFavorited}
-                size="md"
-              />
+              <FavoriteButton costumeId={id} userId={userId} isFavorited={isFavorited} size="md" />
             </div>
             <h1 className="mt-2 text-2xl font-bold text-gray-900">{costume.title}</h1>
 
@@ -159,19 +165,15 @@ export default async function CostumePage({ params }: CostumePageProps) {
                 {TANNING_POLICY_LABEL[costume.tanning_policy] ?? costume.tanning_policy}
               </Badge>
             )}
-            {costume.safety_pin && (
-              <Badge variant="outline">安全ピン可</Badge>
-            )}
-            {costume.perfume && (
-              <Badge variant="outline">香水可</Badge>
-            )}
+            {costume.safety_pin && <Badge variant="outline">安全ピン可</Badge>}
+            {costume.perfume && <Badge variant="outline">香水可</Badge>}
           </div>
 
           {/* Description */}
           {costume.description && (
             <div>
               <h2 className="mb-1 text-sm font-medium text-gray-700">説明</h2>
-              <p className="whitespace-pre-wrap text-sm text-gray-600">{costume.description}</p>
+              <p className="text-sm whitespace-pre-wrap text-gray-600">{costume.description}</p>
             </div>
           )}
 
@@ -179,10 +181,13 @@ export default async function CostumePage({ params }: CostumePageProps) {
           <div className="rounded-xl border border-gray-200 p-4">
             <h2 className="mb-2 text-sm font-medium text-gray-700">クリーニング</h2>
             <p className="text-sm text-gray-800">
-              {CLEANING_RESPONSIBILITY_LABEL[costume.cleaning_responsibility] ?? costume.cleaning_responsibility}
+              {CLEANING_RESPONSIBILITY_LABEL[costume.cleaning_responsibility] ??
+                costume.cleaning_responsibility}
             </p>
             {costume.cleaning_notes && (
-              <p className="mt-1 whitespace-pre-wrap text-sm text-gray-500">{costume.cleaning_notes}</p>
+              <p className="mt-1 text-sm whitespace-pre-wrap text-gray-500">
+                {costume.cleaning_notes}
+              </p>
             )}
           </div>
 
@@ -193,11 +198,7 @@ export default async function CostumePage({ params }: CostumePageProps) {
               href={`/users/${costume.profiles.id}`}
               className="flex items-center gap-3 hover:opacity-80"
             >
-              <Avatar
-                src={costume.profiles.avatar_url}
-                name={costume.profiles.name}
-                size="lg"
-              />
+              <Avatar src={costume.profiles.avatar_url} name={costume.profiles.name} size="lg" />
               <div>
                 <p className="font-medium text-gray-900">
                   {costume.profiles.name ?? '名前未設定'}
@@ -244,9 +245,7 @@ export default async function CostumePage({ params }: CostumePageProps) {
             </Link>
           ) : null}
 
-          <p className="text-xs text-gray-400">
-            出品日: {formatDate(costume.created_at)}
-          </p>
+          <p className="text-xs text-gray-400">出品日: {formatDate(costume.created_at)}</p>
         </div>
       </div>
 
@@ -256,12 +255,14 @@ export default async function CostumePage({ params }: CostumePageProps) {
           <div className="mb-4 flex items-center gap-4">
             <h2 className="text-lg font-bold text-gray-900">
               借りた人の声
-              <span className="ml-2 text-sm font-normal text-gray-400">({costumeReviews.length}件)</span>
+              <span className="ml-2 text-sm font-normal text-gray-400">
+                ({costumeReviews.length}件)
+              </span>
             </h2>
             {costumeReviews.some((r) => r.rating) && (
               <p className="text-sm text-gray-600">
-                👍 良かった {costumeReviews.filter((r) => r.rating === 'good').length}件
-                {' / '}{costumeReviews.filter((r) => r.rating).length}件
+                👍 良かった {costumeReviews.filter((r) => r.rating === 'good').length}件{' / '}
+                {costumeReviews.filter((r) => r.rating).length}件
               </p>
             )}
           </div>

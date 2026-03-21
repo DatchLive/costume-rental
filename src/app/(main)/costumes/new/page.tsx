@@ -3,13 +3,19 @@ import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { NewCostumeClient } from './NewCostumeClient'
-import { FREE_PLAN_MAX_COSTUMES, FREE_PLAN_MAX_IMAGES, PREMIUM_PLAN_MAX_IMAGES } from '@/lib/constants'
+import {
+  FREE_PLAN_MAX_COSTUMES,
+  FREE_PLAN_MAX_IMAGES,
+  PREMIUM_PLAN_MAX_IMAGES,
+} from '@/lib/constants'
 
 export const metadata: Metadata = { title: '衣装を出品する' }
 
 export default async function NewCostumePage() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
 
   if (!user) redirect('/login?next=/costumes/new')
 

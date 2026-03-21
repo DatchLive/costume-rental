@@ -75,13 +75,14 @@ function ResetPasswordContent() {
 
         <div className="rounded-xl border border-gray-200 bg-white p-8 shadow-sm">
           {serverError && (
-            <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">
-              {serverError}
-            </div>
+            <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">{serverError}</div>
           )}
 
           {isRecovery ? (
-            <form onSubmit={passwordForm.handleSubmit(onNewPasswordSubmit)} className="flex flex-col gap-4">
+            <form
+              onSubmit={passwordForm.handleSubmit(onNewPasswordSubmit)}
+              className="flex flex-col gap-4"
+            >
               <Input
                 label="新しいパスワード"
                 type="password"
@@ -111,9 +112,7 @@ function ResetPasswordContent() {
           ) : emailSent ? (
             <div className="text-center">
               <div className="mb-4 text-4xl">✉️</div>
-              <h2 className="mb-2 text-lg font-semibold text-gray-900">
-                メールを送信しました
-              </h2>
+              <h2 className="mb-2 text-lg font-semibold text-gray-900">メールを送信しました</h2>
               <p className="text-sm text-gray-600">
                 パスワードリセット用のリンクをメールでお送りしました。
               </p>
@@ -145,10 +144,7 @@ function ResetPasswordContent() {
               >
                 リセットメールを送信
               </Button>
-              <Link
-                href="/login"
-                className="text-center text-sm text-amber-700 hover:underline"
-              >
+              <Link href="/login" className="text-center text-sm text-amber-700 hover:underline">
                 ログインページへ戻る
               </Link>
             </form>
@@ -161,7 +157,13 @@ function ResetPasswordContent() {
 
 export default function ResetPasswordPage() {
   return (
-    <Suspense fallback={<div className="flex min-h-screen items-center justify-center"><div className="h-8 w-8 animate-spin rounded-full border-4 border-amber-500 border-t-transparent" /></div>}>
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-amber-500 border-t-transparent" />
+        </div>
+      }
+    >
       <ResetPasswordContent />
     </Suspense>
   )

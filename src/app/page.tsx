@@ -32,7 +32,9 @@ async function CostumeList({ searchParams }: HomePageProps) {
 
   const supabase = await createClient()
 
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   const userId = user?.id ?? null
 
   let query = supabase
@@ -50,9 +52,10 @@ async function CostumeList({ searchParams }: HomePageProps) {
       .or(`height_max.is.null,height_max.gte.${h}`)
   }
   if (params.area) {
-    query = params.ships_nationwide === 'true'
-      ? query.or(`area.eq.${params.area},ships_nationwide.eq.true`)
-      : query.eq('area', params.area)
+    query =
+      params.ships_nationwide === 'true'
+        ? query.or(`area.eq.${params.area},ships_nationwide.eq.true`)
+        : query.eq('area', params.area)
   }
   if (params.ships_nationwide === 'true' && !params.area) {
     query = query.eq('ships_nationwide', true)
@@ -75,14 +78,14 @@ async function CostumeList({ searchParams }: HomePageProps) {
   ])
 
   const typedCostumes = (costumes ?? []) as unknown as CostumeWithProfile[]
-  const favoritedIds = new Set((favoritesData ?? []).map((f) => (f as { costume_id: string }).costume_id))
+  const favoritedIds = new Set(
+    (favoritesData ?? []).map((f) => (f as { costume_id: string }).costume_id),
+  )
 
   return (
     <div>
       <div className="mb-4 text-sm text-gray-500">
-        {typedCostumes.length > 0
-          ? `${typedCostumes.length}件の衣装が見つかりました`
-          : ''}
+        {typedCostumes.length > 0 ? `${typedCostumes.length}件の衣装が見つかりました` : ''}
       </div>
       <CostumeGrid costumes={typedCostumes} favoritedIds={favoritedIds} userId={userId} />
       {typedCostumes.length === PAGE_SIZE && (

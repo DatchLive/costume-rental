@@ -14,7 +14,9 @@ interface EditCostumePageProps {
 export default async function EditCostumePage({ params }: EditCostumePageProps) {
   const { id } = await params
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
 
   if (!user) redirect(`/login?next=/costumes/${id}/edit`)
 
