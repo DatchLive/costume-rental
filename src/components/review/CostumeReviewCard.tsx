@@ -16,7 +16,6 @@ interface CostumeReviewCardProps {
   review: CostumeReviewWithReviewer
 }
 
-
 export function CostumeReviewCard({ review }: CostumeReviewCardProps) {
   const meta: { label: string; value: string }[] = []
   if (review.size_fit)
