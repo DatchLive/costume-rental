@@ -10,7 +10,15 @@ export type CostumeCategory =
   | 'その他'
 
 export type CostumeStatus = 'available' | 'hidden'
-export type RentalStatus = 'pending' | 'approved' | 'rejected' | 'active' | 'returning' | 'returned' | 'completed' | 'cancelled'
+export type RentalStatus =
+  | 'pending'
+  | 'approved'
+  | 'rejected'
+  | 'active'
+  | 'returning'
+  | 'returned'
+  | 'completed'
+  | 'cancelled'
 export type ReviewRole = 'owner' | 'renter'
 export type NotificationType =
   | 'rental_requested'
@@ -145,7 +153,7 @@ export interface Database {
             isOneToOne: false
             referencedRelation: 'profiles'
             referencedColumns: ['id']
-          }
+          },
         ]
       }
       rentals: {
@@ -212,7 +220,7 @@ export interface Database {
             isOneToOne: false
             referencedRelation: 'profiles'
             referencedColumns: ['id']
-          }
+          },
         ]
       }
       messages: {
@@ -247,7 +255,7 @@ export interface Database {
             isOneToOne: false
             referencedRelation: 'rentals'
             referencedColumns: ['id']
-          }
+          },
         ]
       }
       reviews: {
@@ -426,7 +434,7 @@ export interface Database {
             isOneToOne: false
             referencedRelation: 'rentals'
             referencedColumns: ['id']
-          }
+          },
         ]
       }
       reports: {
@@ -506,7 +514,10 @@ export type CostumeReview = Database['public']['Tables']['costume_reviews']['Row
 
 // Extended types with joined relations
 export type CostumeWithProfile = Costume & {
-  profiles: Pick<Profile, 'id' | 'name' | 'avatar_url' | 'good_count' | 'total_count' | 'is_verified'>
+  profiles: Pick<
+    Profile,
+    'id' | 'name' | 'avatar_url' | 'good_count' | 'total_count' | 'is_verified'
+  >
 }
 
 export type RentalWithDetails = Rental & {

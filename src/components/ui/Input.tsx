@@ -24,10 +24,10 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           id={inputId}
           className={cn(
             'h-10 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400',
-            'focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20',
+            'focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none',
             'disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500',
             error && 'border-red-500 focus:border-red-500 focus:ring-red-500/20',
-            className
+            className,
           )}
           {...props}
         />
@@ -35,7 +35,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         {error && <p className="text-xs text-red-500">{error}</p>}
       </div>
     )
-  }
+  },
 )
 
 Input.displayName = 'Input'

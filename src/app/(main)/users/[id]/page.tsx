@@ -22,11 +22,7 @@ export default async function UserPage({ params }: UserPageProps) {
   const { id } = await params
   const supabase = await createClient()
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', id)
-    .single()
+  const { data: profile } = await supabase.from('profiles').select('*').eq('id', id).single()
 
   if (!profile) notFound()
 
@@ -54,9 +50,7 @@ export default async function UserPage({ params }: UserPageProps) {
         <Avatar src={profile.avatar_url} name={profile.name} size="xl" />
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold text-gray-900">
-              {profile.name ?? '名前未設定'}
-            </h1>
+            <h1 className="text-2xl font-bold text-gray-900">{profile.name ?? '名前未設定'}</h1>
             {profile.is_verified && (
               <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800">
                 ✓ 認定ユーザー
@@ -74,9 +68,7 @@ export default async function UserPage({ params }: UserPageProps) {
               👍 良かった {profile.good_count}件 / {profile.total_count}件
             </p>
           )}
-          {profile.bio && (
-            <p className="mt-3 max-w-lg text-sm text-gray-600">{profile.bio}</p>
-          )}
+          {profile.bio && <p className="mt-3 max-w-lg text-sm text-gray-600">{profile.bio}</p>}
         </div>
       </div>
 
@@ -97,7 +89,11 @@ export default async function UserPage({ params }: UserPageProps) {
             {reviews!.map((review) => (
               <ReviewCard
                 key={review.id}
-                review={review as unknown as Review & { reviewer: Pick<Profile, 'id' | 'name' | 'avatar_url'> }}
+                review={
+                  review as unknown as Review & {
+                    reviewer: Pick<Profile, 'id' | 'name' | 'avatar_url'>
+                  }
+                }
               />
             ))}
           </div>

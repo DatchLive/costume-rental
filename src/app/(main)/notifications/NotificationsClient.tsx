@@ -33,11 +33,7 @@ export function NotificationsClient({ userId, initialNotifications }: Notificati
       ) : (
         <div className="flex flex-col gap-2">
           {displayNotifications.map((notification) => (
-            <NotificationItem
-              key={notification.id}
-              notification={notification}
-              onRead={markRead}
-            />
+            <NotificationItem key={notification.id} notification={notification} onRead={markRead} />
           ))}
         </div>
       )}

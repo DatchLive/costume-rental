@@ -16,7 +16,13 @@ interface RentalRequestFormProps {
   onSubmit: (data: RentalRequestFormData) => Promise<void>
 }
 
-export function RentalRequestForm({ rentalPrice, studentPrice, shipsNationwide, allowsHandover, onSubmit }: RentalRequestFormProps) {
+export function RentalRequestForm({
+  rentalPrice,
+  studentPrice,
+  shipsNationwide,
+  allowsHandover,
+  onSubmit,
+}: RentalRequestFormProps) {
   const [serverError, setServerError] = useState<string | null>(null)
   const hasStudentPrice = !!studentPrice
   const bothAvailable = shipsNationwide && allowsHandover
@@ -59,17 +65,17 @@ export function RentalRequestForm({ rentalPrice, studentPrice, shipsNationwide, 
         <input
           type="date"
           min={minDateStr}
-          className="h-10 rounded-lg border border-gray-300 px-3 text-sm focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
+          className="h-10 rounded-lg border border-gray-300 px-3 text-sm focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none"
           {...register('use_date')}
         />
-        {errors.use_date && (
-          <p className="text-xs text-red-500">{errors.use_date.message}</p>
-        )}
+        {errors.use_date && <p className="text-xs text-red-500">{errors.use_date.message}</p>}
       </div>
 
       {/* 受け渡し方法 */}
       <div className="flex flex-col gap-2">
-        <p className="text-sm font-medium text-gray-700">受け渡し方法 <span className="text-red-500">*</span></p>
+        <p className="text-sm font-medium text-gray-700">
+          受け渡し方法 <span className="text-red-500">*</span>
+        </p>
         {bothAvailable ? (
           <div className="flex flex-col gap-2">
             <label className="flex cursor-pointer items-center gap-3 rounded-lg border border-gray-200 p-3 hover:bg-gray-50">
@@ -104,22 +110,40 @@ export function RentalRequestForm({ rentalPrice, studentPrice, shipsNationwide, 
       {/* 料金選択（学生料金がある場合のみ） */}
       {hasStudentPrice && (
         <div className="flex flex-col gap-2">
-          <p className="text-sm font-medium text-gray-700">料金プラン <span className="text-red-500">*</span></p>
-          <label className={`flex cursor-pointer items-center justify-between rounded-lg border p-3 transition-colors ${priceType === 'regular' ? 'border-amber-500 bg-amber-50' : 'border-gray-200 hover:bg-gray-50'}`}>
+          <p className="text-sm font-medium text-gray-700">
+            料金プラン <span className="text-red-500">*</span>
+          </p>
+          <label
+            className={`flex cursor-pointer items-center justify-between rounded-lg border p-3 transition-colors ${priceType === 'regular' ? 'border-amber-500 bg-amber-50' : 'border-gray-200 hover:bg-gray-50'}`}
+          >
             <div className="flex items-center gap-2">
-              <input type="radio" value="regular" {...register('price_type')} className="accent-amber-700" />
+              <input
+                type="radio"
+                value="regular"
+                {...register('price_type')}
+                className="accent-amber-700"
+              />
               <span className="text-sm text-gray-700">通常料金</span>
             </div>
             <span className="font-bold text-amber-700">{formatPrice(rentalPrice)}</span>
           </label>
-          <label className={`flex cursor-pointer items-center justify-between rounded-lg border p-3 transition-colors ${priceType === 'student' ? 'border-amber-500 bg-amber-50' : 'border-gray-200 hover:bg-gray-50'}`}>
+          <label
+            className={`flex cursor-pointer items-center justify-between rounded-lg border p-3 transition-colors ${priceType === 'student' ? 'border-amber-500 bg-amber-50' : 'border-gray-200 hover:bg-gray-50'}`}
+          >
             <div className="flex items-center gap-2">
-              <input type="radio" value="student" {...register('price_type')} className="accent-amber-700" />
+              <input
+                type="radio"
+                value="student"
+                {...register('price_type')}
+                className="accent-amber-700"
+              />
               <span className="text-sm text-gray-700">学生料金</span>
             </div>
             <span className="font-bold text-amber-700">{formatPrice(studentPrice!)}</span>
           </label>
-          <p className="text-xs text-gray-400">※ 学生料金の適用はオーナーとのメッセージで確認してください</p>
+          <p className="text-xs text-gray-400">
+            ※ 学生料金の適用はオーナーとのメッセージで確認してください
+          </p>
         </div>
       )}
 

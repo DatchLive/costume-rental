@@ -4,17 +4,28 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useCallback, useState } from 'react'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import { Select } from '@/components/ui/Select'
-import { Button } from '@/components/ui/Button'
-import { COSTUME_CATEGORIES, COSTUME_COLOR_MAP, COSTUME_COLORS, JAPAN_PREFECTURES } from '@/lib/constants'
+import {
+  COSTUME_CATEGORIES,
+  COSTUME_COLOR_MAP,
+  COSTUME_COLORS,
+  JAPAN_PREFECTURES,
+} from '@/lib/constants'
 
-const DETAIL_KEYS = ['height', 'area', 'min_price', 'max_price', 'ships_nationwide', 'allows_handover', 'color', 'handover_area']
+const DETAIL_KEYS = [
+  'height',
+  'area',
+  'min_price',
+  'max_price',
+  'ships_nationwide',
+  'allows_handover',
+  'color',
+  'handover_area',
+]
 
 export function CostumeFilter() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const [detailOpen, setDetailOpen] = useState(
-    DETAIL_KEYS.some((key) => searchParams.has(key))
-  )
+  const [detailOpen, setDetailOpen] = useState(DETAIL_KEYS.some((key) => searchParams.has(key)))
 
   const updateFilter = useCallback(
     (key: string, value: string) => {
@@ -27,7 +38,7 @@ export function CostumeFilter() {
       params.delete('page')
       router.push(`/?${params.toString()}`)
     },
-    [router, searchParams]
+    [router, searchParams],
   )
 
   const resetFilters = useCallback(() => {
@@ -85,7 +96,7 @@ export function CostumeFilter() {
               placeholder="例: 163"
               value={searchParams.get('height') ?? ''}
               onChange={(e) => updateFilter('height', e.target.value)}
-              className="h-10 w-24 rounded-lg border border-gray-300 px-3 text-sm focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
+              className="h-10 w-24 rounded-lg border border-gray-300 px-3 text-sm focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none"
               min={50}
               max={250}
             />
@@ -135,7 +146,7 @@ export function CostumeFilter() {
                 placeholder="下限"
                 value={searchParams.get('min_price') ?? ''}
                 onChange={(e) => updateFilter('min_price', e.target.value)}
-                className="h-10 w-24 rounded-lg border border-gray-300 px-3 text-sm focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
+                className="h-10 w-24 rounded-lg border border-gray-300 px-3 text-sm focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none"
                 min={0}
               />
               <span className="text-gray-400">〜</span>
@@ -144,7 +155,7 @@ export function CostumeFilter() {
                 placeholder="上限"
                 value={searchParams.get('max_price') ?? ''}
                 onChange={(e) => updateFilter('max_price', e.target.value)}
-                className="h-10 w-24 rounded-lg border border-gray-300 px-3 text-sm focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
+                className="h-10 w-24 rounded-lg border border-gray-300 px-3 text-sm focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none"
                 min={0}
               />
             </div>
@@ -177,7 +188,7 @@ export function CostumeFilter() {
               placeholder="例：東京"
               value={searchParams.get('handover_area') ?? ''}
               onChange={(e) => updateFilter('handover_area', e.target.value)}
-              className="h-10 w-36 rounded-lg border border-gray-300 px-3 text-sm focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
+              className="h-10 w-36 rounded-lg border border-gray-300 px-3 text-sm focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none"
             />
           </div>
         </div>

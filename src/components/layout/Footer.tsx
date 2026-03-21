@@ -11,17 +11,25 @@ export function Footer() {
               <ShirtIcon className="h-5 w-5" aria-hidden="true" />
               <span className="font-bold">社交ダンス衣装レンタル</span>
             </Link>
-            <p className="text-xs text-gray-500">
-              社交ダンス衣装のマッチングプラットフォーム
-            </p>
+            <p className="text-xs text-gray-500">社交ダンス衣装のマッチングプラットフォーム</p>
           </div>
 
           <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-gray-600 sm:justify-end">
-            <Link href="/terms" className="hover:text-amber-700">利用規約</Link>
-            <Link href="/privacy" className="hover:text-amber-700">プライバシーポリシー</Link>
-            <Link href="/tokushoho" className="hover:text-amber-700">特定商取引法</Link>
-            <Link href="/faq" className="hover:text-amber-700">よくある質問</Link>
-            <Link href="/contact" className="hover:text-amber-700">お問い合わせ</Link>
+            <Link href="/terms" className="hover:text-amber-700">
+              利用規約
+            </Link>
+            <Link href="/privacy" className="hover:text-amber-700">
+              プライバシーポリシー
+            </Link>
+            <Link href="/tokushoho" className="hover:text-amber-700">
+              特定商取引法
+            </Link>
+            <Link href="/faq" className="hover:text-amber-700">
+              よくある質問
+            </Link>
+            <Link href="/contact" className="hover:text-amber-700">
+              お問い合わせ
+            </Link>
           </nav>
         </div>
 

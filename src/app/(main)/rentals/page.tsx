@@ -21,31 +21,37 @@ export default async function RentalsPage({ searchParams }: RentalsPageProps) {
   const isHistory = tab === 'history'
 
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) redirect('/login?next=/rentals')
 
   const statuses = isHistory ? HISTORY_STATUSES : ACTIVE_STATUSES
 
   const { data: asRenter } = await supabase
     .from('rentals')
-    .select(`
+    .select(
+      `
       *,
       costumes(id, title, images, rental_price),
       renter:profiles!rentals_renter_id_fkey(id, name, avatar_url),
       owner:profiles!rentals_owner_id_fkey(id, name, avatar_url)
-    `)
+    `,
+    )
     .eq('renter_id', user.id)
     .in('status', statuses)
     .order('created_at', { ascending: false })
 
   const { data: asOwner } = await supabase
     .from('rentals')
-    .select(`
+    .select(
+      `
       *,
       costumes(id, title, images, rental_price),
       renter:profiles!rentals_renter_id_fkey(id, name, avatar_url),
       owner:profiles!rentals_owner_id_fkey(id, name, avatar_url)
-    `)
+    `,
+    )
     .eq('owner_id', user.id)
     .in('status', statuses)
     .order('created_at', { ascending: false })
@@ -57,7 +63,11 @@ export default async function RentalsPage({ searchParams }: RentalsPageProps) {
     return (
       <div className="flex flex-col gap-3">
         {rentals.map((rental) => {
-          const costume = (rental as unknown as { costumes: { id: string; title: string; images: string[]; rental_price: number } }).costumes
+          const costume = (
+            rental as unknown as {
+              costumes: { id: string; title: string; images: string[]; rental_price: number }
+            }
+          ).costumes
           return (
             <Link
               key={rental.id}
@@ -75,8 +85,19 @@ export default async function RentalsPage({ searchParams }: RentalsPageProps) {
                   />
                 ) : (
                   <div className="flex h-full items-center justify-center text-gray-300">
-                    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16" />
+                    <svg
+                      className="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1}
+                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16"
+                      />
                     </svg>
                   </div>
                 )}
@@ -85,9 +106,7 @@ export default async function RentalsPage({ searchParams }: RentalsPageProps) {
                 <p className="line-clamp-1 font-medium text-gray-900">
                   {costume?.title ?? '（削除された衣装）'}
                 </p>
-                <p className="text-xs text-gray-500">
-                  使用日: {formatDate(rental.use_date)}
-                </p>
+                <p className="text-xs text-gray-500">使用日: {formatDate(rental.use_date)}</p>
                 <p className="text-sm font-medium text-amber-700">
                   {formatPrice(rental.total_price)}
                 </p>

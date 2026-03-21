@@ -39,12 +39,14 @@ export async function POST(request: Request) {
 
     const { data: rental } = await supabase
       .from('rentals')
-      .select(`
+      .select(
+        `
         *,
         costumes(title),
         renter:profiles!rentals_renter_id_fkey(name),
         owner:profiles!rentals_owner_id_fkey(name)
-      `)
+      `,
+      )
       .eq('id', rentalId)
       .single()
 
@@ -61,31 +63,41 @@ export async function POST(request: Request) {
 
     // ── アプリ内通知（必ず保存） ────────────────────────────────
     const notificationMap: Record<string, { user_id: string; type: string; title: string }[]> = {
-      rental_requested: [{
-        user_id: rental.owner_id,
-        type: 'rental_requested',
-        title: `${renter.name ?? '借り手'}様からレンタル申請が届きました`,
-      }],
-      rental_approved: [{
-        user_id: rental.renter_id,
-        type: 'rental_approved',
-        title: 'レンタル申請が承認されました',
-      }],
-      rental_rejected: [{
-        user_id: rental.renter_id,
-        type: 'rental_rejected',
-        title: 'レンタル申請が却下されました',
-      }],
-      rental_active: [{
-        user_id: rental.renter_id,
-        type: 'rental_approved',
-        title: '衣装が発送されました',
-      }],
-      rental_returning: [{
-        user_id: rental.owner_id,
-        type: 'rental_returned',
-        title: '借り手が返却しました',
-      }],
+      rental_requested: [
+        {
+          user_id: rental.owner_id,
+          type: 'rental_requested',
+          title: `${renter.name ?? '借り手'}様からレンタル申請が届きました`,
+        },
+      ],
+      rental_approved: [
+        {
+          user_id: rental.renter_id,
+          type: 'rental_approved',
+          title: 'レンタル申請が承認されました',
+        },
+      ],
+      rental_rejected: [
+        {
+          user_id: rental.renter_id,
+          type: 'rental_rejected',
+          title: 'レンタル申請が却下されました',
+        },
+      ],
+      rental_active: [
+        {
+          user_id: rental.renter_id,
+          type: 'rental_approved',
+          title: '衣装が発送されました',
+        },
+      ],
+      rental_returning: [
+        {
+          user_id: rental.owner_id,
+          type: 'rental_returned',
+          title: '借り手が返却しました',
+        },
+      ],
       rental_returned: [
         {
           user_id: rental.renter_id,
@@ -115,9 +127,8 @@ export async function POST(request: Request) {
     if (type === 'rental_cancelled') {
       const { cancelled_by } = body as { cancelled_by?: string }
       const notifyUserId = cancelled_by === 'renter' ? rental.owner_id : rental.renter_id
-      const cancellerName = cancelled_by === 'renter'
-        ? (renter.name ?? '借り手')
-        : (owner.name ?? '出品者')
+      const cancellerName =
+        cancelled_by === 'renter' ? (renter.name ?? '借り手') : (owner.name ?? '出品者')
       await supabase.from('notifications').insert({
         user_id: notifyUserId,
         type: 'rental_rejected',
@@ -208,8 +219,10 @@ export async function POST(request: Request) {
       if (type === 'rental_cancelled') {
         const { cancelled_by } = body as { cancelled_by?: string }
         const notifyEmail = cancelled_by === 'renter' ? ownerEmail : renterEmail
-        const notifyName = cancelled_by === 'renter' ? (owner.name ?? '出品者') : (renter.name ?? '借り手')
-        const cancellerName = cancelled_by === 'renter' ? (renter.name ?? '借り手') : (owner.name ?? '出品者')
+        const notifyName =
+          cancelled_by === 'renter' ? (owner.name ?? '出品者') : (renter.name ?? '借り手')
+        const cancellerName =
+          cancelled_by === 'renter' ? (renter.name ?? '借り手') : (owner.name ?? '出品者')
         if (notifyEmail) {
           const { subject, html } = rentalCancelledEmail({
             userName: notifyName,

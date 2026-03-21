@@ -28,7 +28,9 @@ export function useAuth() {
 
     async function init() {
       try {
-        const { data: { user } } = await supabase.auth.getUser()
+        const {
+          data: { user },
+        } = await supabase.auth.getUser()
         setUser(user)
         if (user) await fetchProfile(user.id)
       } finally {

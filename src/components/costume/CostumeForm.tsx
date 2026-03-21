@@ -4,7 +4,14 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { costumeSchema, type CostumeFormData } from '@/lib/validations/costume'
-import { CLEANING_RESPONSIBILITY_OPTIONS, COSTUME_CATEGORIES, COSTUME_COLOR_MAP, COSTUME_COLORS, JAPAN_PREFECTURES, TANNING_POLICY_OPTIONS } from '@/lib/constants'
+import {
+  CLEANING_RESPONSIBILITY_OPTIONS,
+  COSTUME_CATEGORIES,
+  COSTUME_COLOR_MAP,
+  COSTUME_COLORS,
+  JAPAN_PREFECTURES,
+  TANNING_POLICY_OPTIONS,
+} from '@/lib/constants'
 import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
 import { Select } from '@/components/ui/Select'
@@ -56,12 +63,14 @@ export function CostumeForm({
 
   function toggleColor(color: string) {
     if (selectedColors.includes(color)) {
-      setValue('colors', selectedColors.filter((c) => c !== color))
+      setValue(
+        'colors',
+        selectedColors.filter((c) => c !== color),
+      )
     } else if (selectedColors.length < 2) {
       setValue('colors', [...selectedColors, color])
     }
   }
-
 
   async function handleFormSubmit(data: CostumeFormData) {
     setServerError(null)
@@ -121,8 +130,10 @@ export function CostumeForm({
               placeholder="最低"
               min={50}
               max={250}
-              className="h-10 w-full rounded-lg border border-gray-300 px-3 text-sm focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
-              {...register('height_min', { setValueAs: (v) => v === '' || v === null ? undefined : Number(v) })}
+              className="h-10 w-full rounded-lg border border-gray-300 px-3 text-sm focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none"
+              {...register('height_min', {
+                setValueAs: (v) => (v === '' || v === null ? undefined : Number(v)),
+              })}
             />
             <span className="shrink-0 text-gray-400">〜</span>
             <input
@@ -130,8 +141,10 @@ export function CostumeForm({
               placeholder="最高"
               min={50}
               max={250}
-              className="h-10 w-full rounded-lg border border-gray-300 px-3 text-sm focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
-              {...register('height_max', { setValueAs: (v) => v === '' || v === null ? undefined : Number(v) })}
+              className="h-10 w-full rounded-lg border border-gray-300 px-3 text-sm focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none"
+              {...register('height_max', {
+                setValueAs: (v) => (v === '' || v === null ? undefined : Number(v)),
+              })}
             />
           </div>
           {(errors.height_min || errors.height_max) && (
@@ -167,8 +180,23 @@ export function CostumeForm({
                   } ${isSelected ? 'ring-2 ring-amber-500 ring-offset-1' : 'hover:ring-2 hover:ring-gray-300 hover:ring-offset-1'}`}
                 >
                   {isSelected && (
-                    <svg className="h-4 w-4 drop-shadow" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                      <path d="M3 8l3.5 3.5L13 5" stroke={color === 'ホワイト' || color === 'イエロー' || color === 'ベージュ' ? '#374151' : '#fff'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    <svg
+                      className="h-4 w-4 drop-shadow"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M3 8l3.5 3.5L13 5"
+                        stroke={
+                          color === 'ホワイト' || color === 'イエロー' || color === 'ベージュ'
+                            ? '#374151'
+                            : '#fff'
+                        }
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
                     </svg>
                   )}
                 </span>
@@ -177,9 +205,7 @@ export function CostumeForm({
             )
           })}
         </div>
-        {errors.colors && (
-          <p className="text-xs text-red-600">{errors.colors.message as string}</p>
-        )}
+        {errors.colors && <p className="text-xs text-red-600">{errors.colors.message as string}</p>}
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -201,7 +227,9 @@ export function CostumeForm({
             max={100000}
             placeholder="未設定の場合は空欄"
             error={errors.student_price?.message}
-            {...register('student_price', { setValueAs: (v) => v === '' || v === null ? undefined : Number(v) })}
+            {...register('student_price', {
+              setValueAs: (v) => (v === '' || v === null ? undefined : Number(v)),
+            })}
           />
           <p className="text-xs text-gray-400">適用はメッセージで当事者間にて確認してください</p>
         </div>

@@ -72,9 +72,7 @@ export default function SignupPage() {
           {done ? (
             <div className="text-center">
               <div className="mb-4 text-4xl">✉️</div>
-              <h2 className="mb-2 text-lg font-semibold text-gray-900">
-                確認メールを送信しました
-              </h2>
+              <h2 className="mb-2 text-lg font-semibold text-gray-900">確認メールを送信しました</h2>
               <p className="text-sm text-gray-600">
                 メールに記載されたリンクをクリックして、登録を完了してください。
               </p>

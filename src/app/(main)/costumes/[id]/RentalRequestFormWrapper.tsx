@@ -32,7 +32,9 @@ export function RentalRequestFormWrapper({
 
   async function handleSubmit(data: RentalRequestFormData) {
     const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
     if (!user) throw new Error('Not authenticated')
 
     const basePrice = data.price_type === 'student' && studentPrice ? studentPrice : rentalPrice
@@ -80,11 +82,7 @@ export function RentalRequestFormWrapper({
         レンタルを申請する
       </Button>
 
-      <Modal
-        open={modalOpen}
-        onClose={() => !success && setModalOpen(false)}
-        title="レンタル申請"
-      >
+      <Modal open={modalOpen} onClose={() => !success && setModalOpen(false)} title="レンタル申請">
         {success ? (
           <div className="py-4 text-center text-sm text-green-700">
             申請を送信しました。取引ページに移動します...

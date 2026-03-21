@@ -22,7 +22,7 @@ export function useRealtimeMessages(rentalId: string, initialMessages: Message[]
         },
         (payload) => {
           setMessages((prev) => [...prev, payload.new as Message])
-        }
+        },
       )
       .subscribe()
 

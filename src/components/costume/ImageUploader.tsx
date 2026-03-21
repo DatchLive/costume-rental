@@ -41,7 +41,7 @@ export function ImageUploader({
       setError(null)
       setCropQueue(filesToCrop)
     },
-    [images, maxImages]
+    [images, maxImages],
   )
 
   async function handleCropped(blob: Blob) {
@@ -52,7 +52,9 @@ export function ImageUploader({
     setUploading(true)
     const supabase = createClient()
 
-    const compressed = await compressCostumeImage(new File([blob], 'costume.jpg', { type: 'image/jpeg' }))
+    const compressed = await compressCostumeImage(
+      new File([blob], 'costume.jpg', { type: 'image/jpeg' }),
+    )
     const path = `${userId}/${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`
 
     const { error: uploadError } = await supabase.storage
@@ -65,9 +67,9 @@ export function ImageUploader({
       return
     }
 
-    const { data: { publicUrl } } = supabase.storage
-      .from('costume-images')
-      .getPublicUrl(path)
+    const {
+      data: { publicUrl },
+    } = supabase.storage.from('costume-images').getPublicUrl(path)
 
     const updated = [...images, publicUrl]
     setImages(updated)
@@ -101,29 +103,26 @@ export function ImageUploader({
 
   return (
     <div className="flex flex-col gap-3">
-      <label className="text-sm font-medium text-gray-700">
-        衣装の写真（最大{maxImages}枚）
-      </label>
+      <label className="text-sm font-medium text-gray-700">衣装の写真（最大{maxImages}枚）</label>
 
       {/* クロッパー：キューの先頭ファイルを表示 */}
       {cropQueue.length > 0 && (
-        <CostumeCropper
-          file={cropQueue[0]}
-          onCropped={handleCropped}
-          onCancel={handleCropCancel}
-        />
+        <CostumeCropper file={cropQueue[0]} onCropped={handleCropped} onCancel={handleCropCancel} />
       )}
 
       {/* サムネイル */}
       {images.length > 0 && (
         <div className="flex flex-wrap gap-2">
           {images.map((url, index) => (
-            <div key={url} className="relative h-24 w-[72px] overflow-hidden rounded-lg border border-gray-200">
+            <div
+              key={url}
+              className="relative h-24 w-[72px] overflow-hidden rounded-lg border border-gray-200"
+            >
               <Image src={url} alt={`衣装画像${index + 1}`} fill className="object-cover" />
               <button
                 type="button"
                 onClick={() => removeImage(url, index)}
-                className="absolute right-1 top-1 rounded-full bg-black/60 p-0.5 text-white hover:bg-black/80"
+                className="absolute top-1 right-1 rounded-full bg-black/60 p-0.5 text-white hover:bg-black/80"
                 aria-label="画像を削除"
               >
                 <X className="h-3 w-3" />

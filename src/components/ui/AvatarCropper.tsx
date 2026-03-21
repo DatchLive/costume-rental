@@ -12,11 +12,7 @@ interface AvatarCropperProps {
 }
 
 function centerSquareCrop(width: number, height: number): Crop {
-  return centerCrop(
-    makeAspectCrop({ unit: '%', width: 90 }, 1, width, height),
-    width,
-    height,
-  )
+  return centerCrop(makeAspectCrop({ unit: '%', width: 90 }, 1, width, height), width, height)
 }
 
 export function AvatarCropper({ onCropped }: AvatarCropperProps) {
@@ -69,14 +65,18 @@ export function AvatarCropper({ onCropped }: AvatarCropperProps) {
 
     ctx.drawImage(img, cropX, cropY, cropW, cropH, 0, 0, size, size)
 
-    canvas.toBlob(async (blob) => {
-      if (!blob) return
-      const compressed = await compressAvatarBlob(blob)
-      onCropped(compressed)
-      setOpen(false)
-      if (srcUrl) URL.revokeObjectURL(srcUrl)
-      setSrcUrl(null)
-    }, 'image/jpeg', 0.9)
+    canvas.toBlob(
+      async (blob) => {
+        if (!blob) return
+        const compressed = await compressAvatarBlob(blob)
+        onCropped(compressed)
+        setOpen(false)
+        if (srcUrl) URL.revokeObjectURL(srcUrl)
+        setSrcUrl(null)
+      },
+      'image/jpeg',
+      0.9,
+    )
   }, [crop, srcUrl, onCropped])
 
   function handleClose() {

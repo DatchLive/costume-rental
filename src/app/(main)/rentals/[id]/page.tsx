@@ -1,68 +1,66 @@
-import { notFound, redirect } from "next/navigation";
-import Link from "next/link";
-import Image from "next/image";
-import type { Metadata } from "next";
-import { MessageSquare } from "lucide-react";
-import { createClient } from "@/lib/supabase/server";
-import { RentalStatusBadge } from "@/components/rental/RentalStatusBadge";
-import { RentalActionButtons } from "@/components/rental/RentalActionButtons";
-import { ShippingAddressSection } from "@/components/rental/ShippingAddressSection";
-import { Avatar } from "@/components/ui/Avatar";
-import { Button } from "@/components/ui/Button";
-import { formatDate, formatPrice } from "@/lib/utils";
+import { notFound, redirect } from 'next/navigation'
+import Link from 'next/link'
+import Image from 'next/image'
+import type { Metadata } from 'next'
+import { MessageSquare } from 'lucide-react'
+import { createClient } from '@/lib/supabase/server'
+import { RentalStatusBadge } from '@/components/rental/RentalStatusBadge'
+import { RentalActionButtons } from '@/components/rental/RentalActionButtons'
+import { ShippingAddressSection } from '@/components/rental/ShippingAddressSection'
+import { Avatar } from '@/components/ui/Avatar'
+import { Button } from '@/components/ui/Button'
+import { formatDate, formatPrice } from '@/lib/utils'
 import {
   COSTUME_REVIEW_SIZE_FIT_LABELS,
   COSTUME_REVIEW_PHOTO_MATCH_LABELS,
   COSTUME_REVIEW_CONDITION_LABELS,
   COSTUME_REVIEW_SCENE_LABELS,
-} from "@/lib/constants";
-import type { RentalStatus } from "@/types/database";
+} from '@/lib/constants'
+import type { RentalStatus } from '@/types/database'
 
-export const metadata: Metadata = { title: "取引詳細" };
+export const metadata: Metadata = { title: '取引詳細' }
 
 interface RentalDetailPageProps {
-  params: Promise<{ id: string }>;
+  params: Promise<{ id: string }>
 }
 
 const STATUS_GUIDE: Record<string, { renter: string; owner: string }> = {
   pending: {
-    renter: "承認をお待ちください",
-    owner: "申請を確認して承認・却下してください",
+    renter: '承認をお待ちください',
+    owner: '申請を確認して承認・却下してください',
   },
   approved: {
-    renter: "日程・住所などをメッセージで確認してください",
-    owner: "日程・住所などをメッセージで確認してください",
+    renter: '日程・住所などをメッセージで確認してください',
+    owner: '日程・住所などをメッセージで確認してください',
   },
   active: {
-    renter: "返却の準備ができたら返却報告してください",
-    owner: "返却をお待ちください",
+    renter: '返却の準備ができたら返却報告してください',
+    owner: '返却をお待ちください',
   },
   returning: {
-    renter: "オーナーの受取確認をお待ちください",
-    owner: "返却を受け取ったら確認してください",
+    renter: 'オーナーの受取確認をお待ちください',
+    owner: '返却を受け取ったら確認してください',
   },
   returned: {
-    renter: "評価を投稿してください",
-    owner: "クリーニング・準備が完了したら貸し出し可能にしてください",
+    renter: '評価を投稿してください',
+    owner: 'クリーニング・準備が完了したら貸し出し可能にしてください',
   },
   completed: {
-    renter: "取引が完了しました。ありがとうございました！",
-    owner: "取引が完了しました。ありがとうございました！",
+    renter: '取引が完了しました。ありがとうございました！',
+    owner: '取引が完了しました。ありがとうございました！',
   },
-};
+}
 
-export default async function RentalDetailPage({
-  params,
-}: RentalDetailPageProps) {
-  const { id } = await params;
-  const supabase = await createClient();
+export default async function RentalDetailPage({ params }: RentalDetailPageProps) {
+  const { id } = await params
+  const supabase = await createClient()
   const {
     data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect(`/login?next=/rentals/${id}`);
+  } = await supabase.auth.getUser()
+  if (!user) redirect(`/login?next=/rentals/${id}`)
 
   const { data: rental } = await supabase
-    .from("rentals")
+    .from('rentals')
     .select(
       `
       *,
@@ -71,83 +69,82 @@ export default async function RentalDetailPage({
       owner:profiles!rentals_owner_id_fkey(id, name, avatar_url)
     `,
     )
-    .eq("id", id)
-    .single();
+    .eq('id', id)
+    .single()
 
-  if (!rental) notFound();
-  if (rental.renter_id !== user.id && rental.owner_id !== user.id) notFound();
+  if (!rental) notFound()
+  if (rental.renter_id !== user.id && rental.owner_id !== user.id) notFound()
 
-  const isOwner = user.id === rental.owner_id;
-  const isRenter = user.id === rental.renter_id;
+  const isOwner = user.id === rental.owner_id
+  const isRenter = user.id === rental.renter_id
   const costume = (
     rental as unknown as {
       costumes: {
-        id: string;
-        title: string;
-        images: string[];
-        rental_price: number;
-        category: string;
-      };
+        id: string
+        title: string
+        images: string[]
+        rental_price: number
+        category: string
+      }
     }
-  ).costumes;
+  ).costumes
   const renter = (
     rental as unknown as {
-      renter: { id: string; name: string | null; avatar_url: string | null };
+      renter: { id: string; name: string | null; avatar_url: string | null }
     }
-  ).renter;
+  ).renter
   const owner = (
     rental as unknown as {
-      owner: { id: string; name: string | null; avatar_url: string | null };
+      owner: { id: string; name: string | null; avatar_url: string | null }
     }
-  ).owner;
+  ).owner
 
   // 申請時のメッセージ（最初のメッセージ）をオーナー向けに取得
-  const { data: requestMessage } = isOwner && rental.status === 'pending'
-    ? await supabase
-        .from('messages')
-        .select('content')
-        .eq('rental_id', id)
-        .eq('sender_id', rental.renter_id)
-        .order('created_at', { ascending: true })
-        .limit(1)
-        .single()
-    : { data: null }
+  const { data: requestMessage } =
+    isOwner && rental.status === 'pending'
+      ? await supabase
+          .from('messages')
+          .select('content')
+          .eq('rental_id', id)
+          .eq('sender_id', rental.renter_id)
+          .order('created_at', { ascending: true })
+          .limit(1)
+          .single()
+      : { data: null }
 
   // Fetch the user's submitted review (full data)
   const { data: myReview } = await supabase
-    .from("reviews")
-    .select("id, rating, tags, comment, is_published, created_at")
-    .eq("rental_id", id)
-    .eq("reviewer_id", user.id)
-    .single();
+    .from('reviews')
+    .select('id, rating, tags, comment, is_published, created_at')
+    .eq('rental_id', id)
+    .eq('reviewer_id', user.id)
+    .single()
 
-  const guide = STATUS_GUIDE[rental.status];
-  const guideTexts: string[] = [];
+  const guide = STATUS_GUIDE[rental.status]
+  const guideTexts: string[] = []
   if (guide) {
-    const baseText = isRenter ? guide.renter : guide.owner;
+    const baseText = isRenter ? guide.renter : guide.owner
     // 借り手: 評価済みなら「評価してください」を表示しない
-    if (!(isRenter && myReview && rental.status === "returned")) {
-      guideTexts.push(baseText);
+    if (!(isRenter && myReview && rental.status === 'returned')) {
+      guideTexts.push(baseText)
     }
     // 出品者: returned かつ未評価なら「評価してください」を追加
-    if (isOwner && rental.status === "returned" && !myReview) {
-      guideTexts.push("評価を投稿してください");
+    if (isOwner && rental.status === 'returned' && !myReview) {
+      guideTexts.push('評価を投稿してください')
     }
   }
 
   // Fetch the user's costume review (renter only)
   const { data: myCostumeReview } = isRenter
     ? await supabase
-        .from("costume_reviews")
-        .select(
-          "size_fit, photo_match, condition, recommended_scene, comment, created_at",
-        )
-        .eq("rental_id", id)
-        .eq("reviewer_id", user.id)
+        .from('costume_reviews')
+        .select('size_fit, photo_match, condition, recommended_scene, comment, created_at')
+        .eq('rental_id', id)
+        .eq('reviewer_id', user.id)
         .single()
-    : { data: null };
+    : { data: null }
 
-  const canReview = rental.status === "returned" && !myReview;
+  const canReview = rental.status === 'returned' && !myReview
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6">
@@ -175,7 +172,7 @@ export default async function RentalDetailPage({
         {requestMessage && (
           <div className="rounded-xl border border-gray-200 bg-white p-6">
             <h2 className="mb-2 font-semibold text-gray-900">借り手からのメッセージ</h2>
-            <p className="whitespace-pre-wrap text-sm text-gray-700">{requestMessage.content}</p>
+            <p className="text-sm whitespace-pre-wrap text-gray-700">{requestMessage.content}</p>
           </div>
         )}
 
@@ -183,7 +180,7 @@ export default async function RentalDetailPage({
         {rental.status === 'rejected' && rental.cancel_reason && (
           <div className="rounded-xl border border-red-100 bg-red-50 p-6">
             <h2 className="mb-2 font-semibold text-red-800">却下理由</h2>
-            <p className="whitespace-pre-wrap text-sm text-red-700">{rental.cancel_reason}</p>
+            <p className="text-sm whitespace-pre-wrap text-red-700">{rental.cancel_reason}</p>
           </div>
         )}
 
@@ -191,7 +188,7 @@ export default async function RentalDetailPage({
         {myReview && (
           <div className="rounded-xl border border-gray-200 bg-white p-6">
             <h2 className="mb-1 font-semibold text-gray-900">
-              {isRenter ? "オーナーへの評価" : "借り手への評価"}
+              {isRenter ? 'オーナーへの評価' : '借り手への評価'}
             </h2>
             {!myReview.is_published && (
               <p className="mb-3 text-xs text-gray-400">
@@ -201,12 +198,12 @@ export default async function RentalDetailPage({
             <div className="mt-3 flex flex-col gap-3">
               <span
                 className={`inline-flex w-fit items-center gap-1 rounded-full px-3 py-1 text-sm font-medium ${
-                  myReview.rating === "good"
-                    ? "bg-green-100 text-green-700"
-                    : "bg-red-100 text-red-700"
+                  myReview.rating === 'good'
+                    ? 'bg-green-100 text-green-700'
+                    : 'bg-red-100 text-red-700'
                 }`}
               >
-                {myReview.rating === "good" ? "👍 良かった" : "👎 残念だった"}
+                {myReview.rating === 'good' ? '👍 良かった' : '👎 残念だった'}
               </span>
               {(myReview.tags?.length ?? 0) > 0 && (
                 <div className="flex flex-wrap gap-1">
@@ -221,9 +218,7 @@ export default async function RentalDetailPage({
                 </div>
               )}
               {myReview.comment && (
-                <p className="whitespace-pre-wrap text-sm text-gray-600">
-                  {myReview.comment}
-                </p>
+                <p className="text-sm whitespace-pre-wrap text-gray-600">{myReview.comment}</p>
               )}
             </div>
           </div>
@@ -247,9 +242,8 @@ export default async function RentalDetailPage({
                 <div className="flex items-center gap-1">
                   <dt className="text-gray-400">写真との一致度:</dt>
                   <dd className="font-medium text-gray-700">
-                    {COSTUME_REVIEW_PHOTO_MATCH_LABELS[
-                      myCostumeReview.photo_match
-                    ] ?? myCostumeReview.photo_match}
+                    {COSTUME_REVIEW_PHOTO_MATCH_LABELS[myCostumeReview.photo_match] ??
+                      myCostumeReview.photo_match}
                   </dd>
                 </div>
               )}
@@ -257,9 +251,8 @@ export default async function RentalDetailPage({
                 <div className="flex items-center gap-1">
                   <dt className="text-gray-400">コンディション:</dt>
                   <dd className="font-medium text-gray-700">
-                    {COSTUME_REVIEW_CONDITION_LABELS[
-                      myCostumeReview.condition
-                    ] ?? myCostumeReview.condition}
+                    {COSTUME_REVIEW_CONDITION_LABELS[myCostumeReview.condition] ??
+                      myCostumeReview.condition}
                   </dd>
                 </div>
               )}
@@ -277,7 +270,7 @@ export default async function RentalDetailPage({
               </div>
             )}
             {myCostumeReview.comment && (
-              <p className="mt-2 whitespace-pre-wrap text-sm text-gray-600">
+              <p className="mt-2 text-sm whitespace-pre-wrap text-gray-600">
                 {myCostumeReview.comment}
               </p>
             )}
@@ -311,7 +304,7 @@ export default async function RentalDetailPage({
               href={`/costumes/${costume?.id}`}
               className="font-medium text-gray-900 hover:text-amber-700"
             >
-              {costume?.title ?? "（削除された衣装）"}
+              {costume?.title ?? '（削除された衣装）'}
             </Link>
           </div>
         </div>
@@ -322,9 +315,7 @@ export default async function RentalDetailPage({
           <dl className="flex flex-col gap-3 text-sm">
             <div className="flex justify-between">
               <dt className="text-gray-500">使用日</dt>
-              <dd className="font-medium text-gray-900">
-                {formatDate(rental.use_date)}
-              </dd>
+              <dd className="font-medium text-gray-900">{formatDate(rental.use_date)}</dd>
             </div>
             <div className="flex justify-between border-t border-gray-100 pt-3">
               <dt className="text-gray-500">受け渡し方法</dt>
@@ -354,7 +345,7 @@ export default async function RentalDetailPage({
                     href={`/users/${owner.id}`}
                     className="font-medium text-gray-900 hover:text-amber-700"
                   >
-                    {owner.name ?? "名前未設定"}
+                    {owner.name ?? '名前未設定'}
                   </Link>
                 </div>
               </>
@@ -367,7 +358,7 @@ export default async function RentalDetailPage({
                     href={`/users/${renter.id}`}
                     className="font-medium text-gray-900 hover:text-amber-700"
                   >
-                    {renter.name ?? "名前未設定"}
+                    {renter.name ?? '名前未設定'}
                   </Link>
                 </div>
               </>
@@ -378,10 +369,7 @@ export default async function RentalDetailPage({
         {/* 配送先情報（全国発送かつ approved 以降） */}
         {rental.delivery_method === 'shipping' &&
           ['approved', 'active', 'returning', 'returned'].includes(rental.status) && (
-            <ShippingAddressSection
-              rentalId={id}
-              myRole={isOwner ? 'owner' : 'renter'}
-            />
+            <ShippingAddressSection rentalId={id} myRole={isOwner ? 'owner' : 'renter'} />
           )}
 
         {/* Message link */}
@@ -395,12 +383,11 @@ export default async function RentalDetailPage({
         {/* Actions */}
         <RentalActionButtons
           rentalId={id}
-          costumeId={costume?.id ?? ""}
           status={rental.status as RentalStatus}
           isOwner={isOwner}
           isRenter={isRenter}
         />
       </div>
     </div>
-  );
+  )
 }

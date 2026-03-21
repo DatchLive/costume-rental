@@ -58,10 +58,24 @@ export function ContactFormClient() {
         <div className="rounded-lg bg-red-50 p-3 text-sm text-red-700">{serverError}</div>
       )}
       <Input label="お名前" required error={errors.name?.message} {...register('name')} />
-      <Input label="メールアドレス" type="email" required error={errors.email?.message} {...register('email')} />
+      <Input
+        label="メールアドレス"
+        type="email"
+        required
+        error={errors.email?.message}
+        {...register('email')}
+      />
       <Input label="件名" required error={errors.subject?.message} {...register('subject')} />
-      <Textarea label="お問い合わせ内容" required rows={6} error={errors.message?.message} {...register('message')} />
-      <Button type="submit" loading={isSubmitting}>送信する</Button>
+      <Textarea
+        label="お問い合わせ内容"
+        required
+        rows={6}
+        error={errors.message?.message}
+        {...register('message')}
+      />
+      <Button type="submit" loading={isSubmitting}>
+        送信する
+      </Button>
     </form>
   )
 }

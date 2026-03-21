@@ -37,13 +37,15 @@ export function DeleteCostumeButton({ costumeId, images, isDeletable }: DeleteCo
 
     // DB削除成功後にStorageの画像を削除（失敗してもDBは正常）
     if (images.length > 0) {
-      const paths = images.map((url) => {
-        try {
-          return new URL(url).pathname.split('/costume-images/')[1]
-        } catch {
-          return null
-        }
-      }).filter(Boolean) as string[]
+      const paths = images
+        .map((url) => {
+          try {
+            return new URL(url).pathname.split('/costume-images/')[1]
+          } catch {
+            return null
+          }
+        })
+        .filter(Boolean) as string[]
 
       if (paths.length > 0) {
         await supabase.storage.from('costume-images').remove(paths)
@@ -86,9 +88,7 @@ export function DeleteCostumeButton({ costumeId, images, isDeletable }: DeleteCo
           <p className="text-sm text-gray-600">
             削除すると元に戻せません。この衣装に関するお気に入りや衣装レビューも削除されます。
           </p>
-          {error && (
-            <p className="text-sm text-red-600">{error}</p>
-          )}
+          {error && <p className="text-sm text-red-600">{error}</p>}
           <div className="flex justify-end gap-3">
             <Button variant="outline" onClick={() => setOpen(false)}>
               キャンセル

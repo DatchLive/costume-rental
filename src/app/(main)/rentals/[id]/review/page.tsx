@@ -12,7 +12,9 @@ interface ReviewPageProps {
 export default async function ReviewPage({ params }: ReviewPageProps) {
   const { id } = await params
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) redirect(`/login?next=/rentals/${id}/review`)
 
   const { data: rental } = await supabase

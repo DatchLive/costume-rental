@@ -8,13 +8,14 @@ import { createClient } from '@/lib/supabase/server'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { formatPrice } from '@/lib/utils'
-import { RENTAL_STATUS_LABELS } from '@/lib/constants'
 import { StatusToggleClient } from './StatusToggleClient'
 export const metadata: Metadata = { title: '出品した衣装' }
 
 export default async function MyCostumesPage() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) redirect('/login?next=/mypage/costumes')
 
   const [{ data: costumes }, { data: activeRentals }] = await Promise.all([
@@ -32,10 +33,11 @@ export default async function MyCostumesPage() {
 
   const rentingCostumeIds = new Set((activeRentals ?? []).map((r) => r.costume_id))
 
-  const statusLabel: Record<string, { label: string; variant: 'success' | 'warning' | 'default' }> = {
-    available: { label: '公開中', variant: 'success' },
-    hidden: { label: '非公開', variant: 'default' },
-  }
+  const statusLabel: Record<string, { label: string; variant: 'success' | 'warning' | 'default' }> =
+    {
+      available: { label: '公開中', variant: 'success' },
+      hidden: { label: '非公開', variant: 'default' },
+    }
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6">
@@ -73,8 +75,19 @@ export default async function MyCostumesPage() {
                       />
                     ) : (
                       <div className="flex h-full items-center justify-center text-gray-300">
-                        <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        <svg
+                          className="h-6 w-6"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          aria-hidden="true"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={1}
+                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                          />
                         </svg>
                       </div>
                     )}
@@ -88,7 +101,9 @@ export default async function MyCostumesPage() {
                     </Link>
                     <div className="mt-1.5 flex items-center gap-2">
                       <Badge variant={status.variant}>{status.label}</Badge>
-                      <span className="text-sm font-medium text-amber-700">{formatPrice(costume.rental_price)}</span>
+                      <span className="text-sm font-medium text-amber-700">
+                        {formatPrice(costume.rental_price)}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -96,7 +111,10 @@ export default async function MyCostumesPage() {
                 {/* 下段: アクションボタン */}
                 <div className="flex items-center gap-2 border-t border-gray-100 px-4 py-3">
                   {!isRenting && (
-                    <StatusToggleClient costumeId={costume.id} currentStatus={costume.status as 'available' | 'hidden'} />
+                    <StatusToggleClient
+                      costumeId={costume.id}
+                      currentStatus={costume.status as 'available' | 'hidden'}
+                    />
                   )}
                   <div className="flex flex-1 justify-end gap-2">
                     <Link href={`/costumes/${costume.id}/edit`}>

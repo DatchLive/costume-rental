@@ -100,7 +100,9 @@ export function ReviewForm({ role, onSubmit }: ReviewFormProps) {
 
       {/* タグ選択 */}
       <div>
-        <p className="mb-2 text-sm font-medium text-gray-700">あてはまるものを選んでください（任意）</p>
+        <p className="mb-2 text-sm font-medium text-gray-700">
+          あてはまるものを選んでください（任意）
+        </p>
         <div className="flex flex-col gap-2">
           {availableTags.map((tag) => (
             <label key={tag} className="flex cursor-pointer items-center gap-3">

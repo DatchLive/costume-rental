@@ -24,12 +24,7 @@ export function StatusToggleClient({ costumeId, currentStatus }: StatusToggleCli
   }
 
   return (
-    <Button
-      variant="ghost"
-      size="sm"
-      loading={loading}
-      onClick={toggle}
-    >
+    <Button variant="ghost" size="sm" loading={loading} onClick={toggle}>
       {currentStatus === 'available' ? '非公開にする' : '公開する'}
     </Button>
   )

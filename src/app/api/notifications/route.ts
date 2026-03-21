@@ -32,7 +32,8 @@ export async function POST(request: Request) {
         .select('costumes(title)')
         .eq('id', rentalId)
         .single()
-      const costumeTitle = (rental as unknown as { costumes: { title: string } | null })?.costumes?.title ?? '衣装'
+      const costumeTitle =
+        (rental as unknown as { costumes: { title: string } | null })?.costumes?.title ?? '衣装'
 
       await supabase.from('notifications').insert({
         user_id: targetUserId,
