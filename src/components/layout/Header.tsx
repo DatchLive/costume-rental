@@ -29,7 +29,7 @@ export function Header() {
         <Link href="/" className="flex items-center gap-2 text-amber-700">
           <ShirtIcon className="h-6 w-6" aria-hidden="true" />
           <span className="hidden font-bold sm:inline">社交ダンス衣装レンタル</span>
-          <span className="font-bold sm:hidden">ダンス衣装</span>
+          <span className="font-bold sm:hidden">衣装レンタル</span>
         </Link>
 
         {/* Right side */}
