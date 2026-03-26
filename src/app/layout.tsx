@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     template: '%s | 社交ダンス衣装レンタル',
   },
   description:
-    '社交ダンスの衣装をユーザー同士で貸し借りできるマッチングプラットフォーム。ラテン・スタンダードの衣装をリーズナブルにレンタルできます。',
+    '社交ダンスの衣装を貸し借りできるマッチングサービス。ラテン・スタンダードのドレスや練習着を全国のダンサーと安心取引。',
   openGraph: {
     siteName: '社交ダンス衣装レンタル',
     locale: 'ja_JP',
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ja" className={notoSansJP.variable}>
+    <html lang="ja" className={notoSansJP.variable} data-scroll-behavior="smooth">
       <body className="font-sans antialiased">
         {children}
         <Analytics />

@@ -116,7 +116,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
               レンタルしよう
             </h1>
             <p className="mt-3 text-gray-600 sm:text-lg">
-              ラテン・スタンダードの衣装をリーズナブルにレンタル
+              社交ダンスの衣装を、もっと気軽にレンタル
             </p>
             <Link
               href="/costumes/new"
