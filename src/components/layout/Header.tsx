@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Bell, LogOut, User, ShirtIcon, Heart, ClipboardList } from 'lucide-react'
+import { Bell, LogOut, User, ShirtIcon, Heart, ClipboardList, BookOpen } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/hooks/useAuth'
 import { useNotifications } from '@/hooks/useNotifications'
@@ -109,6 +109,13 @@ export function Header() {
                         >
                           <Heart className="h-4 w-4" /> お気に入り
                         </Link>
+                        <Link
+                          href="/guide"
+                          onClick={() => setUserMenuOpen(false)}
+                          className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                        >
+                          <BookOpen className="h-4 w-4" /> 使い方ガイド
+                        </Link>
                         <hr className="my-1 border-gray-100" />
                         <button
                           type="button"
@@ -125,6 +132,12 @@ export function Header() {
             </>
           ) : (
             <div className="flex items-center gap-2">
+              <Link
+                href="/guide"
+                className="hidden text-sm font-medium text-gray-700 hover:text-amber-700 sm:inline"
+              >
+                使い方
+              </Link>
               <Link
                 href="/login"
                 className="text-sm font-medium text-gray-700 hover:text-amber-700"

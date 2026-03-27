@@ -15,6 +15,9 @@ export function Footer() {
           </div>
 
           <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-gray-600 sm:justify-end">
+            <Link href="/guide" className="hover:text-amber-700">
+              使い方ガイド
+            </Link>
             <Link href="/terms" className="hover:text-amber-700">
               利用規約
             </Link>
