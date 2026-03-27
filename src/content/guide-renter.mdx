@@ -1,5 +1,13 @@
 import { StepCard } from '@/components/guide/StepCard'
 import { TipBox } from '@/components/guide/TipBox'
+import {
+  SearchPreview,
+  ApplyPreview,
+  MessagePreview,
+  ActiveStatusPreview,
+  ReturnButtonPreview,
+  ReviewPreviewRenter,
+} from '@/components/guide/previews'
 
 ## 衣装を借りる流れ
 
@@ -9,14 +17,14 @@ import { TipBox } from '@/components/guide/TipBox'
   会員登録・閲覧・申請はすべて**無料**です。支払いは出品者と直接やり取りします。
 </TipBox>
 
-<StepCard step={1} title="アカウントを作成する" image="/images/guide/renter/step1-signup.png" alt="新規登録画面">
+<StepCard step={1} title="アカウントを作成する">
   まずは無料アカウントを作成しましょう。
 
   - 右上の「新規登録」からGoogleアカウントまたはメールアドレスで登録
   - プロフィールページで名前・居住エリアを設定しておくとスムーズです
 </StepCard>
 
-<StepCard step={2} title="衣装を探す" image="/images/guide/renter/step2-search.png" alt="衣装一覧・検索画面">
+<StepCard step={2} title="衣装を探す" preview={<SearchPreview />}>
   トップページで衣装一覧を確認できます。
 
   - カテゴリ（ラテン・スタンダードなど）で絞り込み
@@ -24,7 +32,7 @@ import { TipBox } from '@/components/guide/TipBox'
   - 気になった衣装はハートボタンでお気に入りに追加できます
 </StepCard>
 
-<StepCard step={3} title="衣装の詳細を確認する" image="/images/guide/renter/step3-detail.png" alt="衣装詳細画面">
+<StepCard step={3} title="衣装の詳細を確認する">
   申請前に以下を必ず確認しましょう。
 
   - 衣装の写真・説明文
@@ -34,16 +42,17 @@ import { TipBox } from '@/components/guide/TipBox'
   - 出品者のプロフィールと評価
 </StepCard>
 
-<StepCard step={4} title="レンタルを申請する" image="/images/guide/renter/step4-apply.png" alt="レンタル申請画面">
+<StepCard step={4} title="レンタルを申請する" preview={<ApplyPreview />}>
   「レンタルを申請する」ボタンから申請します。
 
   - 使用したい日付を入力
+  - 受け渡し方法を選択
   - 一言メッセージを添えて送信
 
   出品者の承認を待ちましょう。承認・却下の結果は通知で届きます。
 </StepCard>
 
-<StepCard step={5} title="メッセージで詳細を調整する" image="/images/guide/renter/step5-message.png" alt="メッセージ画面">
+<StepCard step={5} title="メッセージで詳細を調整する" preview={<MessagePreview />}>
   申請が承認されたら、メッセージで受け渡しの詳細を相談します。
 
   - 配送の場合：配送先住所・送料の負担・発送予定日を確認
@@ -53,27 +62,26 @@ import { TipBox } from '@/components/guide/TipBox'
   支払いはサービス外で出品者と直接やり取りします。
 </StepCard>
 
-<StepCard step={6} title="衣装を受け取る" image="/images/guide/renter/step6-receive.png" alt="受取確認画面">
-  衣装が届いたら確認しましょう。
+<StepCard step={6} title="衣装を受け取る" preview={<ActiveStatusPreview />}>
+  出品者が発送すると取引ステータスが「使用中」に変わります。
 
-  - 写真と実物のコンディションを確認
+  - 衣装が届いたら写真と実物のコンディションを確認
   - 気になる点があればすぐにメッセージで出品者に連絡
-  - 問題なければ「受け取りました」ボタンを押す
 </StepCard>
 
-<StepCard step={7} title="使用・返却する" image="/images/guide/renter/step7-return.png" alt="返却手続き画面">
+<StepCard step={7} title="使用・返却する" preview={<ReturnButtonPreview />}>
   大会やパーティーが終わったら、クリーニングして返却します。
 
   - クリーニング条件を守って対応（ホームクリーニング可 / クリーニング店が必要かを確認）
-  - 配送の場合：クリーニング後に梱包して発送、「返送しました」ボタンを押す
-  - 手渡しの場合：クリーニング後に手渡し、「返却しました」ボタンを押す
+  - 配送の場合：クリーニング後に梱包して発送し「返却しました」を押す
+  - 手渡しの場合：クリーニング後に手渡しし「返却しました」を押す
 
   <TipBox type="warning">
     返却前のクリーニングを忘れずに。クリーニング条件は申請前に衣装詳細ページで確認できます。
   </TipBox>
 </StepCard>
 
-<StepCard step={8} title="評価を投稿する" image="/images/guide/renter/step8-review.png" alt="評価投稿画面">
+<StepCard step={8} title="評価を投稿する" preview={<ReviewPreviewRenter />} previewAspect="aspect-[4/3]">
   取引が完了したら、出品者への評価を投稿しましょう。
 
   - 「良かった」または「残念だった」を選択

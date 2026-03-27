@@ -1,5 +1,14 @@
 import { StepCard } from '@/components/guide/StepCard'
 import { TipBox } from '@/components/guide/TipBox'
+import {
+  RegisteredCostumePreview,
+  ApprovalPreview,
+  MessagePreview,
+  ShipPreview,
+  ReturnConfirmPreview,
+  ReturnedStatusPreview,
+  ReviewPreviewOwner,
+} from '@/components/guide/previews'
 
 ## 衣装を貸す流れ
 
@@ -9,7 +18,7 @@ import { TipBox } from '@/components/guide/TipBox'
   出品・取引はすべて**無料**です。支払いは借り手と直接やり取りします。無料プランでは最大3点まで出品できます。
 </TipBox>
 
-<StepCard step={1} title="アカウントを作成・プロフィールを設定する" image="/images/guide/owner/step1-profile.png" alt="プロフィール設定画面">
+<StepCard step={1} title="アカウントを作成・プロフィールを設定する">
   まずは無料アカウントを作成しましょう。
 
   - 右上の「新規登録」からGoogleアカウントまたはメールアドレスで登録
@@ -17,7 +26,7 @@ import { TipBox } from '@/components/guide/TipBox'
   - 借り手に安心してもらうため、プロフィールは丁寧に書くのがおすすめです
 </StepCard>
 
-<StepCard step={2} title="衣装を登録する" image="/images/guide/owner/step2-register.png" alt="衣装登録画面">
+<StepCard step={2} title="衣装を登録する" preview={<RegisteredCostumePreview />}>
   マイページの「衣装を出品する」から登録します。
 
   - 衣装の写真（最大3枚）をアップロード
@@ -31,7 +40,7 @@ import { TipBox } from '@/components/guide/TipBox'
   </TipBox>
 </StepCard>
 
-<StepCard step={3} title="申請を確認する" image="/images/guide/owner/step3-approve.png" alt="申請確認・承認画面">
+<StepCard step={3} title="申請を確認する" preview={<ApprovalPreview />}>
   借り手から申請が届くと通知が来ます。
 
   - 取引一覧で申請内容と使用希望日を確認
@@ -39,7 +48,7 @@ import { TipBox } from '@/components/guide/TipBox'
   - 問題なければ「承認する」、お断りする場合は「却下する」を選択
 </StepCard>
 
-<StepCard step={4} title="メッセージで詳細を調整する" image="/images/guide/owner/step4-message.png" alt="メッセージ画面">
+<StepCard step={4} title="メッセージで詳細を調整する" preview={<MessagePreview />}>
   承認後、メッセージで受け渡しの詳細を相談します。
 
   - 配送の場合：相手の住所・送料の負担方法・発送予定日を確認
@@ -49,21 +58,21 @@ import { TipBox } from '@/components/guide/TipBox'
   支払いはサービス外で直接受け取ります。
 </StepCard>
 
-<StepCard step={5} title="衣装を渡す" image="/images/guide/owner/step5-ship.png" alt="発送完了ボタン画面">
+<StepCard step={5} title="衣装を渡す" preview={<ShipPreview />}>
   受け渡し当日になったら衣装を渡します。
 
   - 配送の場合：丁寧に梱包して発送後、「発送しました」ボタンを押す
   - 手渡しの場合：相手に渡したら「発送しました」ボタンを押す
 </StepCard>
 
-<StepCard step={6} title="返却を受け取る" image="/images/guide/owner/step6-returned.png" alt="返却確認画面">
+<StepCard step={6} title="返却を受け取る" preview={<ReturnConfirmPreview />}>
   借り手から返却連絡が届いたら確認します。
 
   - 配送の場合：衣装が届いたらコンディションを確認し、「受け取りました」ボタンを押す
   - 手渡しの場合：受け取ったら「受け取りました」ボタンを押す
 </StepCard>
 
-<StepCard step={7} title="クリーニング・次の準備をする" image="/images/guide/owner/step7-clean.png" alt="ステータス管理画面">
+<StepCard step={7} title="クリーニング・次の準備をする" preview={<ReturnedStatusPreview />}>
   クリーニング条件に応じて対応します。
 
   - 借り手クリーニングの場合：返却時点で済んでいることを確認
@@ -72,7 +81,7 @@ import { TipBox } from '@/components/guide/TipBox'
   準備が整ったら衣装ページのステータスを「貸し出し可能」に戻しましょう。
 </StepCard>
 
-<StepCard step={8} title="評価を投稿する" image="/images/guide/owner/step8-review.png" alt="評価投稿画面">
+<StepCard step={8} title="評価を投稿する" preview={<ReviewPreviewOwner />} previewAspect="aspect-[4/3]">
   取引が完了したら、借り手への評価を投稿しましょう。
 
   - 「良かった」または「残念だった」を選択
