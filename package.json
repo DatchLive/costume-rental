@@ -31,7 +31,7 @@
     "react-dropzone": "^15.0.0",
     "react-hook-form": "^7.71.2",
     "react-image-crop": "^11.0.10",
-    "resend": "^6.9.2",
+    "resend": "^6.10.0",
     "tailwind-merge": "^3.5.0",
     "zod": "^4.3.6"
   },
